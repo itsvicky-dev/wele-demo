@@ -404,6 +404,7 @@ export function CareerCompass() {
               )}
               <div className="">
                 <div className="flex flex-col items-center space-x-3">
+                  {/* WELCOME MESSAGE */}
                   <div className="flex flex-col items-start space-y-3">
                     <p className="text-gray-800 mb-4">
                       Awesome! You’re just about to kick-start your Career
