@@ -852,7 +852,7 @@ export function CareerCompass() {
         {
           role: "assistant",
           content:
-            "This is a sample response. You can integrate your actual chat logic here.",
+            "That's an interesting question! Let me think about that for a moment. Based on what you're asking, I'd say that understanding the context is really important here.",
         },
       ]);
       setIsLoading(false);
@@ -879,7 +879,7 @@ export function CareerCompass() {
         {
           role: "assistant",
           content:
-            "This is a sample response. You can integrate your actual chat logic here.",
+            "That's an interesting question! Let me think about that for a moment. Based on what you're asking, I'd say that understanding the context is really important here.",
         },
       ]);
       setIsLoading(false);

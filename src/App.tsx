@@ -22,7 +22,7 @@ function App() {
         <Sidebar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/chat" element={<Chat />} />
+          <Route path="/chat" element={<Chat key={window.location.href} />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/learning-hub" element={<LearningHub />} />
           <Route path="/career-compass" element={<CareerCompass />} />

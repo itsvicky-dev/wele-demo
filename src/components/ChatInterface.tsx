@@ -84,7 +84,7 @@ export function ChatInterface({ messages, onSendMessage, isLoading, chatTitle, i
             </div>
           </div>
         ) : (
-          <div className="max-w-3xl mx-auto px-4 py-6">
+          <div className="max-w-3xl mx-auto py-6 min-w-[768px]">
             {/* {!isNewChat && (
               <div className="text-right mb-6">
                 <div className="inline-block bg-gray-100 text-gray-800 px-4 py-2 rounded-2xl rounded-tr-md max-w-[80%]">

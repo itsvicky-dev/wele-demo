@@ -147,11 +147,6 @@ export function Sidebar() {
     setExpandedSections((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const handleNewChat = () => {
-    // Navigate to chat page
-    window.location.href = "/chat";
-  };
-
   return (
     <div className="w-64 bg-[#f9fafb] flex flex-col h-screen border-r border-[#0d0d0d0d]">
       <div className="p-4">
