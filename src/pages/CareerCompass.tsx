@@ -378,7 +378,7 @@ export function CareerCompass() {
         >
           <div
             className={`${
-              showAssessment ? "max-w-5xl" : "max-w-3xl"
+              showAssessment && !showResults ? "max-w-5xl" : "max-w-3xl"
             } mx-auto py-6 flex`}
           >
             <div className="">
@@ -646,11 +646,11 @@ export function CareerCompass() {
       <div className="bg-white">
         <div
           className={` ${
-            showAssessment ? "max-w-5xl" : "max-w-3xl"
+            showAssessment && !showResults ? "max-w-5xl" : "max-w-3xl"
           } mx-auto pb-6`}
         >
           <form
-            onSubmit={(e) => {
+            onSubmit={(e) => {  
               e.preventDefault();
               handleChatSubmit();
             }}
