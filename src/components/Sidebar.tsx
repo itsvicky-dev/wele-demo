@@ -155,7 +155,7 @@ export function Sidebar() {
         </Link>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-3">
+      <div className="flex-1 overflow-hidden hover:overflow-y-auto px-3">
         <div className="">
           <Link
             to="/chat"

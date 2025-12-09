@@ -66,159 +66,6 @@ const careerQuestions: MCQQuestion[] = [
     ],
   },
   {
-    id: "6",
-    question:
-      "You have to choose between two similar items. What helps you decide?",
-    options: [
-      { id: "a", text: "Which one fits your routine better." },
-      { id: "b", text: "Which option looks more appealing." },
-      { id: "c", text: "Which one works better for long term." },
-      { id: "d", text: "Which one makes more sense logically." },
-    ],
-  },
-  {
-    id: "7",
-    question: "Someone asks you to explain something. How do you start?",
-    options: [
-      { id: "a", text: "With a simple story or example." },
-      { id: "b", text: "With the first step of how to do it." },
-      { id: "c", text: "With a clear outline of the steps." },
-      { id: "d", text: "By breaking it into basic ideas." },
-    ],
-  },
-  {
-    id: "8",
-    question: "You're assembling something new. What do you do first?",
-    options: [
-      { id: "a", text: "Try understanding how the parts connect." },
-      { id: "b", text: "Follow the steps in order." },
-      { id: "c", text: "Try assembling based on what feels right." },
-      { id: "d", text: "Try arranging it in a fresh, fun way." },
-    ],
-  },
-  {
-    id: "9",
-    question: "During a conversation, what do you naturally contribute?",
-    options: [
-      { id: "a", text: "Practical suggestions." },
-      { id: "b", text: "Fresh ideas others may not think of." },
-      { id: "c", text: "Organised ways to continue the topic." },
-      { id: "d", text: "Reasoned points based on logic." },
-    ],
-  },
-  {
-    id: "10",
-    question: "You're choosing a gift for someone. How do you decide?",
-    options: [
-      { id: "a", text: "Something useful and reliable." },
-      { id: "b", text: "Something with a creative touch." },
-      { id: "c", text: "Something that suits their daily plan." },
-      { id: "d", text: "Something that fits their personality logically." },
-    ],
-  },
-  // {
-  //   id: "11",
-  //   question:
-  //     "You notice something is not working properly. What do you see first?",
-  //   options: [
-  //     { id: "a", text: "Some step in the process is off." },
-  //     { id: "b", text: "Something unusual in how it behaves." },
-  //     { id: "c", text: "A small visible flaw or issue." },
-  //     { id: "d", text: "Something that doesn't look right creatively." },
-  //   ],
-  // },
-  // {
-  //   id: "12",
-  //   question:
-  //     "You're helping a friend solve a small issue. What do you focus on?",
-  //   options: [
-  //     { id: "a", text: "Show them a simple fix." },
-  //     { id: "b", text: "Help them think through the cause." },
-  //     { id: "c", text: "Suggest a better-looking or fun way to do it." },
-  //     { id: "d", text: "Guide them through proper steps." },
-  //   ],
-  // },
-  // {
-  //   id: "13",
-  //   question: "You are stuck waiting somewhere. What do you do?",
-  //   options: [
-  //     { id: "a", text: "Try something new or fun to pass time." },
-  //     { id: "b", text: "Think of the pattern that caused the delay." },
-  //     { id: "c", text: "Adjust your schedule." },
-  //     { id: "d", text: "Check nearby options or tools to use." },
-  //   ],
-  // },
-  // {
-  //   id: "14",
-  //   question: "You see two people arguing. How do you respond?",
-  //   options: [
-  //     { id: "a", text: "Understand both sides calmly." },
-  //     { id: "b", text: "Try a light creative comment to ease tension." },
-  //     { id: "c", text: "Bring order by letting them talk in turn." },
-  //     { id: "d", text: "Suggest a simple fix they can try." },
-  //   ],
-  // },
-  // {
-  //   id: "15",
-  //   question: "You're setting up your workspace. What do you care about most?",
-  //   options: [
-  //     { id: "a", text: "A unique or pleasant look." },
-  //     { id: "b", text: "Everything placed in proper order." },
-  //     { id: "c", text: "Tools and items that help you work better." },
-  //     { id: "d", text: "Logical arrangement of things." },
-  //   ],
-  // },
-  // {
-  //   id: "16",
-  //   question: "You need to learn something new. How do you begin?",
-  //   options: [
-  //     { id: "a", text: "Try it hands-on immediately." },
-  //     { id: "b", text: "Look for patterns or main ideas." },
-  //     { id: "c", text: "Use a creative approach to understand it." },
-  //     { id: "d", text: "Prepare a small plan." },
-  //   ],
-  // },
-  // {
-  //   id: "17",
-  //   question: "You're asked to guide a junior. What do you focus on?",
-  //   options: [
-  //     { id: "a", text: "Showing them how to do it properly." },
-  //     { id: "b", text: "Helping them think through decisions." },
-  //     { id: "c", text: "Making it interesting for them to learn." },
-  //     { id: "d", text: "Giving them small steps to follow." },
-  //   ],
-  // },
-  // {
-  //   id: "18",
-  //   question: "Someone gives you mixed information. What do you do?",
-  //   options: [
-  //     { id: "a", text: "Re-arrange it in simple order." },
-  //     { id: "b", text: "Think creatively to find meaning." },
-  //     { id: "c", text: "Check possible causes." },
-  //     { id: "d", text: "Try small actions to test it." },
-  //   ],
-  // },
-  // {
-  //   id: "19",
-  //   question: "You see a trending idea online. What attracts you?",
-  //   options: [
-  //     { id: "a", text: "The unique twist behind it." },
-  //     { id: "b", text: "The reason it became popular." },
-  //     { id: "c", text: "How people are managing and timing posts." },
-  //     { id: "d", text: "How people are actually doing it." },
-  //   ],
-  // },
-  // {
-  //   id: "20",
-  //   question: "You buy something new. What do you explore first?",
-  //   options: [
-  //     { id: "a", text: "How good it looks or feels." },
-  //     { id: "b", text: "How it can be used efficiently." },
-  //     { id: "c", text: "Why it works the way it does." },
-  //     { id: "d", text: "Where it fits in your routine." },
-  //   ],
-  // },
-  {
     id: "21",
     question:
       "Your mixie suddenly stops while running. What do you check first?",
@@ -270,430 +117,6 @@ const careerQuestions: MCQQuestion[] = [
       { id: "d", text: "Ask a friend to explain it fully" },
     ],
   },
-  {
-    id: "26",
-    question: "You must fix a noisy fan. What is the best first step?",
-    options: [
-      { id: "a", text: "Check where the noise is coming from" },
-      { id: "b", text: "Oil every part without checking" },
-      { id: "c", text: "Buy a new fan immediately" },
-      { id: "d", text: "Switch it on/off repeatedly" },
-    ],
-  },
-  {
-    id: "27",
-    question:
-      "You check your step count for a week and see one day is unusually high. What will you do?",
-    options: [
-      { id: "a", text: "Compare it with other days to see what changed" },
-      { id: "b", text: "Ignore it and move on" },
-      { id: "c", text: "Blame the phone sensor" },
-      { id: "d", text: "Delete the step history" },
-    ],
-  },
-  {
-    id: "28",
-    question:
-      "A shop sells more snacks on rainy days. What seems most useful to know?",
-    options: [
-      { id: "a", text: "How often rain and sales go up together" },
-      { id: "b", text: "How many workers were present" },
-      { id: "c", text: "The color of the snack packets" },
-      { id: "d", text: "The shop's closing time" },
-    ],
-  },
-  {
-    id: "29",
-    question:
-      "A friend wants to understand why their marks drop sometimes. What will you check first?",
-    options: [
-      { id: "a", text: "The type of questions they often get wrong" },
-      { id: "b", text: "Their handwriting" },
-      { id: "c", text: "The classroom temperature" },
-      { id: "d", text: "Whether they used a new pen" },
-    ],
-  },
-  {
-    id: "30",
-    question:
-      "You have 20 photos of a product. What helps you describe it better?",
-    options: [
-      { id: "a", text: "Picking only the 3–4 photos that tell the main idea" },
-      { id: "b", text: "Showing all 20 photos randomly" },
-      { id: "c", text: "Hiding half the photos" },
-      { id: "d", text: "Only describing its color" },
-    ],
-  },
-  // {
-  //   id: "31",
-  //   question:
-  //     "Your bike uses more petrol during certain weeks. What will you think about?",
-  //   options: [
-  //     { id: "a", text: "Whether long trips happened on those weeks" },
-  //     { id: "b", text: "If the petrol cap looks nice" },
-  //     { id: "c", text: "The brand of tyres" },
-  //     { id: "d", text: "Whether others also bought petrol then" },
-  //   ],
-  // },
-  // {
-  //   id: "32",
-  //   question:
-  //     "A YouTube video gets more views on weekends. What can you guess?",
-  //   options: [
-  //     { id: "a", text: "People may watch more during free days" },
-  //     { id: "b", text: "The video title changed automatically" },
-  //     { id: "c", text: "The video got older" },
-  //     { id: "d", text: "The color tone changed" },
-  //   ],
-  // },
-  // {
-  //   id: "33",
-  //   question:
-  //     "You need to explain a difficult idea to a friend. What do you do?",
-  //   options: [
-  //     { id: "a", text: "Use a simple story or example to make it clear" },
-  //     { id: "b", text: "Repeat the same definition again" },
-  //     { id: "c", text: "Tell them to search online" },
-  //     { id: "d", text: "Give a long explanation with big words" },
-  //   ],
-  // },
-  // {
-  //   id: "34",
-  //   question:
-  //     "You have two objects that don't seem related. How do you understand their connection?",
-  //   options: [
-  //     {
-  //       id: "a",
-  //       text: "Think of a creative purpose they could serve together",
-  //     },
-  //     { id: "b", text: "Compare their size and shape only" },
-  //     { id: "c", text: "Keep them separate—they're unrelated" },
-  //     { id: "d", text: "Ask someone else what they think" },
-  //   ],
-  // },
-  // {
-  //   id: "35",
-  //   question:
-  //     "You see clouds moving in a strange pattern. What is your first thought?",
-  //   options: [
-  //     { id: "a", text: "There might be a larger weather change behind it" },
-  //     { id: "b", text: "Clouds move… that's normal" },
-  //     { id: "c", text: "Maybe it's just windy today" },
-  //     { id: "d", text: "Check if someone else noticed it" },
-  //   ],
-  // },
-  // {
-  //   id: "36",
-  //   question:
-  //     "You hear that a new rule is introduced at school/office. What do you try to understand?",
-  //   options: [
-  //     { id: "a", text: "The bigger purpose behind the rule" },
-  //     { id: "b", text: "Only what the rule says" },
-  //     { id: "c", text: "Why rules keep changing" },
-  //     { id: "d", text: "Ignore it and continue as usual" },
-  //   ],
-  // },
-  // {
-  //   id: "37",
-  //   question:
-  //     "You must reach a place but your usual route is blocked. What do you do?",
-  //   options: [
-  //     { id: "a", text: "Try a different route based on what you know" },
-  //     { id: "b", text: "Wait until the block clears" },
-  //     { id: "c", text: "Call someone to ask for directions" },
-  //     { id: "d", text: "Try only the second-most common route" },
-  //   ],
-  // },
-  // {
-  //   id: "38",
-  //   question:
-  //     "You are given a task but the usual method isn't working. What is your approach?",
-  //   options: [
-  //     { id: "a", text: "Try a new approach and see if it works better" },
-  //     { id: "b", text: "Repeat the old method again" },
-  //     { id: "c", text: "Stop the task for now" },
-  //     { id: "d", text: "Ask someone else to do it for you" },
-  //   ],
-  // },
-  // {
-  //   id: "39",
-  //   question:
-  //     "You are filling out a form and notice two spellings of your name in different places. What will you do?",
-  //   options: [
-  //     { id: "a", text: "Correct the wrong one before submitting" },
-  //     { id: "b", text: "Submit it and fix later" },
-  //     { id: "c", text: 'Leave it because it\'s "almost correct"' },
-  //     { id: "d", text: "Ignore it completely" },
-  //   ],
-  // },
-  // {
-  //   id: "40",
-  //   question:
-  //     'Your friend gives you a list of items to buy: "Milk, Bread, Milk, Eggs." What do you do?',
-  //   options: [
-  //     { id: "a", text: 'Check if "Milk" was repeated by mistake' },
-  //     { id: "b", text: "Buy everything as written" },
-  //     { id: "c", text: "Ask someone else what to do" },
-  //     { id: "d", text: "Buy only one item you remember" },
-  //   ],
-  // },
-  // {
-  //   id: "41",
-  //   question:
-  //     "You plug your phone into a charger and hear a spark sound. What is the safest action?",
-  //   options: [
-  //     { id: "a", text: "Stop using the charger and check what caused it" },
-  //     { id: "b", text: "Continue charging because it works" },
-  //     { id: "c", text: "Use the same charger again later" },
-  //     { id: "d", text: "Ignore it completely" },
-  //   ],
-  // },
-  // {
-  //   id: "42",
-  //   question:
-  //     "Your younger sibling is trying to use scissors too close to their face. What do you do?",
-  //   options: [
-  //     { id: "a", text: "Stop them and explain why it's risky" },
-  //     { id: "b", text: 'Tell them to "be careful" and continue' },
-  //     { id: "c", text: "Watch from far and hope they don't get hurt" },
-  //     { id: "d", text: "Ignore it" },
-  //   ],
-  // },
-  // {
-  //   id: "43",
-  //   question:
-  //     "Your teacher gives a class rule: submit homework before 8 PM. What will you do?",
-  //   options: [
-  //     { id: "a", text: "Always submit before 8 PM, even on busy days" },
-  //     { id: "b", text: "Submit on time sometimes" },
-  //     { id: "c", text: "Submit only when convenient" },
-  //     { id: "d", text: "Ignore the rule" },
-  //   ],
-  // },
-  // {
-  //   id: "44",
-  //   question:
-  //     "You are arranging books on a shelf. What method will you follow?",
-  //   options: [
-  //     {
-  //       id: "a",
-  //       text: "Arrange them by size or category and follow the same pattern",
-  //     },
-  //     { id: "b", text: "Arrange randomly but neatly" },
-  //     { id: "c", text: "Keep only your favourite books in order" },
-  //     { id: "d", text: "Put them however they fall" },
-  //   ],
-  // },
-  // {
-  //   id: "45",
-  //   question:
-  //     "Your friend tries a new app but gets confused while using it. What do you do first?",
-  //   options: [
-  //     { id: "a", text: "Ask them which part felt confusing" },
-  //     { id: "b", text: "Tell them to explore more" },
-  //     { id: "c", text: "Assume they didn't pay attention" },
-  //     { id: "d", text: "Show how you use it without asking their issue" },
-  //   ],
-  // },
-  // {
-  //   id: "46",
-  //   question:
-  //     "An elderly person finds it difficult to read text on a phone. What is the most helpful first step?",
-  //   options: [
-  //     { id: "a", text: "Increase the text size for them" },
-  //     { id: "b", text: "Hand them your phone instead" },
-  //     { id: "c", text: 'Say "You\'ll get used to it"' },
-  //     { id: "d", text: "Change the wallpaper first" },
-  //   ],
-  // },
-  // {
-  //   id: "47",
-  //   question:
-  //     "You notice two shops: one crowded and one empty. What will you check first?",
-  //   options: [
-  //     { id: "a", text: "How neatly things are arranged inside" },
-  //     { id: "b", text: "The colours of the signboard" },
-  //     { id: "c", text: "The size of the shop" },
-  //     { id: "d", text: "Which shop is closer to you" },
-  //   ],
-  // },
-  // {
-  //   id: "48",
-  //   question:
-  //     'Your friend says a website "feels messy." What would you look at to understand why?',
-  //   options: [
-  //     { id: "a", text: "The spacing and arrangement of items" },
-  //     { id: "b", text: "The brand logo only" },
-  //     { id: "c", text: "Just the background colour" },
-  //     { id: "d", text: "How long the page is" },
-  //   ],
-  // },
-  // {
-  //   id: "49",
-  //   question:
-  //     "Someone keeps pressing the wrong button on a remote. What is the best first thought?",
-  //   options: [
-  //     { id: "a", text: "The buttons might be too similar or close" },
-  //     { id: "b", text: "They are careless" },
-  //     { id: "c", text: "The remote battery is low" },
-  //     { id: "d", text: "They need more practice" },
-  //   ],
-  // },
-  // {
-  //   id: "50",
-  //   question:
-  //     "A visitor tries to open a door by pulling, but it needs to be pushed. What makes the most sense?",
-  //   options: [
-  //     { id: "a", text: "The handle design is sending the wrong signal" },
-  //     { id: "b", text: "The person didn't look properly" },
-  //     { id: "c", text: "The door is old" },
-  //     { id: "d", text: "They rushed too much" },
-  //   ],
-  // },
-  // {
-  //   id: "51",
-  //   question:
-  //     "You open your refrigerator and notice one item looks slightly different from yesterday. What do you do first?",
-  //   options: [
-  //     { id: "a", text: "Check what changed and why" },
-  //     { id: "b", text: "Ask someone else if they noticed it" },
-  //     { id: "c", text: "Ignore it because everything still works" },
-  //     { id: "d", text: "Close the fridge and deal with it later" },
-  //   ],
-  // },
-  // {
-  //   id: "52",
-  //   question:
-  //     "Your water bottle leaks a few drops only when you keep it sideways. What seems the best step?",
-  //   options: [
-  //     { id: "a", text: "Inspect where the water is coming from" },
-  //     { id: "b", text: "Wipe it and move on" },
-  //     { id: "c", text: "Buy a new bottle immediately" },
-  //     { id: "d", text: "Ask someone to check the cap" },
-  //   ],
-  // },
-  // {
-  //   id: "53",
-  //   question:
-  //     "You receive a remote with several buttons. How will you check if it works properly?",
-  //   options: [
-  //     { id: "a", text: "Test each button one by one" },
-  //     { id: "b", text: "Press only the main button and assume the rest work" },
-  //     { id: "c", text: "Shake it to see if it turns on" },
-  //     { id: "d", text: "Ask someone else to try it" },
-  //   ],
-  // },
-  // {
-  //   id: "54",
-  //   question:
-  //     "Your lamp sometimes flickers when switched on. What will you do?",
-  //   options: [
-  //     { id: "a", text: "Try the lamp with a different socket to compare" },
-  //     { id: "b", text: "Hit the lamp gently to see if it works" },
-  //     { id: "c", text: "Switch it on and off a few times randomly" },
-  //     { id: "d", text: "Call an electrician immediately" },
-  //   ],
-  // },
-  // {
-  //   id: "55",
-  //   question:
-  //     "You need to prepare tea for 5 people. What is the best way to ensure it comes out the same every time?",
-  //   options: [
-  //     {
-  //       id: "a",
-  //       text: "Follow the same order and same amount of ingredients each time",
-  //     },
-  //     { id: "b", text: "Add ingredients based on mood" },
-  //     { id: "c", text: "Taste and adjust during every step" },
-  //     { id: "d", text: "Ask someone else to guide each time" },
-  //   ],
-  // },
-  // {
-  //   id: "56",
-  //   question:
-  //     "You have to check 20 notebooks for signatures. How will you complete the task?",
-  //   options: [
-  //     {
-  //       id: "a",
-  //       text: "Check them one by one in the same order to avoid missing any",
-  //     },
-  //     { id: "b", text: "Randomly pick notebooks and check signatures" },
-  //     { id: "c", text: "Check a few now and a few later with no sequence" },
-  //     { id: "d", text: "Ask someone to confirm while you check" },
-  //   ],
-  // },
-  // {
-  //   id: "57",
-  //   question:
-  //     "You and your friends need to complete a group poster, but everyone is doing different parts randomly. What will you do first?",
-  //   options: [
-  //     { id: "a", text: "Decide who will do which part before starting" },
-  //     { id: "b", text: "Let everyone continue and see what happens" },
-  //     { id: "c", text: "Finish your own part only" },
-  //     { id: "d", text: "Ask someone else to take charge" },
-  //   ],
-  // },
-  // {
-  //   id: "58",
-  //   question:
-  //     "Your family is preparing for a small event, and tasks are getting mixed up. What seems most useful?",
-  //   options: [
-  //     { id: "a", text: "List tasks and assign who will handle each" },
-  //     { id: "b", text: "Wait and see who starts doing what" },
-  //     { id: "c", text: "Do everything yourself" },
-  //     { id: "d", text: "Ignore the confusion" },
-  //   ],
-  // },
-  // {
-  //   id: "59",
-  //   question:
-  //     "You have to travel tomorrow morning. What is the best way to prepare?",
-  //   options: [
-  //     {
-  //       id: "a",
-  //       text: "Pack your things and plan your route the night before",
-  //     },
-  //     { id: "b", text: "Pack only when leaving" },
-  //     { id: "c", text: "Pack partially and hope nothing is forgotten" },
-  //     { id: "d", text: "Ask others what you should pack" },
-  //   ],
-  // },
-  // {
-  //   id: "60",
-  //   question:
-  //     "You want to study three chapters, but time is limited. What will you do?",
-  //   options: [
-  //     {
-  //       id: "a",
-  //       text: "Plan which chapter to do first and how much time to spend",
-  //     },
-  //     { id: "b", text: "Start with whichever chapter you see first" },
-  //     { id: "c", text: "Try to do all chapters at once" },
-  //     { id: "d", text: "Leave it for later" },
-  //   ],
-  // },
-  // {
-  //   id: "61",
-  //   question:
-  //     "You have to do laundry, finish homework, and meet a friend. What will you do first?",
-  //   options: [
-  //     { id: "a", text: "Do the most important or urgent task first" },
-  //     { id: "b", text: "Do all tasks without order" },
-  //     { id: "c", text: "Do the easiest task first" },
-  //     { id: "d", text: "Skip one task completely" },
-  //   ],
-  // },
-  // {
-  //   id: "62",
-  //   question:
-  //     "You receive many WhatsApp messages at once. How will you respond?",
-  //   options: [
-  //     { id: "a", text: "Reply to the most important conversation first" },
-  //     { id: "b", text: "Reply in the order messages arrived" },
-  //     { id: "c", text: "Reply to who you like the most" },
-  //     { id: "d", text: "Ignore all messages" },
-  //   ],
-  // },
   {
     id: "63",
     question: 'Which option best describes what a "loop" does in programming?',
@@ -750,68 +173,13 @@ const careerQuestions: MCQQuestion[] = [
       { id: "c", text: "It changes the color of the text" },
       { id: "d", text: "It is only used for decoration" },
     ],
-  },
-  {
-    id: "68",
-    question:
-      "You want to repeat an action exactly 10 times. What should you use?",
-    options: [
-      { id: "a", text: "A loop with a fixed count" },
-      { id: "b", text: "A variable with a random value" },
-      { id: "c", text: "An if-condition that never changes" },
-      { id: "d", text: "A function that calls itself repeatedly" },
-    ],
-  },
-  {
-    id: "69",
-    question: 'What is the purpose of a "function" in programming?',
-    options: [
-      {
-        id: "a",
-        text: "To group related steps together so you can reuse them",
-      },
-      { id: "b", text: "To store pictures" },
-      { id: "c", text: "To show error messages" },
-      { id: "d", text: "To make the code look longer" },
-    ],
-  },
-  {
-    id: "70",
-    question: 'When writing code, what does "commenting" help with?',
-    options: [
-      { id: "a", text: "Understanding what the code is doing later" },
-      { id: "b", text: "Running the program faster" },
-      { id: "c", text: "Hiding errors in the program" },
-      { id: "d", text: "Showing text on the screen" },
-    ],
-  },
-  {
-    id: "71",
-    question:
-      "Your program runs but gives the wrong answer. What should you check?",
-    options: [
-      { id: "a", text: "Whether your logic and steps are correct" },
-      { id: "b", text: "If your computer has enough storage" },
-      { id: "c", text: "If your keyboard is new" },
-      { id: "d", text: "The background color of your editor" },
-    ],
-  },
-  {
-    id: "72",
-    question: "What is the purpose of testing your code frequently?",
-    options: [
-      { id: "a", text: "To catch mistakes early and fix them easily" },
-      { id: "b", text: "To make the code colorful" },
-      { id: "c", text: "To confuse hackers" },
-      { id: "d", text: "To make the file size smaller" },
-    ],
-  },
+  }
 ];
 
 const questionSets = [
-  { id: 1, title: "Level 1: Psychometric", start: 0, end: 10 },
-  { id: 2, title: "Level 2: Mixed", start: 10, end: 20 },
-  { id: 3, title: "Level 3: Technical", start: 20, end: 30 },
+  { id: 1, title: "Level 1: Psychometric", start: 0, end: 5 },
+  { id: 2, title: "Level 2: Mixed", start: 5, end: 10 },
+  { id: 3, title: "Level 3: Technical", start: 10, end: 15 },
 ];
 
 export function CareerCompass() {
@@ -870,8 +238,8 @@ export function CareerCompass() {
     if (currentQuestionRef.current && scrollContainerRef.current) {
       setTimeout(() => {
         currentQuestionRef.current?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center'
+          behavior: "smooth",
+          block: "center",
         });
       }, 100);
     }
@@ -880,6 +248,7 @@ export function CareerCompass() {
   const scrollToSet = (setId: number) => {
     const set = questionSets.find((s) => s.id === setId);
     if (set && questionRefs.current[set.start]) {
+      setActiveSet(setId);
       questionRefs.current[set.start]?.scrollIntoView({
         behavior: "smooth",
         block: "start",
@@ -889,8 +258,8 @@ export function CareerCompass() {
 
   const getSetCompletedCount = (setStart: number, setEnd: number) => {
     let count = 0;
-    for (let i = setStart; i < setEnd; i++) {
-      if (userAnswers[careerQuestions[i].id]) count++;
+    for (let i = setStart; i < setEnd && i < careerQuestions.length; i++) {
+      if (userAnswers[careerQuestions[i]?.id]) count++;
     }
     return count;
   };
@@ -1056,14 +425,14 @@ export function CareerCompass() {
                       find the career that actually fits you.”
                     </p>
                   </div>
-                    {!showAssessment && (
-                      <button
-                        onClick={() => setShowAssessment(true)}
-                        className="px-4 py-2 mt-16 rounded-lg border border-[#00BF53] text-[#00BF53] mx-auto flex hover:bg-[#00BF53]/[0.1] transition-colors"
-                      >
-                        Start Career Assessment
-                      </button>
-                    )}
+                  {!showAssessment && (
+                    <button
+                      onClick={() => setShowAssessment(true)}
+                      className="px-4 py-2 mt-16 rounded-lg border border-[#00BF53] text-[#00BF53] mx-auto flex hover:bg-[#00BF53]/[0.1] transition-colors"
+                    >
+                      Start Career Assessment
+                    </button>
+                  )}
                 </div>
               </div>
               {showAssessment && (
@@ -1077,65 +446,99 @@ export function CareerCompass() {
                         </p>
 
                         <div className="space-y-8">
-                          {careerQuestions.slice(0, currentQuestionIndex + 1).map((question, globalIndex) => {
-                            const set = questionSets.find(s => globalIndex >= s.start && globalIndex < s.end);
-                            const showSetTitle = set && (globalIndex === set.start || globalIndex === 0);
-                            
-                            return (
-                              <div key={question.id}>
-                                {showSetTitle && (
-                                  <h2 className="text-xl font-semibold text-gray-900 bg-white py-2 z-10 mb-6">
-                                    {set.title}
-                                  </h2>
-                                )}
-                                <div
-                                  ref={globalIndex === currentQuestionIndex ? currentQuestionRef : null}
-                                  className={`border-l-4 border-[#00BF53]/[0.1] pl-4 transition-all duration-500 ${
-                                    globalIndex === currentQuestionIndex
-                                      ? 'animate-slideIn opacity-100'
-                                      : 'opacity-60'
-                                  }`}
-                                  style={{
-                                    animation: globalIndex === currentQuestionIndex ? 'slideIn 0.5s ease-out' : 'none'
-                                  }}
-                                >
-                                  <h3 className="font-medium text-gray-800 mb-3">
-                                    {globalIndex + 1}. {question.question}
-                                  </h3>
-                                  <div className="space-y-2">
-                                    {question.options.map((option) => (
-                                      <label
-                                        key={option.id}
-                                        className="flex items-center space-x-3 cursor-pointer"
-                                      >
-                                        <input
-                                          type="radio"
-                                          name={question.id}
-                                          value={option.text}
-                                          checked={userAnswers[question.id] === option.text}
-                                          onChange={() => handleAnswerSelect(question.id, option.text)}
-                                          className="text-blue-500"
-                                          disabled={globalIndex !== currentQuestionIndex && !userAnswers[question.id]}
-                                        />
-                                        <span className="text-gray-700">
-                                          {option.text}
-                                        </span>
-                                      </label>
-                                    ))}
+                          {careerQuestions
+                            .slice(0, currentQuestionIndex + 1)
+                            .map((question, globalIndex) => {
+                              const set = questionSets.find(
+                                (s) =>
+                                  globalIndex >= s.start && globalIndex < s.end
+                              );
+                              const showSetTitle =
+                                set &&
+                                (globalIndex === set.start ||
+                                  globalIndex === 0);
+
+                              return (
+                                <div key={question.id}>
+                                  {showSetTitle && (
+                                    <h2 className="text-xl font-semibold text-gray-900 bg-white py-2 z-10 mb-6">
+                                      {set.title}
+                                    </h2>
+                                  )}
+                                  <div
+                                    ref={(el) => {
+                                      questionRefs.current[globalIndex] = el;
+                                      if (
+                                        globalIndex === currentQuestionIndex
+                                      ) {
+                                        currentQuestionRef.current = el;
+                                      }
+                                    }}
+                                    className={`border-l-4 border-[#00BF53]/[0.1] pl-4 transition-all duration-500 ${
+                                      globalIndex === currentQuestionIndex
+                                        ? "animate-slideIn opacity-100"
+                                        : "opacity-60"
+                                    }`}
+                                    style={{
+                                      animation:
+                                        globalIndex === currentQuestionIndex
+                                          ? "slideIn 0.5s ease-out"
+                                          : "none",
+                                    }}
+                                  >
+                                    <h3 className="font-medium text-gray-800 mb-3">
+                                      {globalIndex + 1}. {question.question}
+                                    </h3>
+                                    <div className="space-y-2">
+                                      {question.options.map((option) => (
+                                        <label
+                                          key={option.id}
+                                          className="flex items-center space-x-3 cursor-pointer"
+                                        >
+                                          <input
+                                            type="radio"
+                                            name={question.id}
+                                            value={option.text}
+                                            checked={
+                                              userAnswers[question.id] ===
+                                              option.text
+                                            }
+                                            onChange={() =>
+                                              handleAnswerSelect(
+                                                question.id,
+                                                option.text
+                                              )
+                                            }
+                                            className="text-blue-500"
+                                            disabled={
+                                              globalIndex !==
+                                                currentQuestionIndex &&
+                                              !userAnswers[question.id]
+                                            }
+                                          />
+                                          <span className="text-gray-700">
+                                            {option.text}
+                                          </span>
+                                        </label>
+                                      ))}
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            );
-                          })}
+                              );
+                            })}
                         </div>
-                        {!showResults && currentQuestionIndex === careerQuestions.length - 1 && userAnswers[careerQuestions[currentQuestionIndex].id] && (
-                          <button
-                            onClick={submitAssessment}
-                            className="mt-6 border border-[#00BF53] text-[#00BF53] hover:bg-[#00BF53]/[0.1] px-6 py-2 rounded-lg transition-colors animate-slideIn"
-                          >
-                            Submit
-                          </button>
-                        )}
+                        {!showResults &&
+                          currentQuestionIndex === careerQuestions.length - 1 &&
+                          userAnswers[
+                            careerQuestions[currentQuestionIndex].id
+                          ] && (
+                            <button
+                              onClick={submitAssessment}
+                              className="mt-6 border border-[#00BF53] text-[#00BF53] hover:bg-[#00BF53]/[0.1] px-6 py-2 rounded-lg transition-colors animate-slideIn"
+                            >
+                              Submit
+                            </button>
+                          )}
                       </div>
                     </div>
                   </div>
@@ -1209,17 +612,24 @@ export function CareerCompass() {
                       <button
                         key={set.id}
                         onClick={() => scrollToSet(set.id)}
-                        className={`w-full border-l-2 text-left px-2 transition-all ${
-                          isActive ? "border-[#00BF53]" : ""
+                        className={`w-full border-l-2 text-left px-2 py-1 transition-all ${
+                          isActive ? "border-[#00BF53]" : "border-transparent"
                         }`}
                       >
-                        <div className="flex items-center justify-between">
+                        <div className="flex">
                           <span
                             className={`text-sm font-medium ${
                               isActive ? "text-[#00BF53]" : "text-gray-700"
                             }`}
                           >
                             {set.title}
+                          </span>
+                          <span
+                            className={`text-xs ml-2 self-center ${
+                              isActive ? "text-[#00BF53]" : "text-gray-500"
+                            }`}
+                          >
+                            {completed}/{total}
                           </span>
                         </div>
                       </button>
@@ -1233,7 +643,11 @@ export function CareerCompass() {
       </div>
 
       <div className="bg-white">
-        <div className={` ${showAssessment ? "max-w-5xl" : "max-w-3xl" } mx-auto pb-6`}>
+        <div
+          className={` ${
+            showAssessment ? "max-w-5xl" : "max-w-3xl"
+          } mx-auto pb-6`}
+        >
           <form
             onSubmit={(e) => {
               e.preventDefault();
