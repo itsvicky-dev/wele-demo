@@ -18,6 +18,21 @@
       transform: translateY(0);
     }
   }
+
+  .animate-slideIn {
+    animation: slideIn 0.5s ease-out forwards;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
 }
 
 * {
@@ -46,35 +61,42 @@
 
 /* Hide default radio appearance */
 input[type="radio"] {
-    appearance: none;
-    -webkit-appearance: none;
-    background-color: #fff;
-    width: 14px;
-    height: 14px;
-    border: 1px solid #e8e8e8; /* Border color */
-    border-radius: 50%;
-    cursor: pointer;
-    position: relative;
-    outline: none;
-    transition: 0.2s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: #fff;
+  width: 14px;
+  height: 14px;
+  border: 1px solid #e8e8e8; /* Border color */
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  outline: none;
+  transition: 0.2s ease;
 }
 
 /* Selected/Active State */
 input[type="radio"]:checked {
-    border-color: #00BF53;
-    background-color: #00BF53;
+  border-color: #00bf53;
+  background-color: #00bf53;
 }
 
 /* Optional: inner dot style if you want a custom look */
 input[type="radio"]:checked::after {
-    content: "";
-    width: 6px;
-    height: 6px;
-    background: #fff;
-    border-radius: 50%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
+.scrollbar-hide {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none !important;
+}

@@ -1,5 +1,5 @@
 import { MoreHorizontal, Send } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface MCQOption {
   id: string;
@@ -808,6 +808,12 @@ const careerQuestions: MCQQuestion[] = [
   },
 ];
 
+const questionSets = [
+  { id: 1, title: "Level 1: Psychometric", start: 0, end: 10 },
+  { id: 2, title: "Level 2: Mixed", start: 10, end: 20 },
+  { id: 3, title: "Level 3: Technical", start: 20, end: 30 },
+];
+
 export function CareerCompass() {
   const [showAssessment, setShowAssessment] = useState(false);
   const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
@@ -819,9 +825,74 @@ export function CareerCompass() {
     Array<{ role: "user" | "assistant"; content: string }>
   >([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [activeSet, setActiveSet] = useState(1);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const questionRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const currentQuestionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!showAssessment) return;
+
+    const handleScroll = () => {
+      const container = scrollContainerRef.current;
+      if (!container) return;
+
+      const scrollPosition = container.scrollTop + 200;
+
+      for (let i = questionSets.length - 1; i >= 0; i--) {
+        const set = questionSets[i];
+        const firstQuestionRef = questionRefs.current[set.start];
+        if (firstQuestionRef && firstQuestionRef.offsetTop <= scrollPosition) {
+          setActiveSet(set.id);
+          break;
+        }
+      }
+    };
+
+    const container = scrollContainerRef.current;
+    if (container) {
+      container.addEventListener("scroll", handleScroll);
+      return () => container.removeEventListener("scroll", handleScroll);
+    }
+  }, [showAssessment]);
 
   const handleAnswerSelect = (questionId: string, optionText: string) => {
     setUserAnswers((prev) => ({ ...prev, [questionId]: optionText }));
+    if (currentQuestionIndex < careerQuestions.length - 1) {
+      setTimeout(() => {
+        setCurrentQuestionIndex(currentQuestionIndex + 1);
+      }, 300);
+    }
+  };
+
+  useEffect(() => {
+    if (currentQuestionRef.current && scrollContainerRef.current) {
+      setTimeout(() => {
+        currentQuestionRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+      }, 100);
+    }
+  }, [currentQuestionIndex]);
+
+  const scrollToSet = (setId: number) => {
+    const set = questionSets.find((s) => s.id === setId);
+    if (set && questionRefs.current[set.start]) {
+      questionRefs.current[set.start]?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  };
+
+  const getSetCompletedCount = (setStart: number, setEnd: number) => {
+    let count = 0;
+    for (let i = setStart; i < setEnd; i++) {
+      if (userAnswers[careerQuestions[i].id]) count++;
+    }
+    return count;
   };
 
   const submitAssessment = () => {
@@ -931,177 +1002,238 @@ export function CareerCompass() {
           </div>
         </div>
       </div>
-      <div className="flex-1 overflow-y-auto bg-white">
-        <div className="max-w-3xl mx-auto p-6">
-          {isLoading && (
-            <div className="flex items-start space-x-3 mb-6">
-              <div className="flex-1">
-                <div className="flex space-x-1">
-                  <div
-                    className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
-                    style={{ animationDelay: "0ms" }}
-                  ></div>
-                  <div
-                    className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
-                    style={{ animationDelay: "150ms" }}
-                  ></div>
-                  <div
-                    className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
-                    style={{ animationDelay: "300ms" }}
-                  ></div>
-                </div>
-              </div>
-            </div>
-          )}
-          <div className="">
-            <div className="flex items-start space-x-3">
-              <div className="flex flex-col items-start space-y-6">
-                <p className="text-gray-800 mb-4">
-                  Awesome! You’re just about to kick-start your Career Compass
-                  journey. In this quick mission, we’ll understand who you are,
-                  how you think, and what career path suits you the best.
-                </p>
-                <p className="text-gray-800 mb-4">
-                  <b>Level 1:</b> will have simple psychometric questions to
-                  understand your mindset, behaviour, and decision style.
-                </p>
-                <p className="text-gray-800 mb-4">
-                  <b>Level 2:</b> mixes psychometric + basic technical questions
-                  to see how you connect logic with skills.
-                </p>
-                <p className="text-gray-800 mb-4">
-                  <b>Level 3:</b> dives into pure technical questions to
-                  validate your real-world understanding. Ready ah? Let’s find
-                  the career that actually fits you.”
-                </p>
-                {!showAssessment && (
-                  <button
-                    onClick={() => setShowAssessment(true)}
-                    className="px-4 py-2 rounded-lg border border-[#00BF53] text-[#00BF53] mx-auto flex hover:bg-[#00BF53]/[0.1] transition-colors"
-                  >
-                    Start Career Assessment
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-          {showAssessment && (
-            <div className="space-y-6">
-              <div className="bg-white rounded-lg py-6">
-                <div className="flex items-start space-x-3">
+      <div className="flex-1 flex overflow-hidden">
+        <div
+          ref={scrollContainerRef}
+          className={`flex-1 overflow-y-auto bg-white transition-all duration-300`}
+        >
+          <div
+            className={`${
+              showAssessment ? "max-w-5xl" : "max-w-3xl"
+            } mx-auto py-6 flex`}
+          >
+            <div className="">
+              {isLoading && (
+                <div className="flex items-start space-x-3 mb-6">
                   <div className="flex-1">
-                    <p className="text-gray-800 mb-4">
-                      Please answer all questions to get your personalized
-                      career recommendation:
-                    </p>
-
-                    <div className="space-y-6">
-                      {careerQuestions.map((question, index) => (
-                        <div
-                          key={question.id}
-                          className="border-l-4 border-[#00BF53]/[0.1] pl-4"
-                        >
-                          <h3 className="font-medium text-gray-800 mb-3">
-                            {index + 1}. {question.question}
-                          </h3>
-                          <div className="space-y-2">
-                            {question.options.map((option) => (
-                              <label
-                                key={option.id}
-                                className="flex items-center space-x-3 cursor-pointer"
-                              >
-                                <input
-                                  type="radio"
-                                  name={question.id}
-                                  value={option.text}
-                                  onChange={() =>
-                                    handleAnswerSelect(question.id, option.text)
-                                  }
-                                  className="text-blue-500"
-                                />
-                                <span className="text-gray-700">
-                                  {option.text}
-                                </span>
-                              </label>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
+                    <div className="flex space-x-1">
+                      <div
+                        className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                        style={{ animationDelay: "0ms" }}
+                      ></div>
+                      <div
+                        className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                        style={{ animationDelay: "150ms" }}
+                      ></div>
+                      <div
+                        className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                        style={{ animationDelay: "300ms" }}
+                      ></div>
                     </div>
-                    {!showResults && (
+                  </div>
+                </div>
+              )}
+              <div className="">
+                <div className="flex flex-col items-center space-x-3">
+                  <div className="flex flex-col items-start space-y-3">
+                    <p className="text-gray-800 mb-4">
+                      Awesome! You’re just about to kick-start your Career
+                      Compass journey. In this quick mission, we’ll understand
+                      who you are, how you think, and what career path suits you
+                      the best.
+                    </p>
+                    <p className="text-gray-800">
+                      <b>Level 1:</b> will have simple psychometric questions to
+                      understand your mindset, behaviour, and decision style.
+                    </p>
+                    <p className="text-gray-800">
+                      <b>Level 2:</b> mixes psychometric + basic technical
+                      questions to see how you connect logic with skills.
+                    </p>
+                    <p className="text-gray-800">
+                      <b>Level 3:</b> dives into pure technical questions to
+                      validate your real-world understanding. Ready ah? Let’s
+                      find the career that actually fits you.”
+                    </p>
+                  </div>
+                    {!showAssessment && (
                       <button
-                        onClick={submitAssessment}
-                        disabled={
-                          Object.keys(userAnswers).length !==
-                          careerQuestions.length
-                        }
-                        className="mt-6 border border-[#00BF53] text-[#00BF53] hover:bg-[#00BF53]/[0.1] px-6 py-2 rounded-lg disabled:border-0 disabled:text-gray-400 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                        onClick={() => setShowAssessment(true)}
+                        className="px-4 py-2 mt-16 rounded-lg border border-[#00BF53] text-[#00BF53] mx-auto flex hover:bg-[#00BF53]/[0.1] transition-colors"
                       >
-                        Get My Career Recommendation
+                        Start Career Assessment
                       </button>
                     )}
-                  </div>
                 </div>
               </div>
+              {showAssessment && (
+                <div className="space-y-6">
+                  <div className="bg-white rounded-lg py-6">
+                    <div className="flex items-start space-x-3">
+                      <div className="flex-1">
+                        <p className="text-gray-800 mb-4">
+                          Please answer all questions to get your personalized
+                          career recommendation:
+                        </p>
 
-              {showResults && (
-                <div className="bg-white rounded-lg py-6">
-                  <div className="flex items-start space-x-3">
-                    <div className="flex-1">
-                      <p className="text-gray-800">
-                        {generateRecommendation()}
+                        <div className="space-y-8">
+                          {careerQuestions.slice(0, currentQuestionIndex + 1).map((question, globalIndex) => {
+                            const set = questionSets.find(s => globalIndex >= s.start && globalIndex < s.end);
+                            const showSetTitle = set && (globalIndex === set.start || globalIndex === 0);
+                            
+                            return (
+                              <div key={question.id}>
+                                {showSetTitle && (
+                                  <h2 className="text-xl font-semibold text-gray-900 bg-white py-2 z-10 mb-6">
+                                    {set.title}
+                                  </h2>
+                                )}
+                                <div
+                                  ref={globalIndex === currentQuestionIndex ? currentQuestionRef : null}
+                                  className={`border-l-4 border-[#00BF53]/[0.1] pl-4 transition-all duration-500 ${
+                                    globalIndex === currentQuestionIndex
+                                      ? 'animate-slideIn opacity-100'
+                                      : 'opacity-60'
+                                  }`}
+                                  style={{
+                                    animation: globalIndex === currentQuestionIndex ? 'slideIn 0.5s ease-out' : 'none'
+                                  }}
+                                >
+                                  <h3 className="font-medium text-gray-800 mb-3">
+                                    {globalIndex + 1}. {question.question}
+                                  </h3>
+                                  <div className="space-y-2">
+                                    {question.options.map((option) => (
+                                      <label
+                                        key={option.id}
+                                        className="flex items-center space-x-3 cursor-pointer"
+                                      >
+                                        <input
+                                          type="radio"
+                                          name={question.id}
+                                          value={option.text}
+                                          checked={userAnswers[question.id] === option.text}
+                                          onChange={() => handleAnswerSelect(question.id, option.text)}
+                                          className="text-blue-500"
+                                          disabled={globalIndex !== currentQuestionIndex && !userAnswers[question.id]}
+                                        />
+                                        <span className="text-gray-700">
+                                          {option.text}
+                                        </span>
+                                      </label>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        {!showResults && currentQuestionIndex === careerQuestions.length - 1 && userAnswers[careerQuestions[currentQuestionIndex].id] && (
+                          <button
+                            onClick={submitAssessment}
+                            className="mt-6 border border-[#00BF53] text-[#00BF53] hover:bg-[#00BF53]/[0.1] px-6 py-2 rounded-lg transition-colors animate-slideIn"
+                          >
+                            Submit
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {showResults && (
+                    <div className="bg-white rounded-lg py-6">
+                      <div className="flex items-start space-x-3">
+                        <div className="flex-1">
+                          <p className="text-gray-800">
+                            {generateRecommendation()}
+                          </p>
+                          <button
+                            onClick={() => {
+                              setShowAssessment(false);
+                              setUserAnswers({});
+                              setShowResults(false);
+                              setAssessmentTerminated(false);
+                              setCurrentQuestionIndex(0);
+                            }}
+                            className="mt-4 border border-black px-4 py-2 hover:border-[#00BF53] hover:text-[#00BF53] rounded-lg transition-colors"
+                          >
+                            Take Assessment Again
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {assessmentTerminated && (
+                    <div className="rounded-lg my-4">
+                      <p className="text-yellow-800 text-sm">
+                        ⚠️ Assessment terminated. You can now chat normally.
                       </p>
+                    </div>
+                  )}
+                </div>
+              )}
+              {chatMessages.map((message, index) => (
+                <div key={index} className="mb-6">
+                  {message.role === "assistant" ? (
+                    <div className="flex items-start space-x-3">
+                      <div className="flex-1 space-y-2">
+                        <div className="prose max-w-none">
+                          <p className="text-gray-800 leading-relaxed whitespace-pre-wrap">
+                            {message.content}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-right mb-4">
+                      <div className="inline-block bg-gray-100 text-gray-800 px-4 py-3 rounded-2xl rounded-tr-md max-w-[80%]">
+                        <p className="whitespace-pre-wrap">{message.content}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* SIDE TITLE NAVIGATION */}
+            {showAssessment && !showResults && (
+              <div className="min-w-16 bg-white ml-4 self-start sticky top-[25px]">
+                <div className="space-y-3">
+                  {questionSets.map((set) => {
+                    const completed = getSetCompletedCount(set.start, set.end);
+                    const total = set.end - set.start;
+                    const isActive = activeSet === set.id;
+
+                    return (
                       <button
-                        onClick={() => {
-                          setShowAssessment(false);
-                          setUserAnswers({});
-                          setShowResults(false);
-                          setAssessmentTerminated(false);
-                        }}
-                        className="mt-4 border border-black px-4 py-2 hover:border-[#00BF53] hover:text-[#00BF53] rounded-lg transition-colors"
+                        key={set.id}
+                        onClick={() => scrollToSet(set.id)}
+                        className={`w-full border-l-2 text-left px-2 transition-all ${
+                          isActive ? "border-[#00BF53]" : ""
+                        }`}
                       >
-                        Take Assessment Again
+                        <div className="flex items-center justify-between">
+                          <span
+                            className={`text-sm font-medium ${
+                              isActive ? "text-[#00BF53]" : "text-gray-700"
+                            }`}
+                          >
+                            {set.title}
+                          </span>
+                        </div>
                       </button>
-                    </div>
-                  </div>
+                    );
+                  })}
                 </div>
-              )}
-
-              {assessmentTerminated && (
-                <div className="rounded-lg my-4">
-                  <p className="text-yellow-800 text-sm">
-                    ⚠️ Assessment terminated. You can now chat normally.
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
-          {chatMessages.map((message, index) => (
-            <div key={index} className="mb-6">
-              {message.role === "assistant" ? (
-                <div className="flex items-start space-x-3">
-                  <div className="flex-1 space-y-2">
-                    <div className="prose max-w-none">
-                      <p className="text-gray-800 leading-relaxed whitespace-pre-wrap">
-                        {message.content}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="text-right mb-4">
-                  <div className="inline-block bg-gray-100 text-gray-800 px-4 py-3 rounded-2xl rounded-tr-md max-w-[80%]">
-                    <p className="whitespace-pre-wrap">{message.content}</p>
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
       <div className="bg-white">
-        <div className="max-w-3xl mx-auto py-6">
+        <div className={` ${showAssessment ? "max-w-5xl" : "max-w-3xl" } mx-auto pb-6`}>
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -1109,7 +1241,7 @@ export function CareerCompass() {
             }}
             className="relative"
           >
-            <div className="flex items-end space-x-3 border border-gray-300 rounded-full p-3">
+            <div className="flex items-end space-x-3 border border-gray-300 rounded-full p-3 max-w-3xl">
               <textarea
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
@@ -1142,7 +1274,7 @@ export function CareerCompass() {
             <div className="p-6">
               <div className="flex items-center space-x-3 mb-4">
                 <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
-                  <span className="text-2xl">⚠️</span>
+                  <span className="text-3xl text-yellow-500 font-bold">!</span>
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900">Warning</h3>
               </div>
