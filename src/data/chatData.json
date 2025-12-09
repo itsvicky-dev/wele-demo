@@ -1,0 +1,102 @@
+{
+  "1": {
+    "id": "1",
+    "title": "What is Supabase",
+    "messages": [
+      {
+        "id": "m1",
+        "conversation_id": "1",
+        "role": "user",
+        "content": "what is supabase is that free",
+        "created_at": "2024-12-08T12:00:00Z"
+      },
+      {
+        "id": "m2",
+        "conversation_id": "1",
+        "role": "assistant",
+        "content": "Here's a quick overview of what Supabase is — and whether it's free or not.\n\n✅ **What is Supabase**\n\n• Supabase is an **open-source backend-as-a-service (BaaS) platform**.\n• It gives you a ready-to-use backend for your app: a full **PostgreSQL database, authentication** (user sign-ups / sign-ins), **file storage, real-time updates/subscriptions, APIs**, and even **serverless edge functions** — so you don't have to build or manage your own servers.\n• This makes Supabase a popular alternative to managed backends like Firebase — especially for developers who prefer SQL/PostgreSQL and want more control/open-source tooling.\n\n🔍 **Is Supabase Free?**\n\nYes — Supabase offers a **free tier** which many developers use to start projects, build",
+        "created_at": "2024-12-08T12:01:00Z"
+      }
+    ]
+  },
+  "2": {
+    "id": "2",
+    "title": "Correct prompt generation",
+    "messages": [
+      {
+        "id": "m3",
+        "conversation_id": "2",
+        "role": "user",
+        "content": "How to write effective prompts for AI models?",
+        "created_at": "2024-12-07T15:30:00Z"
+      },
+      {
+        "id": "m4",
+        "conversation_id": "2",
+        "role": "assistant",
+        "content": "Here are key principles for writing effective AI prompts:\n\n**Be Specific and Clear**\n• Provide clear context and specific instructions\n• Use concrete examples when possible\n• Avoid ambiguous language\n\n**Structure Your Prompts**\n• Break complex tasks into steps\n• Use formatting like bullet points or numbers\n• Specify the desired output format\n\n**Provide Context**\n• Include relevant background information\n• Specify your role or perspective\n• Mention any constraints or requirements\n\n**Iterate and Refine**\n• Test different phrasings\n• Add examples of good/bad outputs\n• Refine based on results\n\nWould you like me to help you craft a specific prompt?",
+        "created_at": "2024-12-07T15:31:00Z"
+      }
+    ]
+  },
+  "3": {
+    "id": "3",
+    "title": "Configuring MUI fields",
+    "messages": [
+      {
+        "id": "m5",
+        "conversation_id": "3",
+        "role": "user",
+        "content": "How do I configure Material-UI form fields with validation?",
+        "created_at": "2024-12-06T10:15:00Z"
+      },
+      {
+        "id": "m6",
+        "conversation_id": "3",
+        "role": "assistant",
+        "content": "Here's how to configure Material-UI form fields with validation:\n\n**Basic Setup with Formik**\n```jsx\nimport { TextField } from '@mui/material';\nimport { useFormik } from 'formik';\nimport * as Yup from 'yup';\n\nconst validationSchema = Yup.object({\n  email: Yup.string().email('Invalid email').required('Required'),\n  password: Yup.string().min(6, 'Too short').required('Required')\n});\n\nconst MyForm = () => {\n  const formik = useFormik({\n    initialValues: { email: '', password: '' },\n    validationSchema,\n    onSubmit: (values) => console.log(values)\n  });\n\n  return (\n    <form onSubmit={formik.handleSubmit}>\n      <TextField\n        name=\"email\"\n        label=\"Email\"\n        value={formik.values.email}\n        onChange={formik.handleChange}\n        error={formik.touched.email && Boolean(formik.errors.email)}\n        helperText={formik.touched.email && formik.errors.email}\n      />\n    </form>\n  );\n};\n```\n\n**Key Features:**\n• Error states with `error` prop\n• Helper text for validation messages\n• Integration with validation libraries\n• Custom styling options",
+        "created_at": "2024-12-06T10:16:00Z"
+      }
+    ]
+  },
+  "4": {
+    "id": "4",
+    "title": "Figma to React AI tools",
+    "messages": [
+      {
+        "id": "m7",
+        "conversation_id": "4",
+        "role": "user",
+        "content": "What are the best AI tools to convert Figma designs to React code?",
+        "created_at": "2024-12-05T14:20:00Z"
+      },
+      {
+        "id": "m8",
+        "conversation_id": "4",
+        "role": "assistant",
+        "content": "Here are the top AI tools for converting Figma to React:\n\n**🔥 Top Recommendations:**\n\n**1. Figma to Code (Official Plugin)**\n• Built by Figma team\n• Generates clean React/HTML/CSS\n• Free and reliable\n\n**2. Anima**\n• High-quality code generation\n• Supports React, Vue, HTML\n• Responsive design handling\n• Paid but worth it for complex projects\n\n**3. Locofy**\n• AI-powered design to code\n• Supports multiple frameworks\n• Good for production-ready code\n\n**4. Builder.io**\n• Visual development platform\n• Real-time collaboration\n• Component-based approach\n\n**5. TeleportHQ**\n• Open-source option\n• Multiple export formats\n• Good for simple layouts\n\n**Pro Tips:**\n• Always review and refactor generated code\n• Use proper naming conventions in Figma\n• Organize layers and components well\n• Test responsiveness after conversion\n\nWhich type of project are you working on?",
+        "created_at": "2024-12-05T14:21:00Z"
+      }
+    ]
+  },
+  "5": {
+    "id": "5",
+    "title": "Test cases for React app",
+    "messages": [
+      {
+        "id": "m9",
+        "conversation_id": "5",
+        "role": "user",
+        "content": "How to write comprehensive test cases for a React application?",
+        "created_at": "2024-12-04T09:45:00Z"
+      },
+      {
+        "id": "m10",
+        "conversation_id": "5",
+        "role": "assistant",
+        "content": "Here's a comprehensive guide for testing React applications:\n\n**🧪 Testing Pyramid for React**\n\n**1. Unit Tests (70%)**\n```jsx\n// Component testing with React Testing Library\nimport { render, screen, fireEvent } from '@testing-library/react';\nimport Button from './Button';\n\ntest('renders button with correct text', () => {\n  render(<Button>Click me</Button>);\n  expect(screen.getByText('Click me')).toBeInTheDocument();\n});\n\ntest('calls onClick when clicked', () => {\n  const handleClick = jest.fn();\n  render(<Button onClick={handleClick}>Click me</Button>);\n  fireEvent.click(screen.getByText('Click me'));\n  expect(handleClick).toHaveBeenCalledTimes(1);\n});\n```\n\n**2. Integration Tests (20%)**\n```jsx\n// Testing component interactions\ntest('form submission works correctly', async () => {\n  render(<ContactForm />);\n  \n  fireEvent.change(screen.getByLabelText('Email'), {\n    target: { value: 'test@example.com' }\n  });\n  \n  fireEvent.click(screen.getByText('Submit'));\n  \n  await waitFor(() => {\n    expect(screen.getByText('Success!')).toBeInTheDocument();\n  });\n});\n```\n\n**3. E2E Tests (10%)**\n```jsx\n// Cypress example\ncy.visit('/login');\ncy.get('[data-testid=\"email\"]').type('user@example.com');\ncy.get('[data-testid=\"password\"]').type('password');\ncy.get('[data-testid=\"submit\"]').click();\ncy.url().should('include', '/dashboard');\n```\n\n**🛠️ Essential Testing Tools:**\n• **Jest** - Test runner\n• **React Testing Library** - Component testing\n• **Cypress/Playwright** - E2E testing\n• **MSW** - API mocking\n\n**📋 What to Test:**\n✅ User interactions\n✅ Component rendering\n✅ State changes\n✅ API calls\n✅ Error handling\n✅ Accessibility\n\n**❌ What NOT to Test:**\n❌ Implementation details\n❌ Third-party libraries\n❌ Styling (unless critical)\n\nWant me to help you write tests for a specific component?",
+        "created_at": "2024-12-04T09:46:00Z"
+      }
+    ]
+  }
+}
