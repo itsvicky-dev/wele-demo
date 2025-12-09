@@ -48,7 +48,7 @@ export function ChatInterface({ messages, onSendMessage, isLoading, chatTitle, i
   return (
     <div className="flex-1 flex flex-col h-screen bg-white">
       {/* Header */}
-      <div className="border-b border-gray-200 bg-white px-4 py-3">
+      <div className="border-b border-[#0d0d0d0d] bg-white px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <h1 className="text-lg text-gray-900">
@@ -113,9 +113,6 @@ export function ChatInterface({ messages, onSendMessage, isLoading, chatTitle, i
             ))}
             {isLoading && (
               <div className="flex items-start space-x-3 mb-6">
-                <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                  <div className="w-4 h-4 bg-white rounded-sm"></div>
-                </div>
                 <div className="flex-1">
                   <div className="flex space-x-1">
                     <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
@@ -134,7 +131,7 @@ export function ChatInterface({ messages, onSendMessage, isLoading, chatTitle, i
       <div className={`bg-white ${messages.length === 0 ? 'flex-shrink-0' : ''}`}>
         <div className="max-w-3xl mx-auto py-6">
           <form onSubmit={handleSubmit} className="relative">
-            <div className="flex items-end space-x-3 bg-gray-50 rounded-3xl p-3">
+            <div className="flex items-end space-x-3 border border-gray-300 rounded-full p-3">
               <button type="button" className="p-2 text-gray-500 hover:text-gray-700 transition-colors">
                 <Paperclip size={20} />
               </button>

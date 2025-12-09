@@ -74,13 +74,7 @@ export function Sidebar() {
       title: "Database design principles",
       timestamp: "1 week ago",
       preview: "What are the key principles for good database...",
-    },
-    {
-      id: "6",
-      title: "Machine learning fundamentals",
-      timestamp: "1 week ago",
-      preview: "I want to get started with machine learning...",
-    },
+    }
   ];
 
   const set1Menus: MenuItem[] = [
@@ -159,7 +153,7 @@ export function Sidebar() {
   };
 
   return (
-    <div className="w-64 bg-[#f9fafb] flex flex-col h-screen">
+    <div className="w-64 bg-[#f9fafb] flex flex-col h-screen border-r border-[#0d0d0d0d]">
       <div className="p-4">
         <Link to="/" className="flex items-center gap-2 mb-6">
           <img src={Logo} alt="" />
@@ -186,7 +180,7 @@ export function Sidebar() {
               to={menu.path}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all text-sm ${
                 location.pathname === menu.path
-                  ? "bg-white text-[#00BF53] font-medium shadow-sm"
+                  ? "text-[#00BF53] font-medium"
                   : "text-gray-600 hover:bg-white hover:text-[#00BF53]"
               }`}
             >
@@ -207,7 +201,7 @@ export function Sidebar() {
                 to={menu.path}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all text-sm ${
                   location.pathname === menu.path
-                    ? "bg-white text-[#00BF53] font-medium shadow-sm"
+                    ? "text-[#00BF53] font-medium"
                     : "text-gray-600 hover:bg-white hover:text-[#00BF53]"
                 }`}
               >

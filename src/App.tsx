@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import { Sidebar } from './components/Sidebar';
 import { Home } from './pages/Home';
 import { Dashboard } from './pages/Dashboard';
@@ -17,7 +17,7 @@ import { Chat } from './pages/Chat';
 function App() {
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <div className="flex h-screen overflow-hidden">
         <Sidebar />
         <Routes>
@@ -36,7 +36,7 @@ function App() {
           <Route path="/what-is-best" element={<WhatIsBest />} />
         </Routes>
       </div>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
