@@ -35,7 +35,6 @@ function App() {
           <Route path="/skill-showcase" element={<SkillShowcase />} />
           <Route path="/chat-history" element={<ChatHistory />} />
           <Route path="/what-is-best" element={<WhatIsBest />} />
-          <Route path="/ai" element={<AIChat isOpen={true} onClose={() => {return}} />} />
         </Routes>
       </div>
     </HashRouter>

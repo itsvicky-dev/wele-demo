@@ -13,9 +13,8 @@ class AIService {
   private baseUrl: string;
 
   constructor() {
-    // Using OpenRouter API - replace with your actual API key
-    // this.apiKey = process.env.REACT_APP_OPENROUTER_API_KEY || 'your-api-key-here';
-    this.apiKey ='your-api-key-here';
+    // Using OpenRouter API with environment variable
+    this.apiKey = import.meta.env.VITE_OPENROUTER_API_KEY || '';
     this.baseUrl = 'https://openrouter.ai/api/v1';
   }
 
@@ -30,7 +29,7 @@ class AIService {
           'X-Title': 'Wele Learning Platform'
         },
         body: JSON.stringify({
-          model: 'microsoft/wizardlm-2-8x22b',
+          model: 'google/gemma-3-4b-it:free',
           messages,
           stream: true,
           temperature: 0.7,
@@ -78,13 +77,9 @@ class AIService {
       }
     } catch (error) {
       console.error('AI Service Error:', error);
-      // Fallback to mock response for demo
-      const mockResponse = "I'm here to help you with your learning journey! This is a demo response since the AI service is not configured with a valid API key.";
-      for (const char of mockResponse) {
-        await new Promise(resolve => setTimeout(resolve, 30));
-        yield { content: char, isComplete: false };
-      }
-      yield { content: '', isComplete: true };
+      // Fallback to a clean error message
+      const errorMessage = "Sorry, I'm having trouble connecting to the AI service. Please try again.";
+      yield { content: errorMessage, isComplete: true };
     }
   }
 

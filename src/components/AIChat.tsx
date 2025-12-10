@@ -37,11 +37,13 @@ export function AIChat({ isOpen, onClose }: AIChatProps) {
 
       for await (const chunk of aiService.streamResponse(conversationMessages)) {
         if (chunk.isComplete) {
-          setMessages(prev => [...prev, { role: 'assistant', content: assistantResponse }]);
+          if (assistantResponse.trim()) {
+            setMessages(prev => [...prev, { role: 'assistant', content: assistantResponse }]);
+          }
           setStreamingMessage('');
           setIsTyping(false);
-          break;
-        } else {
+          return;
+        } else if (chunk.content) {
           assistantResponse += chunk.content;
           setStreamingMessage(assistantResponse);
         }
@@ -93,13 +95,13 @@ export function AIChat({ isOpen, onClose }: AIChatProps) {
             </div>
           ))}
 
-          {isTyping && streamingMessage && (
+          {isTyping && (
             <div className="flex gap-3 justify-start">
               <div className="w-8 h-8 bg-[#00BF53] rounded-full flex items-center justify-center">
                 <Bot className="w-4 h-4 text-white" />
               </div>
               <div className="max-w-[70%] p-3 rounded-lg bg-gray-100 text-gray-900">
-                <p className="text-sm whitespace-pre-wrap">{streamingMessage}<span className="animate-pulse">|</span></p>
+                <p className="text-sm whitespace-pre-wrap">{streamingMessage || 'Thinking...'}<span className="animate-pulse">|</span></p>
               </div>
             </div>
           )}

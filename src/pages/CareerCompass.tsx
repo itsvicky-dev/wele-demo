@@ -1,4 +1,4 @@
-import { MoreHorizontal, Send } from "lucide-react";
+import { ArrowUp, MoreHorizontal, Send } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
 interface MCQOption {
@@ -676,7 +676,7 @@ export function CareerCompass() {
                 disabled={!chatInput.trim() || isLoading}
                 className="w-8 h-8 bg-[#00BF53] disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-full flex items-center justify-center transition-all duration-200"
               >
-                <Send size={16} />
+                <ArrowUp size={16} />
               </button>
             </div>
           </form>
