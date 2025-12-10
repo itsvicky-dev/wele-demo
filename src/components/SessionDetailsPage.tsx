@@ -452,10 +452,10 @@ export function SessionDetailsPage({
                     </div>
                     <div className="flex items-center gap-2">
                       <button
-                        className="flex items-center gap-2 px-4 py-2 text-[#00BF53] rounded-lg transition-colors"
+                        className="flex items-center text-sm gap-2 px-3 py-2 border border-[#00BF53] text-[#00BF53] rounded-full hover:bg-[#00A047] hover:text-white transition-all duration-200 font-medium text-sm shadow-sm hover:shadow-md"
                       >
                         <Sparkles className="w-4 h-4" />
-                        Take a test
+                        Take a Test
                       </button>
                       <div className="flex bg-gray-100 rounded-full transition-colors p-2">
                         <button className="flex items-center gap-2 px-2 text-sm font-medium">
@@ -497,6 +497,12 @@ export function SessionDetailsPage({
                   <ChatTextArea
                     placeholder="Ask AI about this session..."
                     suggestions={suggestions}
+                    sessionContext={{
+                      title: session.title,
+                      courseName: session.courseName,
+                      description: session.description,
+                      duration: session.duration,
+                    }}
                     onSendMessage={(message) =>
                       console.log("Chat message:", message)
                     }

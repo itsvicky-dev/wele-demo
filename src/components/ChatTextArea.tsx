@@ -20,6 +20,12 @@ interface ChatTextAreaProps {
   disabled?: boolean;
   className?: string;
   suggestions?: Suggestion[];
+  sessionContext?: {
+    title: string;
+    courseName: string;
+    description?: string;
+    duration: number;
+  };
 }
 
 export function ChatTextArea({
@@ -28,6 +34,7 @@ export function ChatTextArea({
   disabled = false,
   className = "",
   suggestions = [],
+  sessionContext,
 }: ChatTextAreaProps) {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -50,8 +57,62 @@ export function ChatTextArea({
     }
   }, [messages, showDrawer]);
 
-  const handleSuggestionClick = (suggestionText: string) => {
-    setInput(suggestionText);
+  const handleSuggestionClick = async (suggestionText: string) => {
+    if (isLoading || disabled) return;
+
+    let messageContent = suggestionText;
+    if (suggestionText.toLowerCase().includes("summarize this session") && sessionContext) {
+      messageContent = `${suggestionText}\n\nSession Details:\nTitle: ${sessionContext.title}\nCourse: ${sessionContext.courseName}\nDuration: ${sessionContext.duration} minutes${sessionContext.description ? `\nDescription: ${sessionContext.description}` : ""}`;
+    }
+
+    const userMessage: ChatMessage = {
+      role: "user",
+      content: messageContent,
+      id: Date.now().toString(),
+    };
+
+    const assistantMessage: ChatMessage = {
+      role: "assistant",
+      content: "",
+      id: (Date.now() + 1).toString(),
+    };
+
+    setMessages((prev) => [...prev, userMessage, assistantMessage]);
+    setShowDrawer(true);
+    setIsLoading(true);
+    onSendMessage?.(userMessage.content);
+
+    try {
+      const aiMessages: AIMessage[] = [
+        ...messages,
+        { role: userMessage.role, content: userMessage.content },
+      ].map((msg) => ({
+        role: msg.role,
+        content: msg.content,
+      }));
+
+      let assistantContent = "";
+
+      for await (const chunk of aiService.streamResponse(aiMessages)) {
+        console.log("Received chunk:", chunk);
+        if (!chunk.isComplete) {
+          assistantContent += chunk.content;
+          setMessages((prev) => {
+            const newMessages = [...prev];
+            const lastMessage = newMessages[newMessages.length - 1];
+            if (lastMessage.role === "assistant") {
+              lastMessage.content = assistantContent;
+            }
+            console.log("Updated message:", lastMessage, newMessages);
+            return newMessages;
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Chat error:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
