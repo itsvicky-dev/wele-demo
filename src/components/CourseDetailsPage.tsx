@@ -8,6 +8,7 @@ import {
   Star,
   Users,
   Sparkles,
+  Lock,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -77,7 +78,7 @@ export function CourseDetailsPage({
     typeText();
   };
   return (
-    <div className="min-h-screen bg-white">
+    <div className="bg-white">
       {/* Header with Breadcrumb */}
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-6 py-4">
@@ -252,8 +253,8 @@ export function CourseDetailsPage({
           <div className="space-y-6">
             {/* Sessions List */}
             <div className="bg-white rounded-xl shadow-sm">
-              <div className="p-6 border-b">
-                <h2 className="text-xl font-semibold text-gray-900">
+              <div className="pb-6 border-b">
+                <h2 className="text-md font-semibold text-gray-900">
                   Course Sessions
                 </h2>
               </div>
@@ -262,7 +263,7 @@ export function CourseDetailsPage({
                   <div
                     key={session.id}
                     onClick={() => onSessionClick(session.id)}
-                    className="p-6 hover:bg-gray-50 cursor-pointer transition-colors group"
+                    className="p-2 hover:bg-gray-50 cursor-pointer transition-colors group"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
@@ -280,11 +281,11 @@ export function CourseDetailsPage({
                           ) : session.status === "current" ? (
                             <Play className="w-4 h-4" />
                           ) : (
-                            "🔒"
+                            <Lock className="w-4 h-4" />
                           )}
                         </div>
                         <div>
-                          <h3 className="font-medium text-gray-900 group-hover:text-blue-600 transition-colors">
+                          <h3 className="font-medium text-sm text-gray-900 group-hover:text-blue-600 transition-colors">
                             {session.title}
                           </h3>
                           <div className="flex items-center gap-4 text-sm text-gray-600 mt-1">

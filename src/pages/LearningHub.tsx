@@ -7,7 +7,7 @@ export function LearningHub() {
   const [currentView, setCurrentView] = useState<"course" | "session">(
     "course"
   );
-  const [selectedSession, setSelectedSession] = useState<number | null>(null);
+  const [selectedSession, setSelectedSession] = useState<number | null>(1);
 
   const course = {
     id: 1,
@@ -172,10 +172,20 @@ export function LearningHub() {
   }
 
   return (
-    <CourseDetailsPage
+    // <CourseDetailsPage
+    //   course={course}
+    //   sessions={sessions}
+    //   onSessionClick={handleSessionClick}
+    // />
+    <SessionDetailsPage
       course={course}
+      session={currentSession}
+      trainer={course.trainer}
+      comments={comments}
+      notes={notes}
       sessions={sessions}
-      onSessionClick={handleSessionClick}
+      onCourseDetailsClick={handleBackToCourse}
+      onSessionChange={handleSessionChange}
     />
   );
 }
