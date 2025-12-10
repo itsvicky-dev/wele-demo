@@ -111,7 +111,7 @@ export function SessionDetailsPage({
   const suggestions = [
     {
       id: "1",
-      text: "What are the key concepts covered in this JavaScript session?"
+      text: "Summarize this session.",
     },
     {
       id: "2", 
@@ -122,26 +122,6 @@ export function SessionDetailsPage({
       text: "How does lexical scoping work in JavaScript?"
     }
   ];
-
-  const handleSummarize = () => {
-    setShowSummary(true);
-    setIsTyping(true);
-    const summary =
-      "This JavaScript session covers fundamental concepts including variables, functions, and scope. Key topics include: 1) Variable declarations with let, const, and var 2) Function expressions vs declarations 3) Lexical scoping and closures 4) Hoisting behavior 5) Best practices for modern JavaScript development.";
-
-    let index = 0;
-    const typeText = () => {
-      if (index < summary.length) {
-        setSummaryText(summary.slice(0, index + 1));
-        index++;
-        setTimeout(typeText, 30);
-      } else {
-        setIsTyping(false);
-      }
-    };
-    setSummaryText("");
-    typeText();
-  };
 
   const handleCourseDetailsToggle = () => {
     setShowCourseDetails(!showCourseDetails);
@@ -210,7 +190,7 @@ export function SessionDetailsPage({
         </div>
       </div>
       <div className="flex-1 overflow-y-auto">
-        <div className="max-w-[69rem] mx-auto px-6 space-y-6 py-6">
+        <div className="max-w-[calc(100vw-450px)] mx-auto px-6 space-y-6 py-6">
           {/* Course and Session Badges */}
           {/* <div className="flex gap-2">
             <span className="pr-3 py-1 text-sm rounded-full">
@@ -460,10 +440,10 @@ export function SessionDetailsPage({
                         <h3 className="font-semibold text-gray-900">
                           {trainer.name}
                         </h3>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-gray-600 flex">
                           {trainer.title}, {trainer.company} <br />
-                          <div className="flex items-center ">
-                            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-2" />{" "}
+                          <div className="flex items-center ml-2">
+                            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />{" "}
                             {trainer.rating} ({trainer.reviews.toLocaleString()}{" "}
                             reviews)
                           </div>
@@ -472,11 +452,10 @@ export function SessionDetailsPage({
                     </div>
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={handleSummarize}
                         className="flex items-center gap-2 px-4 py-2 text-[#00BF53] rounded-lg transition-colors"
                       >
                         <Sparkles className="w-4 h-4" />
-                        Summarize
+                        Take a test
                       </button>
                       <div className="flex bg-gray-100 rounded-full transition-colors p-2">
                         <button className="flex items-center gap-2 px-2 text-sm font-medium">
@@ -532,7 +511,7 @@ export function SessionDetailsPage({
               <div className="flex border-b">
                 <button
                   onClick={() => setActiveTab("comments")}
-                  className={`flex-1 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                  className={`flex-1 px-4 py-1 text-sm font-medium border-b-2 transition-colors ${
                     activeTab === "comments"
                       ? "border-black text-black"
                       : "border-transparent text-gray-600 hover:text-gray-900"
@@ -546,7 +525,7 @@ export function SessionDetailsPage({
                 </button>
                 <button
                   onClick={() => setActiveTab("notes")}
-                  className={`flex-1 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                  className={`flex-1 px-4 py-1 text-sm font-medium border-b-2 transition-colors ${
                     activeTab === "notes"
                       ? "border-black text-black"
                       : "border-transparent text-gray-600 hover:text-gray-900"

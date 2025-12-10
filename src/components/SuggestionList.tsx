@@ -26,10 +26,10 @@ export function SuggestionList({
           <button
             key={suggestion.id}
             onClick={() => onSuggestionClick(suggestion.text)}
-            className="w-full text-left p-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors group flex items-start gap-2"
+            className="w-full text-left p-2 border-b border-gray-100 last:border-none group flex items-start gap-2"
           >
-            <ArrowUpRight className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
-            <span className="text-sm text-gray-700 group-hover:text-gray-900">
+            <ArrowUpRight className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0 group-hover:text-[#00BF53] transition-colors" />
+            <span className="text-sm text-gray-700 group-hover:text-[#00BF53] transition-colors">
               {suggestion.text}
             </span>
           </button>
