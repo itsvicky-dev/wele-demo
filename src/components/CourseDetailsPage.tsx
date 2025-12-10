@@ -77,7 +77,7 @@ export function CourseDetailsPage({
     typeText();
   };
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       {/* Header with Breadcrumb */}
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-6 py-4">
@@ -94,7 +94,7 @@ export function CourseDetailsPage({
           {/* Main Content */}
           <div className="lg:col-span-2 flex flex-col">
             {/* Course Hero */}
-            <div className="bg-[#1E2433] rounded-xl p-8 text-white mb-8">
+            <div className="bg-[#1E2433] rounded-xl p-8 text-white">
               <div className="flex items-start justify-between mb-6">
                 <div className="flex-1">
                   <h1 className="text-3xl font-bold mb-4">{course.title}</h1>
