@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Send, Paperclip, X, ArrowUp } from "lucide-react";
 import { aiService, AIMessage } from "../services/aiService";
+import { SuggestionList } from "./SuggestionList";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -8,11 +9,17 @@ interface ChatMessage {
   id: string;
 }
 
+interface Suggestion {
+  id: string;
+  text: string;
+}
+
 interface ChatTextAreaProps {
   placeholder?: string;
   onSendMessage?: (message: string) => void;
   disabled?: boolean;
   className?: string;
+  suggestions?: Suggestion[];
 }
 
 export function ChatTextArea({
@@ -20,6 +27,7 @@ export function ChatTextArea({
   onSendMessage,
   disabled = false,
   className = "",
+  suggestions = [],
 }: ChatTextAreaProps) {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -41,6 +49,10 @@ export function ChatTextArea({
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages, showDrawer]);
+
+  const handleSuggestionClick = (suggestionText: string) => {
+    setInput(suggestionText);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -106,6 +118,12 @@ export function ChatTextArea({
 
   return (
     <>
+      {/* Suggestions */}
+      <SuggestionList
+        suggestions={suggestions}
+        onSuggestionClick={handleSuggestionClick}
+      />
+      
       {/* Chat Input */}
       <div className={`bg-white rounded-full ${className}`}>
         <form onSubmit={handleSubmit} className="relative">

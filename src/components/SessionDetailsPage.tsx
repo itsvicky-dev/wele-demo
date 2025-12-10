@@ -108,6 +108,21 @@ export function SessionDetailsPage({
   const [showCourseDetails, setShowCourseDetails] = useState(true);
   const [showSessionDropdown, setShowSessionDropdown] = useState(false);
 
+  const suggestions = [
+    {
+      id: "1",
+      text: "What are the key concepts covered in this JavaScript session?"
+    },
+    {
+      id: "2", 
+      text: "Can you explain the difference between let, const, and var?"
+    },
+    {
+      id: "3",
+      text: "How does lexical scoping work in JavaScript?"
+    }
+  ];
+
   const handleSummarize = () => {
     setShowSummary(true);
     setIsTyping(true);
@@ -502,6 +517,7 @@ export function SessionDetailsPage({
                 <div className="max-w-3xl">
                   <ChatTextArea
                     placeholder="Ask AI about this session..."
+                    suggestions={suggestions}
                     onSendMessage={(message) =>
                       console.log("Chat message:", message)
                     }
