@@ -233,7 +233,7 @@ export function ChatTextArea({
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          <div className="flex-1 overflow-y-auto scrollbar-hide p-4 space-y-4 max-w-3xl mx-auto">
             {messages.map((message) => (
               <div key={message.id}>
                 {message.role === "assistant" ? (
@@ -277,7 +277,7 @@ export function ChatTextArea({
           </div>
           <div className={`bg-white rounded-full ${className}`}>
             <form onSubmit={handleSubmit} className="relative">
-              <div className="flex items-end space-x-3 border border-gray-300 rounded-full p-3">
+              <div className="flex items-end space-x-3 border border-gray-300 rounded-full p-3 max-w-3xl mx-auto">
                 <button
                   type="button"
                   className="p-2 text-gray-500 hover:text-gray-700 transition-colors"

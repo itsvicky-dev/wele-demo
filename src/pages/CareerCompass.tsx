@@ -1,4 +1,4 @@
-import { ArrowUp, MoreHorizontal, Send } from "lucide-react";
+import { ArrowUp, MoreHorizontal, Paperclip, Send } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
 interface MCQOption {
@@ -173,7 +173,7 @@ const careerQuestions: MCQQuestion[] = [
       { id: "c", text: "It changes the color of the text" },
       { id: "d", text: "It is only used for decoration" },
     ],
-  }
+  },
 ];
 
 const questionSets = [
@@ -650,13 +650,19 @@ export function CareerCompass() {
           } mx-auto pb-6`}
         >
           <form
-            onSubmit={(e) => {  
+            onSubmit={(e) => {
               e.preventDefault();
               handleChatSubmit();
             }}
             className="relative"
           >
             <div className="flex items-end space-x-3 border border-gray-300 rounded-full p-3 max-w-3xl">
+              <button
+                type="button"
+                className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                <Paperclip size={20} />
+              </button>
               <textarea
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}

@@ -114,13 +114,13 @@ export function SessionDetailsPage({
       text: "Summarize this session.",
     },
     {
-      id: "2", 
-      text: "Can you explain the difference between let, const, and var?"
+      id: "2",
+      text: "Can you explain the difference between let, const, and var?",
     },
-    {
-      id: "3",
-      text: "How does lexical scoping work in JavaScript?"
-    }
+    // {
+    //   id: "3",
+    //   text: "How does lexical scoping work in JavaScript?"
+    // }
   ];
 
   const handleCourseDetailsToggle = () => {
@@ -428,7 +428,7 @@ export function SessionDetailsPage({
                 )}
 
                 {/* Trainer Details */}
-                <div className="bg-white p-4">
+                <div className="bg-white py-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <img
@@ -451,9 +451,7 @@ export function SessionDetailsPage({
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <button
-                        className="flex items-center text-sm gap-2 px-3 py-2 border border-[#00BF53] text-[#00BF53] rounded-full hover:bg-[#00A047] hover:text-white transition-all duration-200 font-medium text-sm shadow-sm hover:shadow-md"
-                      >
+                      <button className="flex items-center text-sm gap-2 px-3 py-2 border border-[#00BF53] text-[#00BF53] rounded-full hover:bg-[#00A047] hover:text-white transition-all duration-200 font-medium text-sm shadow-sm hover:shadow-md">
                         <Sparkles className="w-4 h-4" />
                         Take a Test
                       </button>
@@ -492,8 +490,8 @@ export function SessionDetailsPage({
               </div>
 
               {/* Chat Text Area at Bottom */}
-              <div className="sticky bottom-0 top-[calc(100vh-140px)] left-0 right-0 z-[60] max-w-3xl">
-                <div className="max-w-3xl">
+              <div className="fixed bottom-10 left-0 right-0 z-[60] max-w-[calc(100vw-720px)] mx-auto">
+                <div className="max-w-[44rem]">
                   <ChatTextArea
                     placeholder="Ask AI about this session..."
                     suggestions={suggestions}

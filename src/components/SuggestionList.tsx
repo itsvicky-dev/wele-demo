@@ -20,18 +20,16 @@ export function SuggestionList({
 
   return (
     <div className={`mb-4 ${className}`}>
-      <h3 className="text-sm font-medium text-gray-900 mb-3">Related</h3>
-      <div className="space-y-2">
+      {/* <h3 className="text-sm font-medium text-gray-900 mb-3">Related</h3> */}
+      <div className="flex flex-wrap gap-2">
         {suggestions.map((suggestion) => (
           <button
             key={suggestion.id}
             onClick={() => onSuggestionClick(suggestion.text)}
-            className="w-full text-left p-2 border-b border-gray-100 last:border-none group flex items-start gap-2"
+            className="px-3 py-1.5 bg-gray-100 hover:bg-[#00BF53] text-gray-700 hover:text-white rounded-full text-sm transition-colors duration-200 flex items-center gap-1"
           >
-            <ArrowUpRight className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0 group-hover:text-[#00BF53] transition-colors" />
-            <span className="text-sm text-gray-700 group-hover:text-[#00BF53] transition-colors">
-              {suggestion.text}
-            </span>
+            <span>{suggestion.text}</span>
+            <ArrowUpRight className="w-3 h-3" />
           </button>
         ))}
       </div>
