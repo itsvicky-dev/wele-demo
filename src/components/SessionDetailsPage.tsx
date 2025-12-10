@@ -18,6 +18,10 @@ import {
   Star,
   FileSpreadsheet,
   Lock,
+  ThumbsUpIcon,
+  ThumbsDown,
+  ThumbsDownIcon,
+  StarIcon,
 } from "lucide-react";
 import { useState, useRef } from "react";
 import { VideoPlayer } from "./VideoPlayer";
@@ -139,14 +143,61 @@ export function SessionDetailsPage({
           >
             {session.courseName}
           </span>
+
           <ChevronRight className="w-4 h-4" />
-          <span className="text-gray-900 font-medium">{session.title}</span>
+          <div className="relative">
+            <span
+              className="text-gray-900 font-medium flex items-center gap-1 cursor-pointer"
+              onClick={() => setShowSessionDropdown(!showSessionDropdown)}
+            >
+              {session.title}
+              <ChevronDown className="w-3 h-3" />
+            </span>
+            {/* <button className="flex items-center border border-gray-300 gap-1 px-3 py-1 text-sm rounded-full backdrop-blur-sm transition-colors">
+            {session.title}
+          </button> */}
+            {showSessionDropdown && (
+              <div className="absolute top-full left-0 mt-1 z-50 bg-white rounded-lg shadow-lg border min-w-64 max-h-64 overflow-y-auto">
+                {sessions.map((sess) => (
+                  <button
+                    key={sess.id}
+                    onClick={() => {
+                      onSessionChange(sess.id);
+                      setShowSessionDropdown(false);
+                    }}
+                    disabled={sess.status === "locked"}
+                    className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 transition-colors first:rounded-t-lg last:rounded-b-lg ${
+                      sess.id === session.id
+                        ? "bg-green-50 text-[#00BF53]"
+                        : "text-gray-900"
+                    } ${
+                      sess.status === "locked"
+                        ? "opacity-50 cursor-not-allowed"
+                        : ""
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span>{sess.title}</span>
+                      {sess.status === "completed" && (
+                        <span className="text-green-600 text-xs">✓</span>
+                      )}
+                      {sess.status === "locked" && (
+                        <span className="text-gray-400 text-xs">
+                          <Lock size={16} />
+                        </span>
+                      )}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <div className="flex-1 overflow-y-auto">
-        <div className="max-w-6xl mx-auto px-6 space-y-6 py-6">
+        <div className="max-w-[69rem] mx-auto px-6 space-y-6 py-6">
           {/* Course and Session Badges */}
-          <div className="flex gap-2">
+          {/* <div className="flex gap-2">
             <span className="pr-3 py-1 text-sm rounded-full">
               {course.title.split(":")[0]}
             </span>
@@ -192,7 +243,7 @@ export function SessionDetailsPage({
                 </div>
               )}
             </div>
-          </div>
+          </div> */}
 
           <div className="grid grid-cols-[1fr_320px] gap-6">
             {/* Left Video Section */}
@@ -235,8 +286,8 @@ export function SessionDetailsPage({
 
                 {/* Course Details Overlay */}
                 {showCourseDetails && (
-                  <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-50 max-h-[430px]">
-                    <div className="bg-[#1E2433] rounded-xl px-8 py-4 text-white w-full h-full max-h-[430px] overflow-y-auto flex flex-col">
+                  <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-[39] max-h-[400px]">
+                    <div className="bg-[#1E2433] rounded-xl px-8 py-4 text-white w-full h-full max-h-[400px] overflow-y-auto flex flex-col">
                       <div className="bg-[#1E2433] mb-4 border-white/10 flex justify-start">
                         <div className="flex bg-black/40 backdrop-blur-sm rounded-full p-1">
                           <button
@@ -395,27 +446,39 @@ export function SessionDetailsPage({
                           {trainer.name}
                         </h3>
                         <p className="text-sm text-gray-600">
-                          {trainer.title}, {trainer.company} • ⭐{" "}
-                          {trainer.rating} ({trainer.reviews.toLocaleString()}{" "}
-                          reviews)
+                          {trainer.title}, {trainer.company} <br />
+                          <div className="flex items-center ">
+                            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-2" />{" "}
+                            {trainer.rating} ({trainer.reviews.toLocaleString()}{" "}
+                            reviews)
+                          </div>
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
                       <button
                         onClick={handleSummarize}
-                        className="flex items-center gap-2 px-4 py-2 bg-green-50 text-[#00BF53] rounded-lg hover:bg-green-100 transition-colors"
+                        className="flex items-center gap-2 px-4 py-2 text-[#00BF53] rounded-lg transition-colors"
                       >
                         <Sparkles className="w-4 h-4" />
                         Summarize
                       </button>
+                      <div className="flex bg-gray-100 rounded-full transition-colors p-2">
+                        <button className="flex items-center gap-2 px-2 text-sm font-medium">
+                          <ThumbsUpIcon size={16} className="text-gray-600" />{" "}
+                          120K
+                        </button>
+                        <button className="flex items-center gap-2 border-l border-gray-300 px-2">
+                          <ThumbsDownIcon size={16} className="text-gray-600" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 {/* AI Summary */}
                 {showSummary && (
-                  <div className="bg-green-50 border-t p-4 mb-8">
+                  <div className="border-t p-4 mb-8">
                     <div className="flex items-start gap-3">
                       <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
                         <Sparkles className="w-4 h-4 text-[#00BF53]" />
@@ -455,20 +518,21 @@ export function SessionDetailsPage({
                   onClick={() => setActiveTab("comments")}
                   className={`flex-1 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
                     activeTab === "comments"
-                      ? "border-[#00BF53] text-[#00BF53]"
+                      ? "border-black text-black"
                       : "border-transparent text-gray-600 hover:text-gray-900"
                   }`}
                 >
                   <div className="flex items-center justify-center gap-2">
                     <MessageSquare className="w-4 h-4" />
                     Comments
+                    <span className="text-sm">{comments.length}</span>
                   </div>
                 </button>
                 <button
                   onClick={() => setActiveTab("notes")}
                   className={`flex-1 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
                     activeTab === "notes"
-                      ? "border-[#00BF53] text-[#00BF53]"
+                      ? "border-black text-black"
                       : "border-transparent text-gray-600 hover:text-gray-900"
                   }`}
                 >
@@ -484,18 +548,11 @@ export function SessionDetailsPage({
                 {activeTab === "comments" ? (
                   <div className="h-full flex flex-col">
                     {/* Comments Header */}
-                    <div className="p-4 border-b">
-                      <div className="flex items-center mb-3">
-                        <h3 className="font-medium text-gray-900">Comments</h3>
-                        <span className="text-sm text-gray-500 ml-2">
-                          {comments.length}
-                        </span>
-                      </div>
-
+                    <div className="p-4">
                       {/* Add Comment */}
                       <div className="flex gap-2">
                         <img
-                          src="https://via.placeholder.com/32"
+                          src="https://api.dicebear.com/9.x/notionists/svg?seed=varient5"
                           alt="User"
                           className="w-8 h-8 rounded-full"
                         />
@@ -517,7 +574,7 @@ export function SessionDetailsPage({
                       {comments.map((comment) => (
                         <div key={comment.id} className="flex gap-3">
                           <img
-                            src="https://via.placeholder.com/32"
+                            src="https://api.dicebear.com/9.x/notionists/svg?seed=varient8"
                             alt={comment.user}
                             className="w-8 h-8 rounded-full flex-shrink-0"
                           />
@@ -527,7 +584,7 @@ export function SessionDetailsPage({
                                 {comment.user}
                               </span>
                               {comment.pinned && (
-                                <span className="px-2 py-0.5 bg-green-100 text-[#00BF53] text-xs rounded-full">
+                                <span className="px-2 py-0.5 bg-gray-200 text-gray-600 text-xs rounded-full">
                                   Pinned
                                 </span>
                               )}
@@ -554,45 +611,33 @@ export function SessionDetailsPage({
                   </div>
                 ) : (
                   <div className="h-full flex flex-col">
-                    {/* Notes Header */}
-                    <div className="p-2">
-                      <h3 className="font-medium text-gray-900">
-                        {course.title}
-                      </h3>
-                    </div>
-
                     {/* Notes Content */}
-                    <div className="flex-1 overflow-y-auto space-y-6">
-                      {sessions.map((sess) => (
-                        <div
-                          key={sess.id}
-                          className="space-y-2 border rounded-lg p-3"
-                        >
-                          <h4 className="font-medium text-sm text-[#00000080]">
-                            {sess.title}
-                          </h4>
-                          <div className="flex items-center gap-1 text-xs text-gray-500 mb-3">
-                            <Calendar className="w-3 h-3" />
-                            <span>July 08, 2025</span>
-                          </div>
-                          <div className="flex flex-wrap gap-5">
-                            <button className="flex items-center gap-1 py-1 text-[#808080] font-medium text-xs transition-colors border-b ">
-                              <FileSpreadsheet size={12} /> Notes 1
-                            </button>
-                            <button className="flex items-center gap-1 py-1 text-[#808080] font-medium text-xs transition-colors border-b ">
-                              <FileSpreadsheet size={12} /> Notes 2
-                            </button>
-                            <button className="flex items-center gap-1 py-1 text-[#808080] font-medium text-xs transition-colors border-b ">
-                              <FileSpreadsheet size={12} /> Notes 3
-                            </button>
-                          </div>
-                          {sess.id === 5 && (
-                            <p className="text-xs text-gray-500 mt-2">
-                              Session Not yet started
-                            </p>
-                          )}
+                    <div className="flex-1 overflow-y-auto space-y-6 mt-2">
+                      {/* {sessions.map((sess) => ( */}
+                      <div
+                        key={session.id}
+                        className="space-y-2 border rounded-lg p-3"
+                      >
+                        <h4 className="font-medium text-sm text-[#00000080]">
+                          {session.title}
+                        </h4>
+                        <div className="flex items-center gap-1 text-xs text-gray-500 mb-3">
+                          <Calendar className="w-3 h-3" />
+                          <span>July 08, 2025</span>
                         </div>
-                      ))}
+                        <div className="flex flex-wrap gap-5">
+                          <button className="flex items-center gap-1 py-1 text-[#808080] font-medium text-xs transition-colors border-b ">
+                            <FileSpreadsheet size={12} /> Notes 1
+                          </button>
+                          <button className="flex items-center gap-1 py-1 text-[#808080] font-medium text-xs transition-colors border-b ">
+                            <FileSpreadsheet size={12} /> Notes 2
+                          </button>
+                          <button className="flex items-center gap-1 py-1 text-[#808080] font-medium text-xs transition-colors border-b ">
+                            <FileSpreadsheet size={12} /> Notes 3
+                          </button>
+                        </div>
+                      </div>
+                      {/* ))} */}
                     </div>
                   </div>
                 )}

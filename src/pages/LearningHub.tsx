@@ -34,7 +34,7 @@ export function LearningHub() {
       company: "Zoho",
       rating: 4.9,
       reviews: 2100,
-      avatar: "https://via.placeholder.com/48",
+      avatar: "https://api.dicebear.com/9.x/notionists/svg?seed=varient7",
     },
   };
 
