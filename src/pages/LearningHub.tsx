@@ -1,19 +1,21 @@
-import { Play, ThumbsUp, Send, Volume2, Maximize, Settings, Pause } from 'lucide-react';
+import { Play, ThumbsUp, Send, Volume2, Maximize, Settings, Pause, Calendar, Globe, Clock, BookOpen, BarChart3, BarChart, AudioWaveform } from 'lucide-react';
 import { useState, useRef } from 'react';
+import sessionVideo from '../assets/videos/session.mp4';
 
 export function LearningHub() {
   const [selectedSession, setSelectedSession] = useState<number | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(300);
+  const [showCourseDetails, setShowCourseDetails] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const sessions = [
-    { id: 1, title: 'The Complete JavaScript Course 2025: From Zero to Expert!', trainer: 'Scarlett Johnson', status: 'Head of Design, Zoho', video: 'https://www.w3schools.com/html/mov_bbb.mp4' },
-    { id: 2, title: 'The Complete JavaScript Course 2025: From Zero to Expert!', trainer: 'Scarlett Johnson', status: 'Head of Design, Zoho', video: 'https://www.w3schools.com/html/mov_bbb.mp4' },
-    { id: 3, title: 'The Complete JavaScript Course 2025: From Zero to Expert!', trainer: 'Scarlett Johnson', status: 'Head of Design, Zoho', video: 'https://www.w3schools.com/html/mov_bbb.mp4' },
-    { id: 4, title: 'The Complete JavaScript Course 2025: From Zero to Expert!', trainer: 'Scarlett Johnson', status: 'Head of Design, Zoho', video: 'https://www.w3schools.com/html/mov_bbb.mp4' },
-    { id: 5, title: 'The Complete JavaScript Course 2025: From Zero to Expert!', trainer: 'Scarlett Johnson', status: 'Head of Design, Zoho', video: 'https://www.w3schools.com/html/mov_bbb.mp4' },
+    { id: 1, title: 'The Complete JavaScript Course 2025: From Zero to Expert!', trainer: 'Scarlett Johnson', status: 'Head of Design, Zoho', video: sessionVideo },
+    { id: 2, title: 'The Complete JavaScript Course 2025: From Zero to Expert!', trainer: 'Scarlett Johnson', status: 'Head of Design, Zoho', video: sessionVideo },
+    { id: 3, title: 'The Complete JavaScript Course 2025: From Zero to Expert!', trainer: 'Scarlett Johnson', status: 'Head of Design, Zoho', video: sessionVideo },
+    { id: 4, title: 'The Complete JavaScript Course 2025: From Zero to Expert!', trainer: 'Scarlett Johnson', status: 'Head of Design, Zoho', video: sessionVideo },
+    { id: 5, title: 'The Complete JavaScript Course 2025: From Zero to Expert!', trainer: 'Scarlett Johnson', status: 'Head of Design, Zoho', video: sessionVideo },
   ];
 
   const comments = [
@@ -42,6 +44,11 @@ export function LearningHub() {
     }
   };
 
+  const handleSessionClick = (sessionId: number) => {
+    setSelectedSession(sessionId);
+    setShowCourseDetails(false);
+  };
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
@@ -49,7 +56,7 @@ export function LearningHub() {
   };
 
   return (
-    <div className="flex-1 p-8 bg-gray-50 overflow-y-auto">
+    <div className="flex-1 p-8 bg-white overflow-y-auto">
       <h1 className="text-2xl font-bold text-gray-900 mb-6">The Complete JavaScript Course 2025: From Zero to Expert!</h1>
       
       <div className="flex gap-6">
@@ -65,7 +72,73 @@ export function LearningHub() {
                   onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
                   onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
                 />
+                
+                {/* Course Details Overlay */}
+                {showCourseDetails && (
+                  <div className="absolute inset-0 bg-gray-800/95 text-white p-8 overflow-y-auto">
+                    <h2 className="text-2xl font-bold mb-4">The Complete JavaScript Course 2025: From Zero to Expert!!</h2>
+                    <p className="text-gray-300 mb-6">The modern JavaScript course for everyone! Master JavaScript with projects, challenges and theory. Many courses in one!</p>
+
+                    <div className="space-y-3 mb-6">
+                      <div className="flex items-center gap-2 text-sm">
+                        <Calendar className="w-4 h-4" />
+                        <span>Course start date & end date : 28th July, 2025 - 27th August, 2025</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
+                        <Globe className="w-4 h-4" />
+                        <span>English, Tamil, 4 more languages</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
+                        <Clock className="w-4 h-4" />
+                        <span>08 Sessions - Totally</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between mb-6">
+                      <span className="text-sm">40% Completed</span>
+                      <span className="text-sm">6 Session remaining</span>
+                    </div>
+
+                    <div className="mb-6">
+                      <h3 className="text-lg font-semibold mb-3">What you'll learn</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {['Foundational Concepts', 'Control Structures', 'Functions & Scope', 'Objects & Arrays', 'DOM Manipulation', 'Advanced JavaScript (Introductory)', 'Intro to APIs & JSON', 'Mini Projects & Practice'].map((topic) => (
+                          <span key={topic} className="px-3 py-1.5 bg-gray-700 rounded text-sm">{topic}</span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-300 rounded-lg opacity-20"></div>
+                      <div className="relative p-6">
+                        <div className="text-6xl font-bold opacity-30">JavaScript</div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="absolute top-4 left-4">
+                    <div className="flex gap-3">
+                      <button 
+                        onClick={() => setShowCourseDetails(false)}
+                        className={`px-4 py-2 rounded-full text-sm transition-colors ${
+                          !showCourseDetails ? 'bg-gray-700 text-white' : 'bg-white/20 text-white'
+                        }`}
+                      >
+                        Recording Video
+                      </button>
+                      <button 
+                        onClick={() => setShowCourseDetails(true)}
+                        className={`px-4 py-2 rounded-full text-sm transition-colors ${
+                          showCourseDetails ? 'bg-white text-gray-800' : 'bg-white/20 text-white'
+                        }`}
+                      >
+                        Course Details
+                      </button>
+                    </div>
+                  </div>
+                  
                   <div className="absolute bottom-0 left-0 right-0 p-4">
                     <div className="flex items-center gap-3 mb-2">
                       <button onClick={togglePlay} className="w-10 h-10 bg-[#00BF53] rounded-full flex items-center justify-center hover:bg-[#00a045]">
@@ -96,26 +169,22 @@ export function LearningHub() {
             </div>
           ) : null}
           
-          <div className="bg-gray-800 rounded-lg p-8 text-white">
-            <div className="flex gap-3 mb-6">
-            <button className="px-4 py-2 bg-gray-700 rounded-full text-sm">Recording Video</button>
-            <button className="px-4 py-2 bg-white text-gray-800 rounded-full text-sm font-medium">Course Details</button>
-            </div>
-
+          {(!selectedSession && showCourseDetails) && (
+            <div className="bg-gray-800 rounded-lg p-8 text-white">
             <h2 className="text-2xl font-bold mb-4">The Complete JavaScript Course 2025: From Zero to Expert!!</h2>
             <p className="text-gray-300 mb-6">The modern JavaScript course for everyone! Master JavaScript with projects, challenges and theory. Many courses in one!</p>
 
             <div className="space-y-3 mb-6">
               <div className="flex items-center gap-2 text-sm">
-                <span>📅</span>
+                <Calendar className="w-4 h-4" />
                 <span>Course start date & end date : 28th July, 2025 - 27th August, 2025</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
-                <span>🌐</span>
+                <Globe className="w-4 h-4" />
                 <span>English, Tamil, 4 more languages</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
-                <span>⏱️</span>
+                <Clock className="w-4 h-4" />
                 <span>08 Sessions - Totally</span>
               </div>
             </div>
@@ -140,7 +209,8 @@ export function LearningHub() {
                 <div className="text-6xl font-bold opacity-30">JavaScript</div>
               </div>
             </div>
-          </div>
+            </div>
+          )}
 
           {/* Session Details & Comments */}
           <div className="mt-6 space-y-6">
@@ -165,7 +235,10 @@ export function LearningHub() {
                     <img src="https://via.placeholder.com/32" alt="Trainer" className="w-8 h-8 rounded-full" />
                     <span className="font-semibold text-sm">Scarlett Johnson</span>
                   </div>
-                  <p className="text-xs text-gray-600">📚 Head of Design, Zoho</p>
+                  <p className="text-xs text-gray-600 flex items-center gap-1">
+                    <BookOpen className="w-3 h-3" />
+                    Head of Design, Zoho
+                  </p>
                 </div>
                 <div className="text-yellow-400">⭐⭐⭐⭐⭐</div>
               </div>
@@ -232,19 +305,26 @@ export function LearningHub() {
             {sessions.map((session) => (
               <div
                 key={session.id}
-                onClick={() => setSelectedSession(session.id)}
-                className={`bg-white p-4 rounded-lg shadow-sm border cursor-pointer transition-all ${
+                onClick={() => handleSessionClick(session.id)}
+                className={`cursor-pointer transition-all ${
                   selectedSession === session.id ? 'border-[#00BF53] bg-green-50' : 'border-gray-200 hover:border-[#00BF53]'
                 }`}
               >
                 <div className="flex items-start gap-3">
                   <button className="mt-1 w-8 h-8 bg-[#00BF53] rounded-full flex items-center justify-center hover:bg-[#00a045] transition-colors">
-                    <Play className="w-4 h-4 text-white fill-white" />
+                    {selectedSession === session.id ? (
+                      <AudioWaveform className="w-4 h-4 text-white" />
+                    ) : (
+                      <Play className="w-4 h-4 text-white fill-white" />
+                    )}
                   </button>
                   <div className="flex-1">
                     <h3 className="font-semibold text-sm text-gray-900 mb-1">{session.title}</h3>
-                    <p className="text-xs text-gray-600">Trainer : {session.trainer}</p>
-                    <p className="text-xs text-gray-500">📚 {session.status}</p>
+                    {/* <p className="text-xs text-gray-600">Trainer : {session.trainer}</p>
+                    <p className="text-xs text-gray-500 flex items-center gap-1">
+                      <BookOpen className="w-3 h-3" />
+                      {session.status}
+                    </p> */}
                   </div>
                 </div>
               </div>
@@ -263,7 +343,10 @@ export function LearningHub() {
               {sessionDetails.map((detail) => (
                 <div key={detail.id} className="border-l-2 border-gray-200 pl-4">
                   <h4 className="font-semibold text-sm text-gray-900 mb-1">{detail.title}</h4>
-                  <p className="text-xs text-gray-600 mb-2">📅 {detail.date}</p>
+                  <p className="text-xs text-gray-600 mb-2 flex items-center gap-1">
+                    <Calendar className="w-3 h-3" />
+                    {detail.date}
+                  </p>
                   {detail.notes ? (
                     <div className="flex gap-2">
                       {detail.notes.map((note, idx) => (
