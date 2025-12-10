@@ -206,8 +206,8 @@ export function SessionDetailsPage({
       <div className="bg-white border-b px-6 py-4">
         <div className="flex items-center gap-2 text-sm text-gray-600">
           <span
-            onClick={onCourseDetailsClick}
-            className="hover:text-[#00BF53] cursor-pointer"
+            // onClick={onCourseDetailsClick}
+            // className="hover:text-[#00BF53] cursor-pointer"
           >
             {session.courseName}
           </span>
