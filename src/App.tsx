@@ -13,6 +13,7 @@ import { SkillShowcase } from './pages/SkillShowcase';
 import { ChatHistory } from './pages/ChatHistory';
 import { WhatIsBest } from './pages/WhatIsBest';
 import { Chat } from './pages/Chat';
+import { AIChat } from './components/AIChat';
 
 function App() {
 
@@ -34,6 +35,7 @@ function App() {
           <Route path="/skill-showcase" element={<SkillShowcase />} />
           <Route path="/chat-history" element={<ChatHistory />} />
           <Route path="/what-is-best" element={<WhatIsBest />} />
+          <Route path="/ai" element={<AIChat isOpen={true} onClose={() => {return}} />} />
         </Routes>
       </div>
     </HashRouter>
