@@ -271,7 +271,7 @@ export function SessionDetailsPage({
           <div className="grid grid-cols-[1fr_320px] gap-6">
             {/* Left Video Section */}
             <div className="relative">
-              <div className="flex flex-col h-full  overflow-y-auto max-h-[78vh] scrollbar-hide">
+              <div className="flex flex-col h-full">
                 {/* Video Player */}
                 <div className="max-h-[455px] relative">
                   <VideoPlayer
@@ -465,11 +465,13 @@ export function SessionDetailsPage({
                         className="w-12 h-12 rounded-full"
                       />
                       <div>
-                        <h3 className="font-semibold text-gray-900">
+                        <h3 className="font-semibold text-sm text-gray-900">
                           {trainer.name}
                         </h3>
                         <p className="text-sm text-gray-600 flex">
-                          {trainer.title}, {trainer.company} <br />
+                          {trainer.title}
+                          {/* , {trainer.company} */}
+                           <br />
                           <div className="flex items-center ml-2">
                             <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />{" "}
                             {trainer.rating} ({trainer.reviews.toLocaleString()}{" "}
@@ -513,15 +515,15 @@ export function SessionDetailsPage({
                 )}
 
                 {/* Test Cards */}
-                <div className="bg-white py-4 text-xs mb-[80px]">
+                <div className="bg-white py-4 text-xs mb-[160px]">
                   <h3 className="font-semibold text-gray-900 mb-4">
                     Available Tests
                   </h3>
-                  <div className="space-y-3">
+                  <div className="border border-gray-200 rounded-[10px]">
                     {testCards.map((test) => (
                       <div
                         key={test.id}
-                        className="border border-gray-200 rounded-lg p-2"
+                        className="border-b border-gray-200 p-2 last:border-b-0 "
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex items-center gap-3 flex-1">

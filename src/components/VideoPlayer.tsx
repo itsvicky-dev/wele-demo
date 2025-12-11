@@ -97,13 +97,13 @@ export function VideoPlayer({ videoSrc, onCourseDetailsClick }: VideoPlayerProps
   return (
     <div 
       ref={containerRef}
-      className="relative flex-1 bg-black group cursor-pointer"
+      className="relative flex-1 bg-black group cursor-pointer rounded-[10px]"
       onMouseMove={handleMouseMove}
       onMouseLeave={() => !showSettings && setShowControls(false)}
     >
       <video
         ref={videoRef}
-        className={`w-full h-full object-contain {${!isFullscreen ? 'min-h-[455px]' : ''}`}
+        className={`w-full h-full object-contain rounded-[10px] ${!isFullscreen ? 'max-h-[455px]' : ''}`}
         src={videoSrc}
         onClick={handleVideoClick}
         onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
@@ -113,7 +113,7 @@ export function VideoPlayer({ videoSrc, onCourseDetailsClick }: VideoPlayerProps
       />
       
       {/* Video Controls Overlay */}
-      <div className={`absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 transition-opacity duration-300 ${
+      <div className={`absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 transition-opacity duration-300 rounded-[10px] ${
         showControls || !isPlaying ? 'opacity-100' : 'opacity-0'
       }`}>
         {/* Top Controls */}
