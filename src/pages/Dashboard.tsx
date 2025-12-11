@@ -1,4 +1,4 @@
-import { Sparkles, ArrowRight, ChevronLeft, ChevronRight, FileText, Code, Trophy, Users, Calendar, Target, Clock, CheckCircle, XCircle, Circle, BookOpen, Zap, TrendingUp, Star, MessageCircle, Lightbulb, Gift, BarChart3, Heart, Share2, Bookmark, MoreHorizontal, Flame, Award, Crown } from "lucide-react";
+import { Sparkles, ArrowRight, ChevronLeft, ChevronRight, FileText, Code, Trophy, Users, Calendar, Target, Clock, CheckCircle, XCircle, Circle, BookOpen, Zap, TrendingUp, Star, MessageCircle, Lightbulb, Gift, BarChart3, Heart, Share2, Bookmark, MoreHorizontal, Flame, Award, Crown, BookCheck } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export function Dashboard() {
@@ -14,7 +14,7 @@ export function Dashboard() {
   ];
   
   const allActivities = [
-    { name: "Mathi R.", action: "reviewed", target: "5 code submissions", initials: "MR", icon: <Code size={16} className="text-[#00bf53]" /> },
+    { name: "Mathi MS.", action: "reviewed", target: "5 code submissions", initials: "MR", icon: <Code size={16} className="text-[#00bf53]" /> },
     { name: "Sarah K.", action: "completed", target: "React Fundamentals", initials: "SK", icon: <BookOpen size={16} className="text-[#00bf53]" /> },
     { name: "Tom B.", action: "posted", target: "a helpful tip for Ai", initials: "TB", icon: <MessageCircle size={16} className="text-[#00bf53]" /> },
     { name: "Emma W.", action: "submitted", target: "Weekly Challenge", initials: "EW", icon: <Trophy size={16} className="text-[#00bf53]" /> },
@@ -26,6 +26,37 @@ export function Dashboard() {
   
   const [liveActivities, setLiveActivities] = useState(allActivities.slice(0, 3));
   const [newActivity, setNewActivity] = useState(null);
+  const [sessionPage, setSessionPage] = useState(0);
+  
+  const allSessions = [
+    { id: 'S1', status: 'present' },
+    { id: 'S2', status: 'present' },
+    { id: 'S3', status: 'absent' },
+    { id: 'S4', status: 'present' },
+    { id: 'S5', status: 'present' },
+    { id: 'S6', status: 'present' },
+    { id: 'S7', status: 'present' },
+    { id: 'S8', status: 'pending' },
+    { id: 'S9', status: 'pending' },
+    { id: 'S10', status: 'pending' },
+    { id: 'S11', status: 'pending' },
+    { id: 'S12', status: 'pending' },
+    { id: 'S13', status: 'pending' },
+    { id: 'S14', status: 'pending' },
+  ];
+  
+  const getSessionStyle = (status) => {
+    switch(status) {
+      case 'present': return 'bg-green-50 border-green-200 text-green-700';
+      case 'absent': return 'bg-red-50 border-red-200 text-red-700';
+      case 'pending': return 'bg-gray-50 border-gray-200 text-gray-500';
+      default: return 'bg-gray-50 border-gray-200 text-gray-500';
+    }
+  };
+  
+  const currentSessions = allSessions.slice(sessionPage * 7, (sessionPage + 1) * 7);
+  const totalPages = Math.ceil(allSessions.length / 7);
+  const hasNextPage = sessionPage < totalPages - 1;
   
   const todayClasses = [
     { time: "10:00 AM", subject: "React Advanced", instructor: "John Doe", status: "live" },
@@ -81,7 +112,7 @@ export function Dashboard() {
         {activeTab === 'for-you' && (
           <>
             {/* Main Layout: Left 3 + Right 1 */}
-            <div className="mt-0 flex gap-6">
+            <div className="mt-0 flex gap-4">
               {/* Left Section - 3 columns */}
               <div className="flex-1 space-y-4">
                 
@@ -107,7 +138,10 @@ export function Dashboard() {
                       ))}
                     </div>
                     {todayClasses.length > 3 && (
-                      <button className="text-xs text-[#00bf53] mt-2 hover:underline">Show More</button>
+                      <button className="text-xs text-gray-500 font-medium hover:text-green-600 flex items-center gap-1 group">
+                        Show More
+                        <ArrowRight size={12} className="group-hover:text-green-600" />
+                      </button>
                     )}
                   </div>
                   
@@ -133,51 +167,65 @@ export function Dashboard() {
                       ))}
                     </div>
                     {skillGaps.length > 3 && (
-                      <button className="text-xs text-[#00bf53] mt-7 hover:underline">View Full Analysis</button>
+                      <button className="text-xs text-gray-500 mt-8 font-medium hover:text-green-600 flex items-center gap-1 group">
+                        View Full Analysis
+                        <ArrowRight size={12} className="group-hover:text-green-600" />
+                      </button>
                     )}
                   </div>
                   
-                  {/* Weekly Challenge */}
+                  {/* Course Progress */}
                   <div className="bg-white rounded-xl p-4 border border-gray-200">
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-2">
-                        <Trophy size={16} className="text-[#00bf53]" />
-                        <h3 className="font-semibold text-gray-900 text-sm">Weekly Challenge</h3>
+                    <div className="flex items-center gap-2 mb-3">
+                      <BookOpen size={16} className="text-[#00bf53]" />
+                      <h3 className="font-semibold text-gray-900 text-sm">Course Progress</h3>
+                    </div>
+                    <div className="flex items-center justify-center mb-3">
+                      <div className="relative w-16 h-16">
+                        <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
+                          <path className="text-gray-200" stroke="currentColor" strokeWidth="3" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                          <path className="text-[#00bf53]" stroke="currentColor" strokeWidth="3" fill="none" strokeDasharray="75, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        </svg>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <span className="text-lg font-bold text-gray-900">75%</span>
+                        </div>
                       </div>
                     </div>
-                    <h4 className="font-medium text-gray-900 text-sm mb-2">Build a Todo App</h4>
-                    <div className="mb-2">
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="text-xs text-gray-600">Progress</span>
-                        <span className="text-xs font-medium text-[#00bf53]">65%</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-1">
-                        <div className="bg-[#00bf53] h-1 rounded-full" style={{width: '65%'}}></div>
-                      </div>
-                    </div>
-                    <div className="space-y-1 mb-3">
-                      <div className="flex justify-between text-xs">
-                        <span className="text-gray-600">Participants</span>
-                        <span className="font-medium text-gray-900">2,341</span>
-                      </div>
-                      <div className="flex justify-between text-xs">
-                        <span className="text-gray-600">Your Rank</span>
-                        <span className="font-medium text-gray-900">#47</span>
-                      </div>
+                    <div className="text-center">
+                      <div className="text-xs text-[#00bf53] font-medium">+8% this week</div>
+                      <div className="text-xs text-gray-500">12/16 chapters completed</div>
                     </div>
                     <div className=" pt-2">
-                      <button className="text-xs text-[#00bf53] hover:underline">Continue Challenge</button>
+                      <button className="text-xs text-gray-500 font-medium hover:text-green-600 flex items-center gap-1 group">
+                        Continue Course
+                        <ArrowRight size={12} className="group-hover:text-green-600" />
+                      </button>
                     </div>
                   </div>
                 </div>
 
                                 {/* Top Banner - Full Width */}
                 <div className=" rounded-2xl  p-6 text-white relative overflow-hidden border border-gray-300 ">
-                  <div className="absolute top-4 left-4 text-xs font-medium opacity-80 text-gray-900">ONLINE COURSE</div>
-                  <h1 className="text-2xl font-bold mt-6 mb-2 text-gray-500">Sharpen Your Skills with</h1>
-                  <h1 className="text-2xl font-bold mb-4 text-gray-500">Professional Online Courses</h1>
-                  <button className="bg-black text-white px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2">
-                    Join Now
+                  <div className="absolute top-4 left-4 text-xs font-medium opacity-80 text-gray-900">Future-Ready Skill Spotlight</div>
+                  <div className="absolute top-4 right-4 bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs font-medium">🔥 Top Pick</div>
+                  <h1 className="text-xl font-bold mt-6 mb-2 text-gray-900">Top 1% Careers: Machine Learning Specialist</h1>
+                  <div className="space-y-1 mb-3 text-sm text-gray-700">
+                    <div className="flex items-center gap-2">
+                      <Users size={14} className="text-gray-600" />
+                      <span>4.2× Hiring Growth (Global)</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <TrendingUp size={14} className="text-gray-600" />
+                      <span>Average Salary: ₹28–₹52L</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Target size={14} className="text-gray-600" />
+                      <span>Demand across FinTech, EdTech, HealthTech, SaaS</span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-gray-600 mb-4">ML Specialists are leading AI automation, predictive analytics, and next-gen product intelligence.</p>
+                  <button className="bg-gray-700 text-white px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2">
+                    Become a Specialist
                     <ArrowRight size={14} />
                   </button>
                   <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -193,18 +241,19 @@ export function Dashboard() {
                 {/* Summary Section */}
                 <div className="bg-white rounded-2xl p-6 py-4 border border-gray-200">
                   <h2 className="text-lg font-semibold text-gray-900 pb-2">Summary</h2>
-                  <div className="space-y-4 text-sm text-gray-600 leading-relaxed">
+                  <div className="space-y-3 text-sm text-gray-600 leading-relaxed">
                     <p>
-                      Welcome to your personalized learning dashboard! Track your progress across multiple courses and skills.
-                      Stay updated with today's live sessions and monitor your attendance to maintain consistent learning habits.
+                      Welcome to your smart learning space!
+                      Here, every course, skill, and activity is tracked in one powerful dashboard designed to guide your growth.
                     </p>
                     <p>
-                      Challenge yourself with weekly coding tasks and compete with thousands of learners worldwide.
-                      Analyze your skill gaps to identify areas for improvement and focus your learning efforts effectively.
+                      Stay consistent with daily goals, live class reminders, and AI-powered progress insights that show exactly where you are improving.
+                      Challenge yourself with weekly tasks, quizzes, and real-time competitions with learners across India.
                     </p>
                     <p>
-                      Connect with our vibrant community of learners and mentors for support and collaboration.
-                      Access quick tools for resume building, daily practice, and career development to accelerate your growth.
+                      Your dashboard highlights skill gaps, recommends what to learn next, and helps you stay career-ready.
+                      Join a growing community of learners, mentors, and industry experts.
+                      Use our quick tools for resume building, AI-driven practice, and career guidance — everything you need to level up faster.
                     </p>
                   </div>
                 </div>
@@ -213,7 +262,10 @@ export function Dashboard() {
                 <div className="grid grid-cols-3 gap-4">
                   {/* Current Streak */}
                   <div className="bg-white rounded-xl p-4 border border-gray-200">
-                    <h3 className="font-semibold text-gray-900 text-sm mb-3">Current Streak</h3>
+                    <div className="flex items-center gap-2 mb-3">
+                      <Flame size={16} className="text-[#00bf53]" />
+                      <h3 className="font-semibold text-gray-900 text-sm">Current Streak</h3>
+                    </div>
                     <div className="flex justify-between text-xs mb-2">
                       <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
                     </div>
@@ -241,7 +293,10 @@ export function Dashboard() {
                   
                   {/* Current Level */}
                   <div className="bg-white rounded-xl p-4 border border-gray-200">
-                    <h3 className="font-semibold text-gray-900 text-sm mb-3">Current Level</h3>
+                    <div className="flex items-center gap-2 mb-3">
+                      <Award size={16} className="text-[#00bf53]" />
+                      <h3 className="font-semibold text-gray-900 text-sm">Current Level</h3>
+                    </div>
                     <div className="text-center mb-3">
                       <div className="text-2xl font-bold text-gray-900">Level 12</div>
                       <div className="text-sm text-gray-500">2,450 XP</div>
@@ -251,30 +306,46 @@ export function Dashboard() {
                         <span className="text-gray-600">Next Level</span>
                         <span className="text-gray-600">3,000 XP</span>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div className="bg-[#00bf53] h-2 rounded-full" style={{width: '82%'}}></div>
+                      <div className="w-full bg-gray-200 rounded-full h-1">
+                        <div className="bg-[#00bf53] h-1 rounded-full" style={{width: '82%'}}></div>
                       </div>
                     </div>
                     <p className="text-xs text-gray-500 text-center">Unlock: Premium Badge</p>
                   </div>
                   
-                  {/* Course Progress */}
+                  {/* Weekly Challenge */}
                   <div className="bg-white rounded-xl p-4 border border-gray-200">
-                    <h3 className="font-semibold text-gray-900 text-sm mb-3">Course Progress</h3>
-                    <div className="flex items-center justify-center mb-3">
-                      <div className="relative w-16 h-16">
-                        <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
-                          <path className="text-gray-200" stroke="currentColor" strokeWidth="3" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                          <path className="text-[#00bf53]" stroke="currentColor" strokeWidth="3" fill="none" strokeDasharray="75, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                        </svg>
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-lg font-bold text-gray-900">75%</span>
-                        </div>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <Trophy size={16} className="text-[#00bf53]" />
+                        <h3 className="font-semibold text-gray-900 text-sm">Weekly Challenge</h3>
                       </div>
                     </div>
-                    <div className="text-center">
-                      <div className="text-xs text-[#00bf53] font-medium">+8% this week</div>
-                      <div className="text-xs text-gray-500">12/16 chapters completed</div>
+                    <h4 className="font-medium text-gray-900 text-sm mb-2">Build a Todo App</h4>
+                    <div className="mb-2">
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-xs text-gray-600">Progress</span>
+                        <span className="text-xs font-medium text-[#00bf53]">65%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-1">
+                        <div className="bg-[#00bf53] h-1 rounded-full" style={{width: '65%'}}></div>
+                      </div>
+                    </div>
+                    <div className="space-y-1 ">
+                      <div className="flex justify-between text-xs">
+                        <span className="text-gray-600">Participants</span>
+                        <span className="font-medium text-gray-900">2,341</span>
+                      </div>
+                      <div className="flex justify-between text-xs">
+                        <span className="text-gray-600">Your Rank</span>
+                        <span className="font-medium text-gray-900">#47</span>
+                      </div>
+                      <div className="">
+                      <button className="text-xs text-gray-500 font-medium hover:text-green-600 flex items-center gap-1 group">
+                        Continue Course
+                        <ArrowRight size={12} className="group-hover:text-green-600" />
+                      </button>
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -363,27 +434,45 @@ export function Dashboard() {
                   </div>
                   
                   <div>
-                    <p className="text-sm text-gray-600 mb-2">Recent Sessions</p>
-                    <div className="flex flex-wrap gap-2">
-                      <div className="flex flex-col items-center justify-center w-16 h-12 bg-gray-50 rounded text-xs">
-                        <CheckCircle size={12} className="text-[#00bf53] mb-1" />
-                        Dec 2
+                    <div className="flex justify-between items-center mb-2">
+                      <p className="text-sm text-gray-600">Recent Sessions</p>
+                      <p className="text-sm text-gray-600">December</p>
+                    </div>
+                    <div className="grid grid-cols-4 gap-2 mb-3">
+                      {currentSessions.map((session) => (
+                        <div key={session.id} className={`w-12 h-10 border rounded flex items-center justify-center text-xs font-medium ${getSessionStyle(session.status)}`}>
+                          {session.id}
+                        </div>
+                      ))}
+                      {hasNextPage && (
+                        <button 
+                          onClick={() => setSessionPage(sessionPage + 1)}
+                          className="w-12 h-10 border border-gray-300 rounded flex items-center justify-center hover:bg-gray-100"
+                        >
+                          <ChevronRight size={16} className="text-gray-600" />
+                        </button>
+                      )}
+                      {!hasNextPage && sessionPage > 0 && (
+                        <button 
+                          onClick={() => setSessionPage(sessionPage - 1)}
+                          className="w-12 h-10 border border-gray-300 rounded flex items-center justify-center hover:bg-gray-100"
+                        >
+                          <ChevronLeft size={16} className="text-gray-600" />
+                        </button>
+                      )}
+                    </div>
+                    <div className="flex gap-4 text-xs">
+                      <div className="flex items-center gap-1">
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                        <span className="text-gray-600">Present</span>
                       </div>
-                      <div className="flex flex-col items-center justify-center w-16 h-12 bg-gray-50 rounded text-xs">
-                        <CheckCircle size={12} className="text-[#00bf53] mb-1" />
-                        Dec 3
+                      <div className="flex items-center gap-1">
+                        <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                        <span className="text-gray-600">Absent</span>
                       </div>
-                      <div className="flex flex-col items-center justify-center w-16 h-12 bg-red-50 rounded text-xs">
-                        <XCircle size={12} className="text-red-600 mb-1" />
-                        Dec 4
-                      </div>
-                      <div className="flex flex-col items-center justify-center w-16 h-12 bg-gray-50 rounded text-xs">
-                        <CheckCircle size={12} className="text-[#00bf53] mb-1" />
-                        Dec 5
-                      </div>
-                      <div className="flex flex-col items-center justify-center w-16 h-12 bg-gray-50 rounded text-xs">
-                        <Circle size={12} className="text-gray-400 mb-1" />
-                        Dec 6
+                      <div className="flex items-center gap-1">
+                        <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
+                        <span className="text-gray-600">Yet to Start</span>
                       </div>
                     </div>
                   </div>
@@ -401,7 +490,7 @@ export function Dashboard() {
                     </div>
                     
                     <div className="space-y-3">
-                      {newActivity && (
+                      {/* {newActivity && (
                         <div className="flex items-center gap-3 p-3 bg-green-50 border border-green-200 rounded-lg animate-pulse">
                           <div className="w-8 h-8 bg-green-200 rounded-full flex items-center justify-center text-sm font-medium">
                             {newActivity.initials}
@@ -414,8 +503,8 @@ export function Dashboard() {
                           </div>
                           {newActivity.icon}
                         </div>
-                      )}
-                      {liveActivities.map((activity, index) => (
+                      )} */}
+                      {liveActivities.slice(0, 3).map((activity, index) => (
                         <div key={index} className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
                           <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-sm font-medium">
                             {activity.initials}
