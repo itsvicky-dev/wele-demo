@@ -29,9 +29,9 @@ export function LearningHub() {
       "Advanced JavaScript",
     ],
     trainer: {
-      name: "Scarlett Johnson",
-      title: "Head of Design",
-      company: "Zoho",
+      name: "Krishna Kumar",
+      title: "Trainer @ Wele",
+      company: "Wele",
       rating: 4.9,
       reviews: 2100,
       avatar: "https://api.dicebear.com/9.x/notionists/svg?seed=varient7",
@@ -127,7 +127,7 @@ export function LearningHub() {
       id: 3,
       title: "Functions",
       content:
-        "Functions are blocks of code designed to perform a particular task.",
+        "Functions as blocks of code designed to perform a particular task.",
       timestamp: "22:10",
     },
   ];

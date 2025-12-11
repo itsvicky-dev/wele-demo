@@ -1,46 +1,56 @@
-import { Search, SlidersHorizontal, Clock, MoreHorizontal, ChevronDown } from "lucide-react";
+import { Search, SlidersHorizontal, Clock, MoreHorizontal, ChevronDown, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { chatService } from "../services/chatService";
+import type { Conversation, Message } from "../lib/database.types";
 
-interface ChatItem {
-  id: string;
-  title: string;
-  preview: string;
-  timestamp: string;
+interface ConversationWithPreview extends Conversation {
+  preview?: string;
 }
 
 export function ChatHistory() {
-  const chats: ChatItem[] = [
-    {
-      id: "1",
-      title: "How to learn React effectively?",
-      timestamp: "2 hours ago",
-      preview: "I want to start learning React from scratch...",
-    },
-    {
-      id: "2",
-      title: "Career advice for software development",
-      timestamp: "Yesterday",
-      preview: "What skills should I focus on to become...",
-    },
-    {
-      id: "3",
-      title: "Best practices for coding interviews",
-      timestamp: "2 days ago",
-      preview: "Can you help me prepare for technical interviews...",
-    },
-    {
-      id: "4",
-      title: "Understanding JavaScript closures",
-      timestamp: "3 days ago",
-      preview: "I am having trouble understanding closures...",
-    },
-    {
-      id: "5",
-      title: "Database design principles",
-      timestamp: "1 week ago",
-      preview: "What are the key principles for good database...",
+  const [conversations, setConversations] = useState<ConversationWithPreview[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    loadConversations();
+  }, []);
+
+  const loadConversations = async () => {
+    setLoading(true);
+    const data = await chatService.getConversations();
+    
+    // Get preview for each conversation (first user message)
+    const conversationsWithPreviews = await Promise.all(
+      data.map(async (conv) => {
+        const messages = await chatService.getMessages(conv.id);
+        const firstUserMessage = messages.find(msg => msg.role === 'user');
+        return {
+          ...conv,
+          preview: firstUserMessage ? firstUserMessage.content.slice(0, 60) + '...' : 'No messages yet'
+        };
+      })
+    );
+    
+    setConversations(conversationsWithPreviews);
+    setLoading(false);
+  };
+
+  const handleDeleteConversation = async (conversationId: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (confirm('Are you sure you want to delete this conversation?')) {
+      await chatService.deleteConversation(conversationId);
+      setConversations(prev => prev.filter(conv => conv.id !== conversationId));
     }
-  ];
+  };
+
+  const filteredConversations = conversations.filter(conv => 
+    conv.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (conv.preview && conv.preview.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
 
   return (
     <div className="flex-1 flex flex-col h-screen bg-white max-w-4xl mx-auto">
@@ -58,7 +68,9 @@ export function ChatHistory() {
           />
           <input
             type="text"
-            placeholder="Search your Threads..."
+            placeholder="Search your conversations..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00BF53] focus:border-transparent"
           />
         </div>
@@ -87,31 +99,55 @@ export function ChatHistory() {
 
       {/* Chat List */}
       <div className="flex-1 overflow-y-auto px-8 py-4 scrollbar-hide">
-        <div className="space-y-4">
-          {chats.map((chat) => (
-            <Link
-              key={chat.id}
-              to={`/chat?id=${chat.id}`}
-              className="block border-b border-gray-200 pb-4 hover:bg-gray-50 -mx-4 px-4 transition-all"
-            >
-              <div className="flex items-start justify-between mb-2">
-                <h3 className="text-base font-medium text-gray-800 flex-1 pr-4">
-                  {chat.title}
-                </h3>
-                <button className="text-gray-400 hover:text-gray-600">
-                  <MoreHorizontal size={20} />
-                </button>
-              </div>
-              <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-                {chat.preview}
-              </p>
-              <div className="flex items-center gap-2 text-xs text-gray-500">
-                <Clock size={14} />
-                <span>{chat.timestamp}</span>
-              </div>
-            </Link>
-          ))}
-        </div>
+        {loading ? (
+          <div className="flex items-center justify-center py-8">
+            <div className="text-gray-500">Loading conversations...</div>
+          </div>
+        ) : filteredConversations.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-12">
+            <div className="text-gray-500 mb-2">
+              {searchTerm ? 'No conversations found' : 'No conversations yet'}
+            </div>
+            {!searchTerm && (
+              <Link
+                to="/chat"
+                className="text-[#00BF53] hover:underline text-sm"
+              >
+                Start your first conversation
+              </Link>
+            )}
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {filteredConversations.map((conversation) => (
+              <Link
+                key={conversation.id}
+                to={`/chat?id=${conversation.id}`}
+                className="block border-b border-gray-200 pb-4 hover:bg-gray-50 -mx-4 px-4 transition-all"
+              >
+                <div className="flex items-start justify-between mb-2">
+                  <h3 className="text-base font-medium text-gray-800 flex-1 pr-4">
+                    {conversation.title}
+                  </h3>
+                  <button 
+                    onClick={(e) => handleDeleteConversation(conversation.id, e)}
+                    className="text-gray-400 hover:text-red-500 transition-colors"
+                    title="Delete conversation"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+                <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                  {conversation.preview}
+                </p>
+                <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <Clock size={14} />
+                  <span>{chatService.formatTimestamp(conversation.updated_at)}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

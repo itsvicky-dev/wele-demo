@@ -17,22 +17,17 @@ import {
   ChevronDown,
   ChevronRight,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Logo from "../assets/images/logo.svg";
+import { chatService } from "../services/chatService";
+import type { Conversation } from "../lib/database.types";
 
 interface MenuItem {
   id: string;
   title: string;
   icon: React.ReactNode;
   path: string;
-}
-
-interface ChatItem {
-  id: string;
-  title: string;
-  timestamp: string;
-  preview: string;
 }
 
 export function Sidebar() {
@@ -42,40 +37,19 @@ export function Sidebar() {
   >({
     "chat-history": true,
   });
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Dummy chat data
-  const dummyChats: ChatItem[] = [
-    {
-      id: "1",
-      title: "How to learn React effectively?",
-      timestamp: "2 hours ago",
-      preview: "I want to start learning React from scratch...",
-    },
-    {
-      id: "2",
-      title: "Career advice for software development",
-      timestamp: "Yesterday",
-      preview: "What skills should I focus on to become...",
-    },
-    {
-      id: "3",
-      title: "Best practices for coding interviews",
-      timestamp: "2 days ago",
-      preview: "Can you help me prepare for technical interviews...",
-    },
-    {
-      id: "4",
-      title: "Understanding JavaScript closures",
-      timestamp: "3 days ago",
-      preview: "I am having trouble understanding closures...",
-    },
-    {
-      id: "5",
-      title: "Database design principles",
-      timestamp: "1 week ago",
-      preview: "What are the key principles for good database...",
-    }
-  ];
+  useEffect(() => {
+    loadConversations();
+  }, []);
+
+  const loadConversations = async () => {
+    setLoading(true);
+    const data = await chatService.getConversations();
+    setConversations(data.slice(0, 5)); // Show only recent 5 chats
+    setLoading(false);
+  };
 
   const set1Menus: MenuItem[] = [
     {
@@ -230,31 +204,34 @@ export function Sidebar() {
 
           {expandedSections["chat-history"] && (
             <div className="mt-2 space-y-1">
-              {dummyChats.map((chat) => (
-                <Link
-                  key={chat.id}
-                  to={`/chat?id=${chat.id}`}
-                  className="block px-3 py-2 rounded-lg hover:bg-white transition-all group"
-                >
-                  <div className="flex items-start gap-2">
-                    <MessageSquare
-                      size={14}
-                      className="text-gray-400 mt-0.5 flex-shrink-0"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <div className="text-xs font-medium text-gray-800 truncate group-hover:text-[#00BF53]">
-                        {chat.title}
-                      </div>
-                      <div className="text-xs text-gray-500 truncate mt-0.5">
-                        {chat.preview}
-                      </div>
-                      <div className="text-xs text-gray-400 mt-1">
-                        {chat.timestamp}
+              {loading ? (
+                <div className="px-3 py-2 text-xs text-gray-500">Loading...</div>
+              ) : conversations.length === 0 ? (
+                <div className="px-3 py-2 text-xs text-gray-500">No chats yet</div>
+              ) : (
+                conversations.map((conversation) => (
+                  <Link
+                    key={conversation.id}
+                    to={`/chat?id=${conversation.id}`}
+                    className="block px-3 py-2 rounded-lg hover:bg-white transition-all group"
+                  >
+                    <div className="flex items-start gap-2">
+                      <MessageSquare
+                        size={14}
+                        className="text-gray-400 mt-0.5 flex-shrink-0"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="text-xs font-medium text-gray-800 truncate group-hover:text-[#00BF53]">
+                          {conversation.title}
+                        </div>
+                        <div className="text-xs text-gray-400 mt-1">
+                          {chatService.formatTimestamp(conversation.updated_at)}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                ))
+              )}
             </div>
           )}
         </div>

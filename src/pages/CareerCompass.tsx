@@ -1,5 +1,7 @@
-import { ArrowUp, MoreHorizontal, Send } from "lucide-react";
+import { ArrowUp, MoreHorizontal, Paperclip, Send } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { aiService } from "../services/aiService";
+import type { AIMessage } from "../services/aiService";
 
 interface MCQOption {
   id: string;
@@ -173,7 +175,7 @@ const careerQuestions: MCQQuestion[] = [
       { id: "c", text: "It changes the color of the text" },
       { id: "d", text: "It is only used for decoration" },
     ],
-  }
+  },
 ];
 
 const questionSets = [
@@ -270,7 +272,7 @@ export function CareerCompass() {
     }
   };
 
-  const handleChatSubmit = () => {
+  const handleChatSubmit = async () => {
     if (!chatInput.trim()) return;
 
     if (showAssessment && !showResults && !assessmentTerminated) {
@@ -286,20 +288,42 @@ export function CareerCompass() {
     setChatInput("");
     setIsLoading(true);
 
-    setTimeout(() => {
-      setChatMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content:
-            "That's an interesting question! Let me think about that for a moment. Based on what you're asking, I'd say that understanding the context is really important here.",
-        },
-      ]);
-      setIsLoading(false);
-    }, 1000);
+    const conversationMessages: AIMessage[] = [
+      ...chatMessages.map(msg => ({ role: msg.role, content: msg.content })),
+      { role: "user", content: userMessage }
+    ];
+
+    let assistantContent = "";
+    setChatMessages(prev => [...prev, { role: "assistant", content: "" }]);
+
+    try {
+      for await (const chunk of aiService.streamResponse(conversationMessages)) {
+        if (!chunk.isComplete) {
+          assistantContent += chunk.content;
+          setChatMessages(prev => 
+            prev.map((msg, index) => 
+              index === prev.length - 1 && msg.role === "assistant"
+                ? { ...msg, content: assistantContent }
+                : msg
+            )
+          );
+        }
+      }
+    } catch (error) {
+      console.error('Error generating response:', error);
+      setChatMessages(prev => 
+        prev.map((msg, index) => 
+          index === prev.length - 1 && msg.role === "assistant"
+            ? { ...msg, content: "Sorry, I'm having trouble generating a response. Please try again." }
+            : msg
+        )
+      );
+    }
+
+    setIsLoading(false);
   };
 
-  const handleWarningConfirm = () => {
+  const handleWarningConfirm = async () => {
     setUserAnswers({});
     setShowResults(false);
     setAssessmentTerminated(true);
@@ -313,17 +337,39 @@ export function CareerCompass() {
     setChatInput("");
     setIsLoading(true);
 
-    setTimeout(() => {
-      setChatMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content:
-            "That's an interesting question! Let me think about that for a moment. Based on what you're asking, I'd say that understanding the context is really important here.",
-        },
-      ]);
-      setIsLoading(false);
-    }, 1000);
+    const conversationMessages: AIMessage[] = [
+      ...chatMessages.map(msg => ({ role: msg.role, content: msg.content })),
+      { role: "user", content: userMessage }
+    ];
+
+    let assistantContent = "";
+    setChatMessages(prev => [...prev, { role: "assistant", content: "" }]);
+
+    try {
+      for await (const chunk of aiService.streamResponse(conversationMessages)) {
+        if (!chunk.isComplete) {
+          assistantContent += chunk.content;
+          setChatMessages(prev => 
+            prev.map((msg, index) => 
+              index === prev.length - 1 && msg.role === "assistant"
+                ? { ...msg, content: assistantContent }
+                : msg
+            )
+          );
+        }
+      }
+    } catch (error) {
+      console.error('Error generating response:', error);
+      setChatMessages(prev => 
+        prev.map((msg, index) => 
+          index === prev.length - 1 && msg.role === "assistant"
+            ? { ...msg, content: "Sorry, I'm having trouble generating a response. Please try again." }
+            : msg
+        )
+      );
+    }
+
+    setIsLoading(false);
   };
 
   const generateRecommendation = (): string => {
@@ -583,9 +629,26 @@ export function CareerCompass() {
                     <div className="flex items-start space-x-3">
                       <div className="flex-1 space-y-2">
                         <div className="prose max-w-none">
-                          <p className="text-gray-800 leading-relaxed whitespace-pre-wrap">
-                            {message.content}
-                          </p>
+                          {message.content ? (
+                            <p className="text-gray-800 leading-relaxed whitespace-pre-wrap">
+                              {message.content}
+                            </p>
+                          ) : (
+                            <div className="flex space-x-1">
+                              <div
+                                className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                                style={{ animationDelay: "0ms" }}
+                              ></div>
+                              <div
+                                className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                                style={{ animationDelay: "150ms" }}
+                              ></div>
+                              <div
+                                className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                                style={{ animationDelay: "300ms" }}
+                              ></div>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -650,13 +713,19 @@ export function CareerCompass() {
           } mx-auto pb-6`}
         >
           <form
-            onSubmit={(e) => {  
+            onSubmit={(e) => {
               e.preventDefault();
               handleChatSubmit();
             }}
             className="relative"
           >
             <div className="flex items-end space-x-3 border border-gray-300 rounded-full p-3 max-w-3xl">
+              <button
+                type="button"
+                className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                <Paperclip size={20} />
+              </button>
               <textarea
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}

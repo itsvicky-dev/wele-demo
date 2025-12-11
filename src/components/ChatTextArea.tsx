@@ -40,8 +40,10 @@ export function ChatTextArea({
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showDrawer, setShowDrawer] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -57,8 +59,20 @@ export function ChatTextArea({
     }
   }, [messages, showDrawer]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const handleSuggestionClick = async (suggestionText: string) => {
     if (isLoading || disabled) return;
+    setShowSuggestions(false);
 
     let messageContent = suggestionText;
     if (suggestionText.toLowerCase().includes("summarize this session") && sessionContext) {
@@ -118,6 +132,7 @@ export function ChatTextArea({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading || disabled) return;
+    setShowSuggestions(false);
 
     const userMessage: ChatMessage = {
       role: "user",
@@ -178,17 +193,19 @@ export function ChatTextArea({
   };
 
   return (
-    <>
+    <div ref={containerRef}>
       {/* Suggestions */}
-      <SuggestionList
-        suggestions={suggestions}
-        onSuggestionClick={handleSuggestionClick}
-      />
+      {showSuggestions && (
+        <SuggestionList
+          suggestions={suggestions}
+          onSuggestionClick={handleSuggestionClick}
+        />
+      )}
       
       {/* Chat Input */}
       <div className={`bg-white rounded-full ${className}`}>
         <form onSubmit={handleSubmit} className="relative">
-          <div className="flex items-end space-x-3 border border-gray-300 rounded-full p-3">
+          <div className={`flex items-end space-x-3 border border-gray-300 ${showSuggestions && suggestions.length > 0 ? 'rounded-b-[20px] rounded-t-none' : 'rounded-full'} p-3`}>
             <button
               type="button"
               className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
@@ -200,6 +217,7 @@ export function ChatTextArea({
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
+              onClick={() => setShowSuggestions(true)}
               placeholder={placeholder}
               className="flex-1 bg-transparent border-0 self-center outline-none resize-none text-gray-900 placeholder-gray-500 min-h-[24px] max-h-32"
               rows={1}
@@ -233,7 +251,7 @@ export function ChatTextArea({
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          <div className="flex-1 overflow-y-auto scrollbar-hide p-4 space-y-4 max-w-3xl max-w-3xl mx-auto">
             {messages.map((message) => (
               <div key={message.id}>
                 {message.role === "assistant" ? (
@@ -277,7 +295,7 @@ export function ChatTextArea({
           </div>
           <div className={`bg-white rounded-full ${className}`}>
             <form onSubmit={handleSubmit} className="relative">
-              <div className="flex items-end space-x-3 border border-gray-300 rounded-full p-3">
+              <div className="flex items-end space-x-3 border border-gray-300 rounded-full p-3 max-w-3xl mx-auto">
                 <button
                   type="button"
                   className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
@@ -306,6 +324,6 @@ export function ChatTextArea({
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
