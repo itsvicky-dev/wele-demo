@@ -103,7 +103,7 @@ export function VideoPlayer({ videoSrc, onCourseDetailsClick }: VideoPlayerProps
     >
       <video
         ref={videoRef}
-        className="w-full h-full object-contain max-h-[455px]"
+        className={`w-full h-full object-contain {${!isFullscreen ? 'min-h-[455px]' : ''}`}
         src={videoSrc}
         onClick={handleVideoClick}
         onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
