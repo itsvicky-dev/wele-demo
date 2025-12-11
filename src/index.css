@@ -2,101 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer utilities {
-  .animate-fadeIn {
-    animation: fadeIn 0.3s ease-in-out forwards;
+@keyframes float-up {
+  0% {
+    transform: translateY(100px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px);
     opacity: 0;
   }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .animate-slideIn {
-    animation: slideIn 0.5s ease-out forwards;
-  }
-
-  @keyframes slideIn {
-    from {
-      opacity: 0;
-      transform: translateX(-20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
 }
 
-* {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
-}
-
-*::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-*::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-*::-webkit-scrollbar-thumb {
-  background-color: rgba(156, 163, 175, 0.5);
-  border-radius: 10px;
-  border: 2px solid transparent;
-}
-
-*::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(107, 114, 128, 0.7);
-}
-
-/* Hide default radio appearance */
-input[type="radio"] {
-  appearance: none;
-  -webkit-appearance: none;
-  background-color: #fff;
-  width: 14px;
-  height: 14px;
-  border: 1px solid #e8e8e8; /* Border color */
-  border-radius: 50%;
-  cursor: pointer;
-  position: relative;
-  outline: none;
-  transition: 0.2s ease;
-}
-
-/* Selected/Active State */
-input[type="radio"]:checked {
-  border-color: #00bf53;
-  background-color: #00bf53;
-}
-
-/* Optional: inner dot style if you want a custom look */
-input[type="radio"]:checked::after {
-  content: "";
-  width: 6px;
-  height: 6px;
-  background: #fff;
-  border-radius: 50%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.scrollbar-hide {
-  -ms-overflow-style: none !important;
-  scrollbar-color: rgba(156, 163, 175, 0) transparent;
-}
-.scrollbar-hide::-webkit-scrollbar {
-  display: none !important;
+.animate-float-up {
+  animation: float-up 4s infinite linear;
 }
