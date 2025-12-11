@@ -1,4 +1,4 @@
-import { Sparkles, ArrowRight, ChevronLeft, ChevronRight, FileText, Code, Trophy, Users, Calendar, Target, Clock, CheckCircle, XCircle, Circle, BookOpen, Zap, TrendingUp, Star, MessageCircle, Lightbulb, Gift, BarChart3, Heart, Share2, Bookmark, MoreHorizontal, Flame, Award, Crown, BookCheck } from "lucide-react";
+import { Sparkles, ArrowRight, ChevronLeft, ChevronRight, FileText, Code, Trophy, Users, Calendar, Target, Clock, CheckCircle, XCircle, Circle, BookOpen, Zap, TrendingUp, Star, MessageCircle, Lightbulb, Gift, BarChart3, Heart, Share2, Bookmark, MoreHorizontal, Flame, Award, Crown, BookCheck, LayoutDashboard } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export function Dashboard() {
@@ -86,9 +86,22 @@ export function Dashboard() {
   }, []);
 
   return (
-    <div className="flex-1 overflow-y-auto bg-gray-50">
+    <div className="flex-1 overflow-y-auto bg-white">
+      <div className="sticky top-0 z-20 border-b border-[#0d0d0d0d] bg-white px-4 py-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <LayoutDashboard size={16} className="text-gray-700"/>
+                  <h1 className=" text-md text-gray-700 font-medium">Dashboard</h1>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <button className="p-1.5 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                    <MoreHorizontal size={16} />
+                  </button>
+                </div>
+              </div>
+            </div>
       {/* Tabs */}
-      <div className="sticky top-0 z-10 bg-gray-50 py-4">
+      <div className="sticky top-12 z-10 bg-white py-4">
         <div className="mx-auto px-10">
           <div className="flex space-x-2 justify-start">
             {tabs.map((tab) => (
@@ -108,7 +121,7 @@ export function Dashboard() {
         </div>
       </div>
       
-      <div className="mx-auto px-8 py-4 relative">
+      <div className="mx-auto px-10 py-4 relative">
         {activeTab === 'for-you' && (
           <>
             {/* Main Layout: Left 3 + Right 1 */}
@@ -167,7 +180,7 @@ export function Dashboard() {
                       ))}
                     </div>
                     {skillGaps.length > 3 && (
-                      <button className="text-xs text-gray-500 mt-8 font-medium hover:text-green-600 flex items-center gap-1 group">
+                      <button className="text-xs text-gray-500 mt-6 font-medium hover:text-green-600 flex items-center gap-1 group">
                         View Full Analysis
                         <ArrowRight size={12} className="group-hover:text-green-600" />
                       </button>
@@ -204,10 +217,10 @@ export function Dashboard() {
                   </div>
                 </div>
 
-                                {/* Top Banner - Full Width */}
-                <div className=" rounded-2xl  p-6 text-white relative overflow-hidden border border-gray-300 ">
+                                {/* Combined Banner and Summary Section */}
+                <div className="bg-white rounded-2xl p-6 border border-gray-200 relative overflow-hidden">
                   <div className="absolute top-4 left-4 text-xs font-medium opacity-80 text-gray-900">Future-Ready Skill Spotlight</div>
-                  <div className="absolute top-4 right-4 bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs font-medium">🔥 Top Pick</div>
+                  <div className="absolute top-4 right-4 bg-gray-200 text-gray-900 px-2 py-1 rounded-2xl text-xs font-medium">🔥 Top Pick</div>
                   <h1 className="text-xl font-bold mt-6 mb-2 text-gray-900">Top 1% Careers: Machine Learning Specialist</h1>
                   <div className="space-y-1 mb-3 text-sm text-gray-700">
                     <div className="flex items-center gap-2">
@@ -224,10 +237,34 @@ export function Dashboard() {
                     </div>
                   </div>
                   <p className="text-xs text-gray-600 mb-4">ML Specialists are leading AI automation, predictive analytics, and next-gen product intelligence.</p>
-                  <button className="bg-gray-700 text-white px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2">
+                  <button className="bg-gray-200 text-gray-900 px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2 mb-6 hover:bg-gray-300 transition-colors">
                     Become a Specialist
                     <ArrowRight size={14} />
                   </button>
+                  
+                  <hr className="border-gray-200 mb-4" />
+                  
+                  <h2 className="text-lg font-semibold text-gray-900 pb-2">Summary</h2>
+                  <div className="space-y-3 text-sm text-gray-600 leading-relaxed">
+                    <p>
+                      Welcome to your smart learning space — a personalised hub built to understand how you learn, what you need, and how fast you're growing.
+                    </p>
+                    <p>
+                      Your dashboard brings every course, skill, goal, and activity into one unified view so you can clearly track your progress without confusion.
+                      Stay consistent with daily learning targets, timely reminders for live classes, and structured learning paths designed to help you build habits that actually stick.
+                    </p>
+                    <p>
+                      Our AI continuously analyses your performance, identifies patterns, and gives you deep progress insights — showing not just what you learned but how you're improving over time.
+                      Push your limits with weekly challenges, interactive quizzes, micro-tasks, and real-time competitions with learners across India. Compete, collaborate, and grow as you unlock achievements and climb your learning leaderboard.
+                    </p>
+                    <p>
+                      Your dashboard also highlights your strengths and skill gaps, recommends the exact topics to focus on next, and maps your journey to the career path you're aiming for. You'll always know what to learn, why it matters, and how it brings you one step closer to your goals.
+                    </p>
+                    <p>
+                      Join a growing community of learners, mentors, and industry experts who share knowledge, answer your questions, and help you stay motivated throughout your journey.
+                    </p>
+                  </div>
+                  
                   <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     <div className="w-2 h-2 bg-green-400 rounded-full absolute animate-float-up" style={{right: '10%', animationDelay: '0s'}}></div>
                     <div className="w-1.5 h-1.5 bg-green-300 rounded-full absolute animate-float-up" style={{right: '20%', animationDelay: '0.8s'}}></div>
@@ -235,26 +272,6 @@ export function Dashboard() {
                     <div className="w-1 h-1 bg-green-200 rounded-full absolute animate-float-up" style={{right: '25%', animationDelay: '2.4s'}}></div>
                     <div className="w-2 h-2 bg-green-400 rounded-full absolute animate-float-up" style={{right: '8%', animationDelay: '3.2s'}}></div>
                     <div className="w-1.5 h-1.5 bg-green-300 rounded-full absolute animate-float-up" style={{right: '30%', animationDelay: '4s'}}></div>
-                  </div>
-                </div>
-                
-                {/* Summary Section */}
-                <div className="bg-white rounded-2xl p-6 py-4 border border-gray-200">
-                  <h2 className="text-lg font-semibold text-gray-900 pb-2">Summary</h2>
-                  <div className="space-y-3 text-sm text-gray-600 leading-relaxed">
-                    <p>
-                      Welcome to your smart learning space!
-                      Here, every course, skill, and activity is tracked in one powerful dashboard designed to guide your growth.
-                    </p>
-                    <p>
-                      Stay consistent with daily goals, live class reminders, and AI-powered progress insights that show exactly where you are improving.
-                      Challenge yourself with weekly tasks, quizzes, and real-time competitions with learners across India.
-                    </p>
-                    <p>
-                      Your dashboard highlights skill gaps, recommends what to learn next, and helps you stay career-ready.
-                      Join a growing community of learners, mentors, and industry experts.
-                      Use our quick tools for resume building, AI-driven practice, and career guidance — everything you need to level up faster.
-                    </p>
                   </div>
                 </div>
                 
