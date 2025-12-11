@@ -513,7 +513,7 @@ export function SessionDetailsPage({
                 )}
 
                 {/* Test Cards */}
-                <div className="bg-white py-4 text-xs">
+                <div className="bg-white py-4 text-xs mb-[80px]">
                   <h3 className="font-semibold text-gray-900 mb-4">
                     Available Tests
                   </h3>
