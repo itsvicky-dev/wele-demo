@@ -525,8 +525,8 @@ export function SessionDetailsPage({
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex items-center gap-3 flex-1">
-                            <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
-                              <ClipboardList className="w-3 h-3 text-blue-600" />
+                            <div className="w-6 h-6 bg-gray-100 rounded-lg flex items-center justify-center">
+                              <ClipboardList className="w-3 h-3" />
                             </div>
                             <div className="flex-1">
                               <h4 className="font-medium text-gray-900 mb-1">
@@ -548,7 +548,7 @@ export function SessionDetailsPage({
                               </button>
                             ) : (
                               <div className="text-center">
-                                <div className="text-sm font-semibold text-[#00BF53]">
+                                <div className="text-sm text-[#00BF53]">
                                   {test.score}%
                                 </div>
                                 <div className="text-xs text-gray-500">
