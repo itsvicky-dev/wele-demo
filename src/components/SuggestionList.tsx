@@ -1,4 +1,4 @@
-import { TrendingUp, Search, Sparkles, MapPin } from "lucide-react";
+import { TrendingUp, Search, Sparkles, MapPin, ArrowUpRight } from "lucide-react";
 
 interface Suggestion {
   id: string;
@@ -34,7 +34,7 @@ export function SuggestionList({
             onClick={() => onSuggestionClick(suggestion.text)}
             className="w-full flex items-center gap-3 text-left rounded-md transition-colors duration-200 group"
           >
-            <TrendingUp className="w-4 h-4 text-gray-400 group-hover:text-[#00BF53] transition-colors" />
+            <ArrowUpRight className="w-4 h-4 text-gray-400 group-hover:text-[#00BF53] transition-colors" />
             <span className="text-sm text-gray-700 group-hover:text-[#00BF53]">{suggestion.text}</span>
           </button>
         ))}

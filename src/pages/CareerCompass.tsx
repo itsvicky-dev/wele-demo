@@ -1,4 +1,11 @@
-import { ArrowUp, MoreHorizontal, Paperclip, Send } from "lucide-react";
+import {
+  ArrowUp,
+  Compass,
+  Mic,
+  MoreHorizontal,
+  Paperclip,
+  Send,
+} from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { aiService } from "../services/aiService";
 import type { AIMessage } from "../services/aiService";
@@ -200,6 +207,33 @@ export function CareerCompass() {
   const questionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const currentQuestionRef = useRef<HTMLDivElement>(null);
+  const [displayedContent, setDisplayedContent] = useState('');
+  const [isTyping, setIsTyping] = useState(true);
+
+  const fullContent = `👏Welcome to Career Compass.
+  This quick mission reveals your strengths and shows you the career path that truly fits you.
+
+Level 1: will have simple psychometric questions to understand your mindset, behaviour, and decision style.
+
+Level 2: mixes psychometric + basic technical questions to see how you connect logic with skills.
+
+Level 3: dives into pure technical questions to validate your real-world understanding. Ready ah? Let's find the career that actually fits you."`;
+
+  useEffect(() => {
+    let currentIndex = 0;
+    
+    const typeCharacter = () => {
+      if (currentIndex < fullContent.length) {
+        setDisplayedContent(fullContent.slice(0, currentIndex + 1));
+        currentIndex++;
+        setTimeout(typeCharacter, 5);
+      } else {
+        setIsTyping(false);
+      }
+    };
+    
+    typeCharacter();
+  }, []);
 
   useEffect(() => {
     if (!showAssessment) return;
@@ -289,19 +323,21 @@ export function CareerCompass() {
     setIsLoading(true);
 
     const conversationMessages: AIMessage[] = [
-      ...chatMessages.map(msg => ({ role: msg.role, content: msg.content })),
-      { role: "user", content: userMessage }
+      ...chatMessages.map((msg) => ({ role: msg.role, content: msg.content })),
+      { role: "user", content: userMessage },
     ];
 
     let assistantContent = "";
-    setChatMessages(prev => [...prev, { role: "assistant", content: "" }]);
+    setChatMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
     try {
-      for await (const chunk of aiService.streamResponse(conversationMessages)) {
+      for await (const chunk of aiService.streamResponse(
+        conversationMessages
+      )) {
         if (!chunk.isComplete) {
           assistantContent += chunk.content;
-          setChatMessages(prev => 
-            prev.map((msg, index) => 
+          setChatMessages((prev) =>
+            prev.map((msg, index) =>
               index === prev.length - 1 && msg.role === "assistant"
                 ? { ...msg, content: assistantContent }
                 : msg
@@ -310,11 +346,15 @@ export function CareerCompass() {
         }
       }
     } catch (error) {
-      console.error('Error generating response:', error);
-      setChatMessages(prev => 
-        prev.map((msg, index) => 
+      console.error("Error generating response:", error);
+      setChatMessages((prev) =>
+        prev.map((msg, index) =>
           index === prev.length - 1 && msg.role === "assistant"
-            ? { ...msg, content: "Sorry, I'm having trouble generating a response. Please try again." }
+            ? {
+                ...msg,
+                content:
+                  "Sorry, I'm having trouble generating a response. Please try again.",
+              }
             : msg
         )
       );
@@ -338,19 +378,21 @@ export function CareerCompass() {
     setIsLoading(true);
 
     const conversationMessages: AIMessage[] = [
-      ...chatMessages.map(msg => ({ role: msg.role, content: msg.content })),
-      { role: "user", content: userMessage }
+      ...chatMessages.map((msg) => ({ role: msg.role, content: msg.content })),
+      { role: "user", content: userMessage },
     ];
 
     let assistantContent = "";
-    setChatMessages(prev => [...prev, { role: "assistant", content: "" }]);
+    setChatMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
     try {
-      for await (const chunk of aiService.streamResponse(conversationMessages)) {
+      for await (const chunk of aiService.streamResponse(
+        conversationMessages
+      )) {
         if (!chunk.isComplete) {
           assistantContent += chunk.content;
-          setChatMessages(prev => 
-            prev.map((msg, index) => 
+          setChatMessages((prev) =>
+            prev.map((msg, index) =>
               index === prev.length - 1 && msg.role === "assistant"
                 ? { ...msg, content: assistantContent }
                 : msg
@@ -359,11 +401,15 @@ export function CareerCompass() {
         }
       }
     } catch (error) {
-      console.error('Error generating response:', error);
-      setChatMessages(prev => 
-        prev.map((msg, index) => 
+      console.error("Error generating response:", error);
+      setChatMessages((prev) =>
+        prev.map((msg, index) =>
           index === prev.length - 1 && msg.role === "assistant"
-            ? { ...msg, content: "Sorry, I'm having trouble generating a response. Please try again." }
+            ? {
+                ...msg,
+                content:
+                  "Sorry, I'm having trouble generating a response. Please try again.",
+              }
             : msg
         )
       );
@@ -408,7 +454,10 @@ export function CareerCompass() {
       <div className="border-b border-[#0d0d0d0d] bg-white px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <h1 className="text-lg text-gray-900">Career Compass</h1>
+            <h1 className="text-lg text-gray-900 flex items-center">
+              <Compass size={18} className="mr-2" />
+              Career Compass
+            </h1>
           </div>
           <div className="flex items-center space-x-2">
             <button className="p-1.5 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
@@ -451,28 +500,29 @@ export function CareerCompass() {
               <div className="">
                 <div className="flex flex-col items-center space-x-3">
                   {/* WELCOME MESSAGE */}
-                  <div className="flex flex-col items-start space-y-3">
-                    <p className="text-gray-800 mb-4">
-                      Awesome! You’re just about to kick-start your Career
-                      Compass journey. In this quick mission, we’ll understand
-                      who you are, how you think, and what career path suits you
-                      the best.
+                  <div className="flex flex-col items-start space-y-3" id="welcome-text">
+                    <p className="text-gray-800 flex flex-col mb-3">
+                      <span className="text-center flex">
+                        {displayedContent.split('\n')[0]}
+                        {displayedContent.length < fullContent.length && displayedContent.split('\n').length === 1 && (
+                          <span className="inline-block w-4 h-4 bg-gray-400 rounded-full ml-1 animate-pulse self-center"></span>
+                        )}
+                      </span>
                     </p>
-                    <p className="text-gray-800">
-                      <b>Level 1:</b> will have simple psychometric questions to
-                      understand your mindset, behaviour, and decision style.
-                    </p>
-                    <p className="text-gray-800">
-                      <b>Level 2:</b> mixes psychometric + basic technical
-                      questions to see how you connect logic with skills.
-                    </p>
-                    <p className="text-gray-800">
-                      <b>Level 3:</b> dives into pure technical questions to
-                      validate your real-world understanding. Ready ah? Let’s
-                      find the career that actually fits you.”
-                    </p>
+                    {displayedContent.split('\n').slice(1).map((line, index) => (
+                      line && <p key={index + 1} className="text-gray-800 flex-1">
+                        {line.includes('Level') ? (
+                          <><b>{line.split(':')[0]}:</b>{line.split(':').slice(1).join(':')}</>
+                        ) : (
+                          line
+                        )}
+                        {index === displayedContent.split('\n').slice(1).length - 1 && displayedContent.length < fullContent.length && (
+                          <span className="inline-block w-4 h-4 bg-gray-400 rounded-full ml-1 animate-pulse self-center"></span>
+                        )}
+                      </p>
+                    ))}
                   </div>
-                  {!showAssessment && (
+                  {!showAssessment && displayedContent.length == fullContent.length && (
                     <button
                       onClick={() => setShowAssessment(true)}
                       className="px-4 py-2 mt-16 rounded-lg border border-[#00BF53] text-[#00BF53] mx-auto flex hover:bg-[#00BF53]/[0.1] transition-colors"
@@ -719,7 +769,7 @@ export function CareerCompass() {
             }}
             className="relative"
           >
-            <div className="flex items-end space-x-3 border border-gray-300 rounded-full p-3 max-w-3xl">
+            <div className="flex items-center space-x-3 border border-gray-300 rounded-full p-3 max-w-3xl">
               <button
                 type="button"
                 className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
@@ -740,6 +790,12 @@ export function CareerCompass() {
                 rows={1}
                 disabled={isLoading}
               />
+              <button
+                type="button"
+                className=" text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                <Mic size={24} />
+              </button>
               <button
                 type="submit"
                 disabled={!chatInput.trim() || isLoading}

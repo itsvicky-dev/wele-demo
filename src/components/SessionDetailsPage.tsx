@@ -24,6 +24,7 @@ import {
   StarIcon,
   X,
   ClipboardList,
+  BookOpen,
 } from "lucide-react";
 import { useState, useRef } from "react";
 import { VideoPlayer } from "./VideoPlayer";
@@ -111,25 +112,32 @@ export function SessionDetailsPage({
 
   const [showCourseDetails, setShowCourseDetails] = useState(false);
 
+  const mentors = [
+    { id: 1, name: "Sarah Johnson", domain: "MERN Development", avatar: "mentor1" },
+    { id: 2, name: "Mike Chen", domain: "Full Stack Engineering", avatar: "mentor2" },
+    { id: 3, name: "Emily Davis", domain: "UI/UX Design", avatar: "mentor3" },
+    { id: 4, name: "Alex Rodriguez", domain: "DevOps & Cloud", avatar: "mentor4" }
+  ];
+
   const testCards = [
     {
       id: 1,
-      name: "JavaScript Fundamentals Test",
-      description: "Test your understanding of basic JavaScript concepts",
+      name: "",
+      description: "Introduction to JavaScript",
       completed: false,
       score: null,
     },
     {
       id: 2,
-      name: "Variables & Data Types Quiz",
-      description: "Assessment on JavaScript variables and data types",
+      name: "Attempt 1",
+      description: "Introduction to JavaScript",
       completed: true,
       score: 85,
     },
     {
       id: 3,
-      name: "Functions & Scope Assessment",
-      description: "Evaluate your knowledge of functions and scope",
+      name: "Attempt 2",
+      description: "Introduction to JavaScript",
       completed: true,
       score: 92,
     },
@@ -161,10 +169,11 @@ export function SessionDetailsPage({
       <div className="bg-white border-b px-6 py-4 sticky top-0 z-40">
         <div className="flex items-center gap-2 text-sm text-gray-600">
           <span
+          className="flex items-center"
           // onClick={onCourseDetailsClick}
           // className="hover:text-[#00BF53] cursor-pointer"
           >
-            {session.courseName}
+           <BookOpen size={16} className="mr-2"/> {session.courseName}
           </span>
 
           <ChevronRight className="w-4 h-4" />
@@ -471,7 +480,7 @@ export function SessionDetailsPage({
                         <p className="text-sm text-gray-600 flex">
                           {trainer.title}
                           {/* , {trainer.company} */}
-                           <br />
+                          <br />
                           <div className="flex items-center ml-2">
                             <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />{" "}
                             {trainer.rating} ({trainer.reviews.toLocaleString()}{" "}
@@ -517,7 +526,7 @@ export function SessionDetailsPage({
                 {/* Test Cards */}
                 <div className="bg-white py-4 text-xs mb-[160px]">
                   <h3 className="font-semibold text-gray-900 mb-4">
-                    Available Tests
+                    Tests Attempted
                   </h3>
                   <div className="border border-gray-200 rounded-[10px]">
                     {testCards.map((test) => (
@@ -525,7 +534,7 @@ export function SessionDetailsPage({
                         key={test.id}
                         className="border-b border-gray-200 p-2 last:border-b-0 "
                       >
-                        <div className="flex items-start justify-between">
+                        <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3 flex-1">
                             <div className="w-6 h-6 bg-gray-100 rounded-lg flex items-center justify-center">
                               <ClipboardList className="w-3 h-3" />
@@ -554,7 +563,7 @@ export function SessionDetailsPage({
                                   {test.score}%
                                 </div>
                                 <div className="text-xs text-gray-500">
-                                  Completed
+                                  Scored
                                 </div>
                               </div>
                             )}
@@ -726,45 +735,69 @@ export function SessionDetailsPage({
                         </div>
                       </div>
                     </div>
-
-                    {/* Comments List */}
-                    <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                      {comments.map((comment) => (
-                        <div key={comment.id} className="flex gap-3">
-                          <img
-                            src="https://api.dicebear.com/9.x/notionists/svg?seed=varient8"
-                            alt={comment.user}
-                            className="w-8 h-8 rounded-full flex-shrink-0"
-                          />
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="font-medium text-sm text-gray-900">
-                                {comment.user}
-                              </span>
-                              {comment.pinned && (
-                                <span className="px-2 py-0.5 bg-gray-200 text-gray-600 text-xs rounded-full">
-                                  Pinned
+                    <div>
+                      {/* Comments List */}
+                      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                        {comments.map((comment) => (
+                          <div key={comment.id} className="flex gap-3">
+                            <img
+                              src="https://api.dicebear.com/9.x/notionists/svg?seed=varient8"
+                              alt={comment.user}
+                              className="w-8 h-8 rounded-full flex-shrink-0"
+                            />
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="font-medium text-sm text-gray-900">
+                                  {comment.user}
                                 </span>
-                              )}
-                              <span className="text-xs text-gray-500">
-                                {comment.time}
-                              </span>
-                            </div>
-                            <p className="text-sm text-gray-700 mb-2 leading-relaxed">
-                              {comment.text}
-                            </p>
-                            <div className="flex items-center gap-4">
-                              <button className="flex items-center gap-1 text-xs text-gray-600 hover:text-[#00BF53] transition-colors">
-                                <ThumbsUp className="w-3 h-3" />
-                                <span>{comment.likes}</span>
-                              </button>
-                              <button className="text-xs text-gray-600 hover:text-[#00BF53] transition-colors">
-                                Reply
-                              </button>
+                                {comment.pinned && (
+                                  <span className="px-2 py-0.5 bg-gray-200 text-gray-600 text-xs rounded-full">
+                                    Pinned
+                                  </span>
+                                )}
+                                <span className="text-xs text-gray-500">
+                                  {comment.time}
+                                </span>
+                              </div>
+                              <p className="text-sm text-gray-700 mb-2 leading-relaxed">
+                                {comment.text}
+                              </p>
+                              <div className="flex items-center gap-4">
+                                <button className="flex items-center gap-1 text-xs text-gray-600 hover:text-[#00BF53] transition-colors">
+                                  <ThumbsUp className="w-3 h-3" />
+                                  <span>{comment.likes}</span>
+                                </button>
+                                <button className="text-xs text-gray-600 hover:text-[#00BF53] transition-colors">
+                                  Reply
+                                </button>
+                              </div>
                             </div>
                           </div>
+                        ))}
+                      </div>
+                      
+                      {/* Mentors Section */}
+                      <div className="py-4">
+                        <h3 className="font-medium text-sm text-gray-900 mb-3">Mentors</h3>
+                        <div className="border rounded-lg">
+                          {mentors.map((mentor) => (
+                            <div key={mentor.id} className="flex items-center gap-3 p-2 px-3 border-b last:border-b-0">
+                              <img
+                                src={`https://api.dicebear.com/9.x/notionists/svg?seed=${mentor.avatar}`}
+                                alt={mentor.name}
+                                className="w-10 h-10 rounded-full"
+                              />
+                              <div className="flex-1">
+                                <h4 className="font-medium text-sm text-gray-900">{mentor.name}</h4>
+                                <p className="text-xs text-gray-600">{mentor.domain}</p>
+                              </div>
+                              <button className="px-3 py-1.5 hover:text-[#00BF53] text-xs rounded-lg transition-colors">
+                                Book a slot
+                              </button>
+                            </div>
+                          ))}
                         </div>
-                      ))}
+                      </div>
                     </div>
                   </div>
                 ) : (
@@ -776,7 +809,7 @@ export function SessionDetailsPage({
                         key={session.id}
                         className="space-y-2 border rounded-lg p-3"
                       >
-                        <h4 className="font-medium text-sm text-[#00000080]">
+                        <h4 className="font-medium text-sm text-[#000000d1]">
                           {session.title}
                         </h4>
                         <div className="flex items-center gap-1 text-xs text-gray-500 mb-3">
@@ -784,13 +817,13 @@ export function SessionDetailsPage({
                           <span>July 08, 2025</span>
                         </div>
                         <div className="flex flex-wrap gap-5">
-                          <button className="flex items-center gap-1 py-1 text-[#808080] font-medium text-xs transition-colors border-b ">
+                          <button className="flex items-center gap-1 py-1 text-[#808080] font-medium text-xs transition-colors hover:text-black hover:underline">
                             <FileSpreadsheet size={12} /> Notes 1
                           </button>
-                          <button className="flex items-center gap-1 py-1 text-[#808080] font-medium text-xs transition-colors border-b ">
+                          <button className="flex items-center gap-1 py-1 text-[#808080] font-medium text-xs transition-colors hover:text-black hover:underline">
                             <FileSpreadsheet size={12} /> Notes 2
                           </button>
-                          <button className="flex items-center gap-1 py-1 text-[#808080] font-medium text-xs transition-colors border-b ">
+                          <button className="flex items-center gap-1 py-1 text-[#808080] font-medium text-xs transition-colors hover:text-black hover:underline">
                             <FileSpreadsheet size={12} /> Notes 3
                           </button>
                         </div>
