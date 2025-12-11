@@ -23,6 +23,7 @@ import {
   ThumbsDownIcon,
   StarIcon,
   X,
+  ClipboardList,
 } from "lucide-react";
 import { useState, useRef } from "react";
 import { VideoPlayer } from "./VideoPlayer";
@@ -108,7 +109,31 @@ export function SessionDetailsPage({
   const [isTyping, setIsTyping] = useState(false);
   const [showMCQDrawer, setShowMCQDrawer] = useState(false);
 
-  const [showCourseDetails, setShowCourseDetails] = useState(true);
+  const [showCourseDetails, setShowCourseDetails] = useState(false);
+
+  const testCards = [
+    {
+      id: 1,
+      name: "JavaScript Fundamentals Test",
+      description: "Test your understanding of basic JavaScript concepts",
+      completed: false,
+      score: null,
+    },
+    {
+      id: 2,
+      name: "Variables & Data Types Quiz",
+      description: "Assessment on JavaScript variables and data types",
+      completed: true,
+      score: 85,
+    },
+    {
+      id: 3,
+      name: "Functions & Scope Assessment",
+      description: "Evaluate your knowledge of functions and scope",
+      completed: true,
+      score: 92,
+    },
+  ];
   const [showSessionDropdown, setShowSessionDropdown] = useState(false);
 
   const suggestions = [
@@ -246,7 +271,7 @@ export function SessionDetailsPage({
           <div className="grid grid-cols-[1fr_320px] gap-6">
             {/* Left Video Section */}
             <div className="relative">
-              <div className="flex flex-col h-full">
+              <div className="flex flex-col h-full  overflow-y-auto max-h-[78vh] scrollbar-hide">
                 {/* Video Player */}
                 <div className="max-h-[455px] relative">
                   <VideoPlayer
@@ -254,7 +279,7 @@ export function SessionDetailsPage({
                     onCourseDetailsClick={handleCourseDetailsToggle}
                   />
                   {/* Toggle Buttons */}
-                  <div className="absolute top-4 left-4">
+                  {/* <div className="absolute top-4 left-4">
                     <div className="flex bg-black/40 backdrop-blur-sm rounded-full p-1">
                       <button
                         onClick={handleCourseDetailsToggle}
@@ -279,7 +304,7 @@ export function SessionDetailsPage({
                         Recording Video
                       </button>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* Course Details Overlay */}
@@ -454,13 +479,6 @@ export function SessionDetailsPage({
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <button 
-                        onClick={() => setShowMCQDrawer(true)}
-                        className="flex items-center text-sm gap-2 px-3 py-2 border border-[#00BF53] text-[#00BF53] rounded-full hover:bg-[#00A047] hover:text-white transition-all duration-200 font-medium text-sm shadow-sm hover:shadow-md"
-                      >
-                        <Sparkles className="w-4 h-4" />
-                        Take a Test
-                      </button>
                       <div className="flex bg-gray-100 rounded-full transition-colors p-2">
                         <button className="flex items-center gap-2 px-2 text-sm font-medium">
                           <ThumbsUpIcon size={16} className="text-gray-600" />{" "}
@@ -493,26 +511,81 @@ export function SessionDetailsPage({
                     </div>
                   </div>
                 )}
-              </div>
 
-              {/* Chat Text Area at Bottom */}
-              <div className="fixed bottom-[20px] left-0 right-0 z-[60] max-w-[calc(100vw-720px)] mx-auto">
-                <div className="max-w-[44rem]">
-                  <ChatTextArea
-                    placeholder="Ask AI about this session..."
-                    suggestions={suggestions}
-                    sessionContext={{
-                      title: session.title,
-                      courseName: session.courseName,
-                      description: session.description,
-                      duration: session.duration,
-                    }}
-                    onSendMessage={(message) =>
-                      console.log("Chat message:", message)
-                    }
-                  />
+                {/* Test Cards */}
+                <div className="bg-white py-4 text-xs">
+                  <h3 className="font-semibold text-gray-900 mb-4">
+                    Available Tests
+                  </h3>
+                  <div className="space-y-3">
+                    {testCards.map((test) => (
+                      <div
+                        key={test.id}
+                        className="border border-gray-200 rounded-lg p-2"
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-center gap-3 flex-1">
+                            <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
+                              <ClipboardList className="w-3 h-3 text-blue-600" />
+                            </div>
+                            <div className="flex-1">
+                              <h4 className="font-medium text-gray-900 mb-1">
+                                {test.name}
+                              </h4>
+                              <p className="text-sm text-gray-600">
+                                {test.description}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="ml-4">
+                            {!test.completed ? (
+                              <button
+                                onClick={() => setShowMCQDrawer(true)}
+                                className="flex items-center text-xs gap-2 px-3 py-2 border border-[#00BF53] text-[#00BF53] rounded-full hover:bg-[#00A047] hover:text-white transition-all duration-200 font-medium text-sm shadow-sm hover:shadow-md"
+                              >
+                                <Sparkles className="w-4 h-4" />
+                                Take a Test
+                              </button>
+                            ) : (
+                              <div className="text-center">
+                                <div className="text-sm font-semibold text-[#00BF53]">
+                                  {test.score}%
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                  Completed
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
+            </div>
+
+            {/* Chat Text Area at Bottom */}
+            <div
+              className="fixed bottom-[20px] z-[60]"
+              style={{
+                left: "calc(50% + 364px - 50vw)",
+                width: "calc(100vw - 450px - 320px - 48px - 24px)",
+              }}
+            >
+              <ChatTextArea
+                placeholder="Ask AI about this session..."
+                suggestions={suggestions}
+                sessionContext={{
+                  title: session.title,
+                  courseName: session.courseName,
+                  description: session.description,
+                  duration: session.duration,
+                }}
+                onSendMessage={(message) =>
+                  console.log("Chat message:", message)
+                }
+              />
             </div>
 
             {/* Right Sidebar */}
@@ -523,7 +596,9 @@ export function SessionDetailsPage({
                   <div className="w-full bg-white shadow-2xl transform transition-transform duration-300 ease-out">
                     {/* Drawer Header */}
                     <div className="flex items-center justify-between p-4 border-b">
-                      <h2 className="text-lg font-semibold text-gray-900">Career Assessment</h2>
+                      <h2 className="text-lg font-semibold text-gray-900">
+                        Career Assessment
+                      </h2>
                       <button
                         onClick={() => setShowMCQDrawer(false)}
                         className="p-2 hover:bg-gray-100 rounded-full transition-colors"
@@ -531,7 +606,7 @@ export function SessionDetailsPage({
                         <X className="w-5 h-5 text-gray-500" />
                       </button>
                     </div>
-                    
+
                     {/* MCQ Content */}
                     <div className="h-[calc(100vh-80px)] overflow-y-auto">
                       <MCQAssessment
@@ -540,37 +615,52 @@ export function SessionDetailsPage({
                         questions={[
                           {
                             id: 1,
-                            question: "What is the primary focus of this session?",
+                            question:
+                              "What is the primary focus of this session?",
                             options: [
-                              { text: "Understanding core concepts", value: "concepts" },
-                              { text: "Practical implementation", value: "implementation" },
-                              { text: "Advanced techniques", value: "advanced" },
-                              { text: "Best practices", value: "practices" }
-                            ]
+                              {
+                                text: "Understanding core concepts",
+                                value: "concepts",
+                              },
+                              {
+                                text: "Practical implementation",
+                                value: "implementation",
+                              },
+                              {
+                                text: "Advanced techniques",
+                                value: "advanced",
+                              },
+                              { text: "Best practices", value: "practices" },
+                            ],
                           },
                           {
                             id: 2,
-                            question: "Which skill level is this session designed for?",
+                            question:
+                              "Which skill level is this session designed for?",
                             options: [
                               { text: "Beginner", value: "beginner" },
                               { text: "Intermediate", value: "intermediate" },
                               { text: "Advanced", value: "advanced" },
-                              { text: "Expert", value: "expert" }
-                            ]
+                              { text: "Expert", value: "expert" },
+                            ],
                           },
                           {
                             id: 3,
-                            question: "What is the expected outcome after completing this session?",
+                            question:
+                              "What is the expected outcome after completing this session?",
                             options: [
                               { text: "Basic understanding", value: "basic" },
                               { text: "Practical skills", value: "practical" },
                               { text: "Expert knowledge", value: "expert" },
-                              { text: "Certification readiness", value: "certification" }
-                            ]
-                          }
+                              {
+                                text: "Certification readiness",
+                                value: "certification",
+                              },
+                            ],
+                          },
                         ]}
                         onComplete={(answers) => {
-                          console.log('Assessment completed:', answers);
+                          console.log("Assessment completed:", answers);
                           setShowMCQDrawer(false);
                         }}
                       />
