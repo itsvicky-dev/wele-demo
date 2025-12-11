@@ -102,7 +102,7 @@ export function Dashboard() {
             </div>
       {/* Tabs */}
       <div className="sticky top-12 z-10 bg-white py-4">
-        <div className="mx-auto px-10">
+        <div className="mx-auto px-32">
           <div className="flex space-x-2 justify-start">
             {tabs.map((tab) => (
               <button
@@ -121,7 +121,7 @@ export function Dashboard() {
         </div>
       </div>
       
-      <div className="mx-auto px-10 py-4 relative">
+      <div className="mx-auto px-32 py-4 pt-0 relative">
         {activeTab === 'for-you' && (
           <>
             {/* Main Layout: Left 3 + Right 1 */}
@@ -130,7 +130,7 @@ export function Dashboard() {
               <div className="flex-1 space-y-4">
                 
                 {/* Today Schedule & Skill Analysis Cards */}
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-2 gap-4">
                   {/* Today Schedule */}
                   <div className="bg-white rounded-xl p-4 border border-gray-200">
                     <div className="flex items-center justify-between mb-3">
@@ -185,35 +185,6 @@ export function Dashboard() {
                         <ArrowRight size={12} className="group-hover:text-green-600" />
                       </button>
                     )}
-                  </div>
-                  
-                  {/* Course Progress */}
-                  <div className="bg-white rounded-xl p-4 border border-gray-200">
-                    <div className="flex items-center gap-2 mb-3">
-                      <BookOpen size={16} className="text-[#00bf53]" />
-                      <h3 className="font-semibold text-gray-900 text-sm">Course Progress</h3>
-                    </div>
-                    <div className="flex items-center justify-center mb-3">
-                      <div className="relative w-16 h-16">
-                        <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
-                          <path className="text-gray-200" stroke="currentColor" strokeWidth="3" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                          <path className="text-[#00bf53]" stroke="currentColor" strokeWidth="3" fill="none" strokeDasharray="75, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                        </svg>
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-lg font-bold text-gray-900">75%</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-xs text-[#00bf53] font-medium">+8% this week</div>
-                      <div className="text-xs text-gray-500">12/16 chapters completed</div>
-                    </div>
-                    <div className=" pt-2">
-                      <button className="text-xs text-gray-500 font-medium hover:text-green-600 flex items-center gap-1 group">
-                        Continue Course
-                        <ArrowRight size={12} className="group-hover:text-green-600" />
-                      </button>
-                    </div>
                   </div>
                 </div>
 
@@ -274,62 +245,8 @@ export function Dashboard() {
                     <div className="w-1.5 h-1.5 bg-green-300 rounded-full absolute animate-float-up" style={{right: '30%', animationDelay: '4s'}}></div>
                   </div>
                 </div>
-                
-                {/* Stats Cards */}
-                <div className="grid grid-cols-3 gap-4">
-                  {/* Current Streak */}
-                  <div className="bg-white rounded-xl p-4 border border-gray-200">
-                    <div className="flex items-center gap-2 mb-3">
-                      <Flame size={16} className="text-[#00bf53]" />
-                      <h3 className="font-semibold text-gray-900 text-sm">Current Streak</h3>
-                    </div>
-                    <div className="flex justify-between text-xs mb-2">
-                      <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
-                    </div>
-                    <div className="flex justify-between mb-3">
-                      <div className="w-6 h-6 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center shadow-md">
-                        <Flame size={12} className="text-white" />
-                      </div>
-                      <div className="w-6 h-6 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center shadow-md">
-                        <Flame size={12} className="text-white" />
-                      </div>
-                      <div className="w-6 h-6 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center shadow-md">
-                        <Flame size={12} className="text-white" />
-                      </div>
-                      <div className="w-6 h-6 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center shadow-md">
-                        <Flame size={12} className="text-white" />
-                      </div>
-                      <div className="w-6 h-6 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center shadow-md">
-                        <Flame size={12} className="text-white" />
-                      </div>
-                      <div className="w-6 h-6 bg-gray-200 rounded-full"></div>
-                      <div className="w-6 h-6 bg-gray-200 rounded-full"></div>
-                    </div>
-                    <p className="text-center text-lg font-bold text-gray-900">5 Days</p>
-                  </div>
-                  
-                  {/* Current Level */}
-                  <div className="bg-white rounded-xl p-4 border border-gray-200">
-                    <div className="flex items-center gap-2 mb-3">
-                      <Award size={16} className="text-[#00bf53]" />
-                      <h3 className="font-semibold text-gray-900 text-sm">Current Level</h3>
-                    </div>
-                    <div className="text-center mb-3">
-                      <div className="text-2xl font-bold text-gray-900">Level 12</div>
-                      <div className="text-sm text-gray-500">2,450 XP</div>
-                    </div>
-                    <div className="mb-2">
-                      <div className="flex justify-between text-xs mb-1">
-                        <span className="text-gray-600">Next Level</span>
-                        <span className="text-gray-600">3,000 XP</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-1">
-                        <div className="bg-[#00bf53] h-1 rounded-full" style={{width: '82%'}}></div>
-                      </div>
-                    </div>
-                    <p className="text-xs text-gray-500 text-center">Unlock: Premium Badge</p>
-                  </div>
-                  
+                                <div className="grid grid-cols-2 gap-4">
+                                                      
                   {/* Weekly Challenge */}
                   <div className="bg-white rounded-xl p-4 border border-gray-200">
                     <div className="flex items-center justify-between mb-2">
@@ -363,6 +280,34 @@ export function Dashboard() {
                         <ArrowRight size={12} className="group-hover:text-green-600" />
                       </button>
                     </div>
+                    </div>
+                  </div>
+                  {/* Course Progress */}
+                  <div className="bg-white rounded-xl p-4 border border-gray-200">
+                    <div className="flex items-center gap-2 mb-3">
+                      <BookOpen size={16} className="text-[#00bf53]" />
+                      <h3 className="font-semibold text-gray-900 text-sm">Course Progress</h3>
+                    </div>
+                    <div className="flex items-center justify-center mb-3">
+                      <div className="relative w-16 h-16">
+                        <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
+                          <path className="text-gray-200" stroke="currentColor" strokeWidth="3" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                          <path className="text-[#00bf53]" stroke="currentColor" strokeWidth="3" fill="none" strokeDasharray="75, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        </svg>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <span className="text-lg font-bold text-gray-900">75%</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-xs text-[#00bf53] font-medium">+8% this week</div>
+                      <div className="text-xs text-gray-500">12/16 chapters completed</div>
+                    </div>
+                    <div className=" pt-2">
+                      <button className="text-xs text-gray-500 font-medium hover:text-green-600 flex items-center gap-1 group">
+                        Continue Course
+                        <ArrowRight size={12} className="group-hover:text-green-600" />
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -536,6 +481,61 @@ export function Dashboard() {
                         </div>
                       ))}
                     </div>
+                  </div>
+                </div>
+                                {/* Stats Cards */}
+                <div className="grid grid-cols-1 gap-4">
+                  {/* Current Streak */}
+                  <div className="bg-white rounded-xl p-4 border border-gray-200">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Flame size={16} className="text-[#00bf53]" />
+                      <h3 className="font-semibold text-gray-900 text-sm">Current Streak</h3>
+                    </div>
+                    <div className="flex justify-between text-xs mb-2">
+                      <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+                    </div>
+                    <div className="flex justify-between mb-3">
+                      <div className="w-6 h-6 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center shadow-md">
+                        <Flame size={12} className="text-white" />
+                      </div>
+                      <div className="w-6 h-6 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center shadow-md">
+                        <Flame size={12} className="text-white" />
+                      </div>
+                      <div className="w-6 h-6 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center shadow-md">
+                        <Flame size={12} className="text-white" />
+                      </div>
+                      <div className="w-6 h-6 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center shadow-md">
+                        <Flame size={12} className="text-white" />
+                      </div>
+                      <div className="w-6 h-6 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center shadow-md">
+                        <Flame size={12} className="text-white" />
+                      </div>
+                      <div className="w-6 h-6 bg-gray-200 rounded-full"></div>
+                      <div className="w-6 h-6 bg-gray-200 rounded-full"></div>
+                    </div>
+                    <p className="text-center text-lg font-bold text-gray-900">5 Days</p>
+                  </div>
+                  
+                  {/* Current Level */}
+                  <div className="bg-white rounded-xl p-4 border border-gray-200">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Award size={16} className="text-[#00bf53]" />
+                      <h3 className="font-semibold text-gray-900 text-sm">Current Level</h3>
+                    </div>
+                    <div className="text-center mb-3">
+                      <div className="text-2xl font-bold text-gray-900">Level 12</div>
+                      <div className="text-sm text-gray-500">2,450 XP</div>
+                    </div>
+                    <div className="mb-2">
+                      <div className="flex justify-between text-xs mb-1">
+                        <span className="text-gray-600">Next Level</span>
+                        <span className="text-gray-600">3,000 XP</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-1">
+                        <div className="bg-[#00bf53] h-1 rounded-full" style={{width: '82%'}}></div>
+                      </div>
+                    </div>
+                    <p className="text-xs text-gray-500 text-center">Unlock: Premium Badge</p>
                   </div>
                 </div>
               </div>
