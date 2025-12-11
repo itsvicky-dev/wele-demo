@@ -127,7 +127,7 @@ export function LearningHub() {
       id: 3,
       title: "Functions",
       content:
-        "Functions are blocks of code designed to perform a particular task.",
+        "Functions as blocks of code designed to perform a particular task.",
       timestamp: "22:10",
     },
   ];

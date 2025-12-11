@@ -22,10 +22,12 @@ import {
   ThumbsDown,
   ThumbsDownIcon,
   StarIcon,
+  X,
 } from "lucide-react";
 import { useState, useRef } from "react";
 import { VideoPlayer } from "./VideoPlayer";
 import { ChatTextArea } from "./ChatTextArea";
+import { MCQAssessment } from "./MCQAssessment";
 
 interface Comment {
   id: number;
@@ -104,6 +106,7 @@ export function SessionDetailsPage({
   const [showSummary, setShowSummary] = useState(false);
   const [summaryText, setSummaryText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [showMCQDrawer, setShowMCQDrawer] = useState(false);
 
   const [showCourseDetails, setShowCourseDetails] = useState(true);
   const [showSessionDropdown, setShowSessionDropdown] = useState(false);
@@ -451,7 +454,10 @@ export function SessionDetailsPage({
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <button className="flex items-center text-sm gap-2 px-3 py-2 border border-[#00BF53] text-[#00BF53] rounded-full hover:bg-[#00A047] hover:text-white transition-all duration-200 font-medium text-sm shadow-sm hover:shadow-md">
+                      <button 
+                        onClick={() => setShowMCQDrawer(true)}
+                        className="flex items-center text-sm gap-2 px-3 py-2 border border-[#00BF53] text-[#00BF53] rounded-full hover:bg-[#00A047] hover:text-white transition-all duration-200 font-medium text-sm shadow-sm hover:shadow-md"
+                      >
                         <Sparkles className="w-4 h-4" />
                         Take a Test
                       </button>
@@ -490,7 +496,7 @@ export function SessionDetailsPage({
               </div>
 
               {/* Chat Text Area at Bottom */}
-              <div className="fixed bottom-10 left-0 right-0 z-[60] max-w-[calc(100vw-720px)] mx-auto">
+              <div className="fixed bottom-[20px] left-0 right-0 z-[60] max-w-[calc(100vw-720px)] mx-auto">
                 <div className="max-w-[44rem]">
                   <ChatTextArea
                     placeholder="Ask AI about this session..."
@@ -511,6 +517,67 @@ export function SessionDetailsPage({
 
             {/* Right Sidebar */}
             <div className="bg-white flex flex-col h-full">
+              {/* MCQ Test Drawer Overlay */}
+              {showMCQDrawer && (
+                <div className="absolute inset-0 bg-black/20 z-[70] flex justify-end">
+                  <div className="w-full bg-white shadow-2xl transform transition-transform duration-300 ease-out">
+                    {/* Drawer Header */}
+                    <div className="flex items-center justify-between p-4 border-b">
+                      <h2 className="text-lg font-semibold text-gray-900">Career Assessment</h2>
+                      <button
+                        onClick={() => setShowMCQDrawer(false)}
+                        className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                      >
+                        <X className="w-5 h-5 text-gray-500" />
+                      </button>
+                    </div>
+                    
+                    {/* MCQ Content */}
+                    <div className="h-[calc(100vh-80px)] overflow-y-auto">
+                      <MCQAssessment
+                        title={`${session.courseName} Assessment`}
+                        description={`Test your knowledge on ${session.title}`}
+                        questions={[
+                          {
+                            id: 1,
+                            question: "What is the primary focus of this session?",
+                            options: [
+                              { text: "Understanding core concepts", value: "concepts" },
+                              { text: "Practical implementation", value: "implementation" },
+                              { text: "Advanced techniques", value: "advanced" },
+                              { text: "Best practices", value: "practices" }
+                            ]
+                          },
+                          {
+                            id: 2,
+                            question: "Which skill level is this session designed for?",
+                            options: [
+                              { text: "Beginner", value: "beginner" },
+                              { text: "Intermediate", value: "intermediate" },
+                              { text: "Advanced", value: "advanced" },
+                              { text: "Expert", value: "expert" }
+                            ]
+                          },
+                          {
+                            id: 3,
+                            question: "What is the expected outcome after completing this session?",
+                            options: [
+                              { text: "Basic understanding", value: "basic" },
+                              { text: "Practical skills", value: "practical" },
+                              { text: "Expert knowledge", value: "expert" },
+                              { text: "Certification readiness", value: "certification" }
+                            ]
+                          }
+                        ]}
+                        onComplete={(answers) => {
+                          console.log('Assessment completed:', answers);
+                          setShowMCQDrawer(false);
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
               {/* Tab Headers */}
               <div className="flex border-b">
                 <button
