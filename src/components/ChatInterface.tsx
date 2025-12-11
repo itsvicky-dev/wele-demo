@@ -3,6 +3,9 @@ import {
   MoreHorizontal,
   Paperclip,
   ArrowUp,
+  MessageSquarePlus,
+  MessageSquare,
+  Mic,
 } from "lucide-react";
 import { Message } from "../lib/database.types";
 
@@ -66,7 +69,12 @@ export function ChatInterface({
       <div className="border-b border-[#0d0d0d0d] bg-white px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <h1 className="text-lg text-gray-900">
+            <h1 className="text-lg text-gray-900 flex items-center">
+              {isNewChat ? (
+                <MessageSquarePlus size={18} className="mr-2" />
+              ) : (
+                <MessageSquare size={18} className="mr-2" />
+              )}
               {isNewChat ? "New Chat" : chatTitle || "New Chat"}
             </h1>
           </div>
@@ -163,7 +171,7 @@ export function ChatInterface({
       <div className="bg-white">
         <div className="max-w-3xl mx-auto py-6">
           <form onSubmit={handleSubmit} className="relative">
-            <div className="flex items-end space-x-3 border border-gray-300 rounded-full p-3">
+            <div className="flex items-center space-x-3 border border-gray-300 rounded-full p-3">
               <button
                 type="button"
                 className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
@@ -180,6 +188,12 @@ export function ChatInterface({
                 rows={1}
                 disabled={isLoading}
               />
+              <button
+                type="button"
+                className=" text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                <Mic size={24} />
+              </button>
               <button
                 type="submit"
                 disabled={!input.trim() || isLoading}

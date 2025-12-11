@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Paperclip, X, ArrowUp } from "lucide-react";
+import { Send, Paperclip, X, ArrowUp, Mic } from "lucide-react";
 import { aiService, AIMessage } from "../services/aiService";
 import { SuggestionList } from "./SuggestionList";
 
@@ -61,13 +61,16 @@ export function ChatTextArea({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setShowSuggestions(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleSuggestionClick = async (suggestionText: string) => {
@@ -75,8 +78,19 @@ export function ChatTextArea({
     setShowSuggestions(false);
 
     let messageContent = suggestionText;
-    if (suggestionText.toLowerCase().includes("summarize this session") && sessionContext) {
-      messageContent = `${suggestionText}\n\nSession Details:\nTitle: ${sessionContext.title}\nCourse: ${sessionContext.courseName}\nDuration: ${sessionContext.duration} minutes${sessionContext.description ? `\nDescription: ${sessionContext.description}` : ""}`;
+    if (
+      suggestionText.toLowerCase().includes("summarize this session") &&
+      sessionContext
+    ) {
+      messageContent = `${suggestionText}\n\nSession Details:\nTitle: ${
+        sessionContext.title
+      }\nCourse: ${sessionContext.courseName}\nDuration: ${
+        sessionContext.duration
+      } minutes${
+        sessionContext.description
+          ? `\nDescription: ${sessionContext.description}`
+          : ""
+      }`;
     }
 
     const userMessage: ChatMessage = {
@@ -201,11 +215,17 @@ export function ChatTextArea({
           onSuggestionClick={handleSuggestionClick}
         />
       )}
-      
+
       {/* Chat Input */}
       <div className={`bg-white rounded-full ${className}`}>
         <form onSubmit={handleSubmit} className="relative">
-          <div className={`flex items-end space-x-3 border border-gray-300 ${showSuggestions && suggestions.length > 0 ? 'rounded-b-[20px] rounded-t-none' : 'rounded-full'} p-3`}>
+          <div
+            className={`flex items-center space-x-3 border border-gray-300 ${
+              showSuggestions && suggestions.length > 0
+                ? "rounded-b-[20px] rounded-t-none"
+                : "rounded-full"
+            } p-3`}
+          >
             <button
               type="button"
               className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
@@ -223,6 +243,12 @@ export function ChatTextArea({
               rows={1}
               disabled={disabled || isLoading}
             />
+            <button
+              type="button"
+              className=" text-gray-500 hover:text-gray-700 transition-colors"
+            >
+              <Mic size={24} />
+            </button>
             <button
               type="submit"
               disabled={!input.trim() || isLoading || disabled}
@@ -295,7 +321,7 @@ export function ChatTextArea({
           </div>
           <div className={`bg-white rounded-full ${className}`}>
             <form onSubmit={handleSubmit} className="relative">
-              <div className="flex items-end space-x-3 border border-gray-300 rounded-full p-3 max-w-3xl mx-auto">
+              <div className="flex items-center space-x-3 border border-gray-300 rounded-full p-3 max-w-3xl mx-auto">
                 <button
                   type="button"
                   className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
@@ -312,6 +338,12 @@ export function ChatTextArea({
                   rows={1}
                   disabled={disabled || isLoading}
                 />
+                <button
+                  type="button"
+                  className=" text-gray-500 hover:text-gray-700 transition-colors"
+                >
+                  <Mic size={24} />
+                </button>
                 <button
                   type="submit"
                   disabled={!input.trim() || isLoading || disabled}
