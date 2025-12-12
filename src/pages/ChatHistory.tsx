@@ -12,6 +12,7 @@ export function ChatHistory() {
   const [conversations, setConversations] = useState<ConversationWithPreview[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
   useEffect(() => {
     loadConversations();
@@ -37,13 +38,17 @@ export function ChatHistory() {
     setLoading(false);
   };
 
-  const handleDeleteConversation = async (conversationId: string, e: React.MouseEvent) => {
+  const handleDeleteConversation = (conversationId: string, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
-    if (confirm('Are you sure you want to delete this conversation?')) {
-      await chatService.deleteConversation(conversationId);
-      setConversations(prev => prev.filter(conv => conv.id !== conversationId));
+    setDeleteConfirm(conversationId);
+  };
+
+  const confirmDelete = async () => {
+    if (deleteConfirm) {
+      await chatService.deleteConversation(deleteConfirm);
+      setConversations(prev => prev.filter(conv => conv.id !== deleteConfirm));
+      setDeleteConfirm(null);
     }
   };
 
@@ -149,6 +154,30 @@ export function ChatHistory() {
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-sm mx-4">
+            <h3 className="text-lg font-medium mb-2">Delete conversation?</h3>
+            <p className="text-gray-600 text-sm mb-4">This action cannot be undone.</p>
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() => setDeleteConfirm(null)}
+                className="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="px-4 py-2 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

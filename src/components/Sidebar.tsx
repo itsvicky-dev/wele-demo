@@ -42,6 +42,14 @@ export function Sidebar() {
 
   useEffect(() => {
     loadConversations();
+    
+    // Listen for chat history refresh events
+    const handleRefresh = () => loadConversations();
+    window.addEventListener('refreshChatHistory', handleRefresh);
+    
+    return () => {
+      window.removeEventListener('refreshChatHistory', handleRefresh);
+    };
   }, []);
 
   const loadConversations = async () => {

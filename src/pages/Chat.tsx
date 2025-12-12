@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { ChatInterface } from '../components/ChatInterface';
 import { supabase } from '../lib/supabase';
 import { aiService } from '../services/aiService';
@@ -9,6 +9,7 @@ import chatData from '../data/chatData.json';
 
 export function Chat() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const chatId = searchParams.get('id');
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeConversationId, setActiveConversationId] = useState<string | null>(chatId);
@@ -181,7 +182,12 @@ export function Chat() {
         .eq('id', newConvo.id);
 
       await loadConversations();
-
+      
+      // Refresh sidebar chat history
+      window.dispatchEvent(new CustomEvent('refreshChatHistory'));
+      
+      // Redirect to the new chat
+      navigate(`/chat?id=${newConvo.id}`);
       return;
     }
 
