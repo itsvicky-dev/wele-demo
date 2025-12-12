@@ -1,4 +1,5 @@
 import { Clock, Users, BookOpen } from 'lucide-react';
+import courseBgImage from '../assets/images/course-bg.png';
 
 interface CourseCardProps {
   type: string;
@@ -25,7 +26,7 @@ export function CourseCard({
 }: CourseCardProps) {
   return (
     <div className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-200">
-      <div className="p-6 relative" style={{ backgroundImage: 'url(/assets/images/course-bg.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <div className="p-6 relative" style={{ backgroundImage: `url(${courseBgImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="text-xs font-medium text-gray-700 mb-4">{type}</div>
         <div className="flex items-center gap-3">
           {icon}

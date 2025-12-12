@@ -22,7 +22,9 @@ class AIService {
 
   private async loadDocument(): Promise<void> {
     try {
-      const response = await fetch('/assets/document/wele.txt');
+      // Import the text file from src/assets
+      const weleTextUrl = new URL('../assets/document/wele.txt', import.meta.url).href;
+      const response = await fetch(weleTextUrl);
       this.documentContent = await response.text();
     } catch (error) {
       console.warn('Could not load WE-LE document:', error);
