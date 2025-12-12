@@ -765,7 +765,7 @@ export function MockInterviews() {
                       className={`p-2 rounded-full ${
                         inputValue.trim()
                           ? "bg-[#00BF53] text-white hover:bg-[#00BF53]/90"
-                          : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                          : "bg-gray-300 text-white cursor-not-allowed"
                       }`}
                       onClick={handleTextSubmit}
                       disabled={!inputValue.trim()}

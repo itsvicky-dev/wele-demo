@@ -183,7 +183,7 @@ export function Courses() {
                     }}
                     className="p-2 flex-shrink-0"
                   >
-                    <ChevronLeft className="text-gray-300" />
+                    <ChevronLeft className="text-gray-300"/>
                   </button>
 
                   <div
@@ -195,28 +195,28 @@ export function Courses() {
                       width: "750px",
                     }}
                   >
-                    <div className="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium border border-green-200 whitespace-nowrap">
+                    <div className="bg-green-100 text-green-800 px-4 py-1 rounded-full text-xs font-medium border border-green-200 whitespace-nowrap">
                       Leadership and Management
                     </div>
-                    <div className="text-green-700 px-4 py-2 rounded-full text-sm font-medium border border-green-200 hover:bg-green-100 cursor-pointer whitespace-nowrap">
+                    <div className="text-gray-700 px-4 py-1 rounded-full text-xs font-medium border border-gray-200 hover:bg-green-100 hover:text-green-700 hover:border-green-200 cursor-pointer whitespace-nowrap">
                       Responsible AI
                     </div>
-                    <div className="text-green-700 px-4 py-2 rounded-full text-sm font-medium border border-green-200 hover:bg-green-100 cursor-pointer whitespace-nowrap">
+                    <div className="text-gray-700 px-4 py-1 rounded-full text-xs font-medium border border-gray-200 hover:bg-green-100 hover:text-green-700 hover:border-green-200 cursor-pointer whitespace-nowrap">
                       Machine Learning
                     </div>
-                    <div className="text-green-700 px-4 py-2 rounded-full text-sm font-medium border border-green-200 hover:bg-green-100 cursor-pointer whitespace-nowrap">
+                    <div className="text-gray-700 px-4 py-1 rounded-full text-xs font-medium border border-gray-200 hover:bg-green-100 hover:text-green-700 hover:border-green-200 cursor-pointer whitespace-nowrap">
                       Python Programming
                     </div>
-                    <div className="text-green-700 px-4 py-2 rounded-full text-sm font-medium border border-green-200 hover:bg-green-100 cursor-pointer whitespace-nowrap">
+                    <div className="text-gray-700 px-4 py-1 rounded-full text-xs font-medium border border-gray-200 hover:bg-green-100 hover:text-green-700 hover:border-green-200 cursor-pointer whitespace-nowrap">
                       Computer Programming
                     </div>
-                    <div className="text-green-700 px-4 py-2 rounded-full text-sm font-medium border border-green-200 hover:bg-green-100 cursor-pointer whitespace-nowrap">
+                    <div className="text-gray-700 px-4 py-1 rounded-full text-xs font-medium border border-gray-200 hover:bg-green-100 hover:text-green-700 hover:border-green-200 cursor-pointer whitespace-nowrap">
                       Microsoft Excel
                     </div>
-                    <div className="text-green-700 px-4 py-2 rounded-full text-sm font-medium border border-green-200 hover:bg-green-100 cursor-pointer whitespace-nowrap">
+                    <div className="text-gray-700 px-4 py-1 rounded-full text-xs font-medium border border-gray-200 hover:bg-green-100 hover:text-green-700 hover:border-green-200 cursor-pointer whitespace-nowrap">
                       Data Science
                     </div>
-                    <div className="text-green-700 px-4 py-2 rounded-full text-sm font-medium border border-green-200 hover:bg-green-100 cursor-pointer whitespace-nowrap">
+                    <div className="text-gray-700 px-4 py-1 rounded-full text-xs font-medium border border-gray-200 hover:bg-green-100 hover:text-green-700 hover:border-green-200 cursor-pointer whitespace-nowrap">
                       Cloud Computing
                     </div>
                   </div>
