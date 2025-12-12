@@ -256,13 +256,13 @@ export function Courses() {
                     </div>
                   </div>
                   <div className="p-4">
-                    <h3 className="font-semibold text-gray-900 mb-1">
-                      Google Project Management
+                    <h3 className="font-semibold text-gray-900 mb-1 text-sm">
+                      Project Management
                     </h3>
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <span>🎓 Build toward a degree</span>
+                    <div className="flex items-center gap-2 text-xs text-gray-600">
+                      <span>Build toward a degree</span>
                     </div>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-xs text-gray-600 mt-1">
                       Professional Certificate
                     </p>
                   </div>
@@ -282,10 +282,10 @@ export function Courses() {
                     </div>
                   </div>
                   <div className="p-4">
-                    <h3 className="font-semibold text-gray-900 mb-1">
-                      IBM Product Manager
+                    <h3 className="font-semibold text-gray-900 mb-1 text-sm">
+                      Product Manager
                     </h3>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-xs text-gray-600">
                       Professional Certificate
                     </p>
                   </div>
@@ -305,10 +305,10 @@ export function Courses() {
                     </div>
                   </div>
                   <div className="p-4">
-                    <h3 className="font-semibold text-gray-900 mb-1">
-                      Google People Management Essentials
+                    <h3 className="font-semibold text-gray-900 mb-1 text-sm">
+                      People Management Essentials
                     </h3>
-                    <p className="text-sm text-gray-600">Specialization</p>
+                    <p className="text-xs text-gray-600">Specialization</p>
                   </div>
                 </div>
 
@@ -326,10 +326,10 @@ export function Courses() {
                     </div>
                   </div>
                   <div className="p-4">
-                    <h3 className="font-semibold text-gray-900 mb-1">
-                      IBM Business Analyst
+                    <h3 className="font-semibold text-gray-900 mb-1 text-sm">
+                      Business Analyst
                     </h3>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-xs text-gray-600">
                       Professional Certificate
                     </p>
                   </div>

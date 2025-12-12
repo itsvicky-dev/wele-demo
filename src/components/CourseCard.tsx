@@ -67,7 +67,7 @@ export function CourseCard({
           </div>
         )}
 
-        <button className="w-full py-2.5 border-2 border-green-600 text-green-600 font-medium rounded-md hover:bg-green-50 transition-colors text-sm">
+        <button className="w-full py-2 border-2 border-green-600 text-green-600 text-xs font-medium rounded-md hover:bg-green-50 transition-colors text-sm">
           Enroll Now
         </button>
       </div>
