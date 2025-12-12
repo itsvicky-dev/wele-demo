@@ -1,5 +1,6 @@
 import { Sparkles, ArrowRight, ChevronLeft, ChevronRight, FileText, Code, Trophy, Users, Calendar, Target, Clock, CheckCircle, XCircle, Circle, BookOpen, Zap, TrendingUp, Star, MessageCircle, Lightbulb, Gift, BarChart3, Heart, Share2, Bookmark, MoreHorizontal, Flame, Award, Crown, BookCheck, LayoutDashboard } from "lucide-react";
 import { useState, useEffect } from "react";
+import { ChatTextArea } from "../components/ChatTextArea";
 
 export function Dashboard() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -317,13 +318,13 @@ export function Dashboard() {
               <div className="w-80 space-y-4">
                 {/* Quick Actions */}
                 <div className="bg-white rounded-xl border border-gray-200 p-4">
-                  <div className="flex items-center gap-2 mb-3">
+                  <div className="flex items-center gap-2 mb-0">
                     <Zap size={16} className="text-[#00bf53]" />
                     <h2 className="text-md font-semibold text-gray-900">Quick Actions</h2>
                   </div>
                   
                   <div className="grid grid-cols-2 gap-2">
-                    <div className="flex items-center gap-2 p-2 mb-3 mt-1 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
+                    <div className="flex items-center gap-2 p-2 mt-3  mt-1 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
                       <div className="bg-gray-100 rounded-xl p-2 border border-1">
                         <FileText size={16} className="text-gray-600" />
                       </div>
@@ -333,7 +334,7 @@ export function Dashboard() {
                       </div>
                     </div>
                     
-                    <div className="flex items-center gap-2 p-2 mb-3 mt-1 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
+                    <div className="flex items-center gap-2 p-2 mt-3 mt-1 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
                       <div className="bg-gray-100 rounded-xl p-2 border border-1">
                         <Code size={16} className="text-gray-600" />
                       </div>
@@ -343,7 +344,7 @@ export function Dashboard() {
                       </div>
                     </div>
                     
-                    <div className="flex items-center gap-2 p-2 mb-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
+                    <div className="flex items-center gap-2 p-2 mt-3  hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
                       <div className="bg-gray-100 rounded-xl p-2 border border-1">
                         <Trophy size={16} className="text-gray-600" />
                       </div>
@@ -353,7 +354,7 @@ export function Dashboard() {
                       </div>
                     </div>
                     
-                    <div className="flex items-center gap-2 p-2 mb-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
+                    <div className="flex items-center gap-2 p-2 mt-3  hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
                       <div className="bg-gray-100 rounded-xl p-2 border border-1">
                         <Users size={16} className="text-gray-600" />
                       </div>
@@ -366,7 +367,7 @@ export function Dashboard() {
                 </div>
                 
                 {/* Attendance Health */}
-                <div className="bg-white rounded-xl border border-gray-200 p-6 ">
+                <div className="bg-white rounded-xl border border-gray-200 p-3 ">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
@@ -570,6 +571,29 @@ export function Dashboard() {
             <p className="text-gray-600">Take on exciting coding challenges...</p>
           </div>
         )}
+      </div>
+      
+      {/* Chat TextArea */}
+      <div
+        className="fixed bottom-[20px] z-[60]"
+        style={{
+          left: "calc(50% + 364px - 50vw)",
+          width: "calc(100vw - 450px - 320px - 48px - 24px)",
+        }}
+      >
+        <ChatTextArea
+          placeholder="Ask AI about this dashboard..."
+          suggestions={[]}
+          sessionContext={{
+            title: "Dashboard",
+            courseName: "Learning Dashboard",
+            description: "Your personalized learning hub",
+            duration: "Always Available",
+          }}
+          onSendMessage={(message) =>
+            console.log("Chat message:", message)
+          }
+        />
       </div>
     </div>
   );
