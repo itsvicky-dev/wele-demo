@@ -152,40 +152,39 @@ export function Dashboard() {
                       ))}
                     </div>
                     {todayClasses.length > 3 && (
-                      <button className="text-xs text-gray-500 font-medium hover:text-green-600 flex items-center gap-1 group">
+                      <button className="text-xs text-gray-500 font-medium hover:text-green-600 flex items-center gap-1 group mt-1">
                         Show More
                         <ArrowRight size={12} className="group-hover:text-green-600" />
                       </button>
                     )}
                   </div>
-                  
-                  {/* Skill Gap Analysis */}
-                  <div className="bg-white rounded-xl p-4 border border-gray-200">
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-2">
-                        <BarChart3 size={16} className="text-[#00bf53]" />
-                        <h3 className="font-semibold text-gray-900 text-sm">Skill Gap Analysis</h3>
+                  {/* Course Progress */}
+                  <div className="bg-white rounded-xl p-4 border border-gray-200 ">
+                    <div className="flex items-center gap-2 mb-3">
+                      <BookOpen size={16} className="text-[#00bf53]" />
+                      <h3 className="font-semibold text-gray-900 text-sm">Course Progress</h3>
+                    </div>
+                    <div className="flex items-center justify-center mb-3">
+                      <div className="relative w-16 h-16">
+                        <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
+                          <path className="text-gray-200" stroke="currentColor" strokeWidth="3" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                          <path className="text-[#00bf53]" stroke="currentColor" strokeWidth="3" fill="none" strokeDasharray="75, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        </svg>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <span className="text-lg font-bold text-gray-900">75%</span>
+                        </div>
                       </div>
                     </div>
-                    <div className="space-y-2">
-                      {skillGaps.slice(0, 3).map((skill, index) => (
-                        <div key={index} className="">
-                          <div className="flex justify-between items-center mb-1">
-                            <span className="text-xs font-medium text-gray-900">{skill.skill}</span>
-                            <span className="text-xs text-gray-600">{skill.percentage}%</span>
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-1">
-                            <div className="bg-[#00bf53] h-1 rounded-full" style={{width: `${skill.percentage}%`}}></div>
-                          </div>
-                        </div>
-                      ))}
+                    <div className="text-center">
+                      <div className="text-xs text-[#00bf53] font-medium">+8% this week</div>
+                      <div className="text-xs text-gray-500">12/16 sessions completed</div>
                     </div>
-                    {skillGaps.length > 3 && (
-                      <button className="text-xs text-gray-500 mt-6 font-medium hover:text-green-600 flex items-center gap-1 group">
-                        View Full Analysis
+                    <div className=" pt-2">
+                      <button className="text-xs text-gray-500 font-medium hover:text-green-600 flex items-center gap-1 group ">
+                        Continue Course
                         <ArrowRight size={12} className="group-hover:text-green-600" />
                       </button>
-                    )}
+                    </div>
                   </div>
                 </div>
 
@@ -246,10 +245,10 @@ export function Dashboard() {
                     <div className="w-1.5 h-1.5 bg-green-300 rounded-full absolute animate-float-up" style={{right: '30%', animationDelay: '4s'}}></div>
                   </div>
                 </div>
-                                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-4 ">
                                                       
                   {/* Weekly Challenge */}
-                  <div className="bg-white rounded-xl p-4 border border-gray-200">
+                  <div className="bg-white rounded-xl p-4 border border-gray-200 mb-20">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
                         <Trophy size={16} className="text-[#00bf53]" />
@@ -276,40 +275,40 @@ export function Dashboard() {
                         <span className="font-medium text-gray-900">#47</span>
                       </div>
                       <div className="">
-                      <button className="text-xs text-gray-500 font-medium hover:text-green-600 flex items-center gap-1 group">
+                      <button className="text-xs text-gray-500 font-medium hover:text-green-600 flex items-center gap-1 group mt-4">
                         Continue Course
                         <ArrowRight size={12} className="group-hover:text-green-600" />
                       </button>
                     </div>
                     </div>
                   </div>
-                  {/* Course Progress */}
-                  <div className="bg-white rounded-xl p-4 border border-gray-200">
-                    <div className="flex items-center gap-2 mb-3">
-                      <BookOpen size={16} className="text-[#00bf53]" />
-                      <h3 className="font-semibold text-gray-900 text-sm">Course Progress</h3>
-                    </div>
-                    <div className="flex items-center justify-center mb-3">
-                      <div className="relative w-16 h-16">
-                        <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
-                          <path className="text-gray-200" stroke="currentColor" strokeWidth="3" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                          <path className="text-[#00bf53]" stroke="currentColor" strokeWidth="3" fill="none" strokeDasharray="75, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                        </svg>
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-lg font-bold text-gray-900">75%</span>
-                        </div>
+                                    {/* Skill Gap Analysis */}
+                  <div className="bg-white rounded-xl p-4 border border-gray-200 mb-20">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <BarChart3 size={16} className="text-[#00bf53]" />
+                        <h3 className="font-semibold text-gray-900 text-sm">Skill Gap Analysis</h3>
                       </div>
                     </div>
-                    <div className="text-center">
-                      <div className="text-xs text-[#00bf53] font-medium">+8% this week</div>
-                      <div className="text-xs text-gray-500">12/16 chapters completed</div>
+                    <div className="space-y-2">
+                      {skillGaps.slice(0, 3).map((skill, index) => (
+                        <div key={index} className="">
+                          <div className="flex justify-between items-center mb-1">
+                            <span className="text-xs font-medium text-gray-900">{skill.skill}</span>
+                            <span className="text-xs text-gray-600">{skill.percentage}%</span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-1">
+                            <div className="bg-[#00bf53] h-1 rounded-full" style={{width: `${skill.percentage}%`}}></div>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                    <div className=" pt-2">
-                      <button className="text-xs text-gray-500 font-medium hover:text-green-600 flex items-center gap-1 group">
-                        Continue Course
+                    {skillGaps.length > 3 && (
+                      <button className="text-xs text-gray-500 mt-6 font-medium hover:text-green-600 flex items-center gap-1 group">
+                        View Full Analysis
                         <ArrowRight size={12} className="group-hover:text-green-600" />
                       </button>
-                    </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -323,7 +322,7 @@ export function Dashboard() {
                     <h2 className="text-md font-semibold text-gray-900">Quick Actions</h2>
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-2 gap-2 mt-1">
                     <div className="flex items-center gap-2 p-2 mt-3  mt-1 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
                       <div className="bg-gray-100 rounded-xl p-2 border border-1">
                         <FileText size={16} className="text-gray-600" />
