@@ -25,7 +25,7 @@ export function CourseCard({
 }: CourseCardProps) {
   return (
     <div className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-200">
-      <div className="p-6 relative" style={{ backgroundImage: 'url(/src/assets/images/course-bg.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <div className="p-6 relative" style={{ backgroundImage: 'url(/assets/images/course-bg.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="text-xs font-medium text-gray-700 mb-4">{type}</div>
         <div className="flex items-center gap-3">
           {icon}
