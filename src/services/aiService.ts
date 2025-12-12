@@ -11,15 +11,55 @@ interface AIMessage {
 class AIService {
   private apiKey: string;
   private baseUrl: string;
+  private documentContent: string = '';
 
   constructor() {
     // Using OpenRouter API with environment variable
     this.apiKey = import.meta.env.VITE_OPENROUTER_API_KEY || '';
     this.baseUrl = 'https://openrouter.ai/api/v1';
+    this.loadDocument();
+  }
+
+  private async loadDocument(): Promise<void> {
+    try {
+      const response = await fetch('/src/assets/document/wele.txt');
+      this.documentContent = await response.text();
+    } catch (error) {
+      console.warn('Could not load WE-LE document:', error);
+    }
+  }
+
+  private findRelevantContent(query: string): string {
+    if (!this.documentContent) return '';
+    
+    const queryLower = query.toLowerCase();
+    const sections = this.documentContent.split(/\n\s*\n/);
+    
+    const relevantSections = sections.filter(section => {
+      const sectionLower = section.toLowerCase();
+      return queryLower.split(' ').some(word => 
+        word.length > 3 && sectionLower.includes(word)
+      );
+    });
+    
+    return relevantSections.slice(0, 3).join('\n\n');
   }
 
   async *streamResponse(messages: AIMessage[]): AsyncGenerator<AIResponse> {
     try {
+      // Check if query relates to WE-LE document content
+      const lastMessage = messages[messages.length - 1];
+      const relevantContent = this.findRelevantContent(lastMessage.content);
+      
+      // Enhance messages with document context if relevant
+      const enhancedMessages = relevantContent ? [
+        {
+          role: 'system' as const,
+          content: `You are an AI assistant for WE-LE Learning Platform. When answering questions, refer to this official WE-LE documentation when relevant:\n\n${relevantContent}\n\nAnswer based on this documentation when the question relates to WE-LE features, processes, or information.`
+        },
+        ...messages
+      ] : messages;
+
       const response = await fetch(`${this.baseUrl}/chat/completions`, {
         method: 'POST',
         headers: {
@@ -30,7 +70,7 @@ class AIService {
         },
         body: JSON.stringify({
           model: 'google/gemma-3-4b-it:free',
-          messages,
+          messages: enhancedMessages,
           stream: true,
           temperature: 0.7,
           max_tokens: 1000

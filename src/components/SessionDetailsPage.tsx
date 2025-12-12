@@ -277,7 +277,7 @@ export function SessionDetailsPage({
             </div>
           </div> */}
 
-          <div className="grid grid-cols-[1fr_320px] gap-6">
+          <div className="grid grid-cols-[1fr_320px] gap-12">
             {/* Left Video Section */}
             <div className="relative">
               <div className="flex flex-col h-full">
@@ -715,7 +715,7 @@ export function SessionDetailsPage({
                 {activeTab === "comments" ? (
                   <div className="h-full flex flex-col">
                     {/* Comments Header */}
-                    <div className="p-4">
+                    <div className="py-4">
                       {/* Add Comment */}
                       <div className="flex gap-2">
                         <img
@@ -737,7 +737,7 @@ export function SessionDetailsPage({
                     </div>
                     <div>
                       {/* Comments List */}
-                      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                      <div className="flex-1 overflow-y-auto py-4 space-y-4">
                         {comments.map((comment) => (
                           <div key={comment.id} className="flex gap-3">
                             <img

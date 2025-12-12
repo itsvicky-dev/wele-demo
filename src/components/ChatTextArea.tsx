@@ -207,7 +207,10 @@ export function ChatTextArea({
   };
 
   return (
-    <div ref={containerRef}>
+    <div
+      ref={containerRef}
+      className={`${showSuggestions && suggestions.length > 0 ? "bg-white" : ""}`}
+    >
       {/* Suggestions */}
       {showSuggestions && (
         <SuggestionList

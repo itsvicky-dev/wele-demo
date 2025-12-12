@@ -217,7 +217,7 @@ Level 1: will have simple psychometric questions to understand your mindset, beh
 
 Level 2: mixes psychometric + basic technical questions to see how you connect logic with skills.
 
-Level 3: dives into pure technical questions to validate your real-world understanding. Ready ah? Let's find the career that actually fits you."`;
+Level 3: dives into pure technical questions to validate your real-world understanding. Ready ah? Let's find the career that actually fits you.`;
 
   useEffect(() => {
     let currentIndex = 0;
@@ -226,7 +226,7 @@ Level 3: dives into pure technical questions to validate your real-world underst
       if (currentIndex < fullContent.length) {
         setDisplayedContent(fullContent.slice(0, currentIndex + 1));
         currentIndex++;
-        setTimeout(typeCharacter, 5);
+        setTimeout(typeCharacter, 15);
       } else {
         setIsTyping(false);
       }
@@ -473,7 +473,7 @@ Level 3: dives into pure technical questions to validate your real-world underst
         >
           <div
             className={`${
-              showAssessment && !showResults ? "max-w-5xl" : "max-w-3xl"
+              showAssessment ? "max-w-5xl" : "max-w-3xl"
             } mx-auto py-6 flex`}
           >
             <div className="">
@@ -714,9 +714,9 @@ Level 3: dives into pure technical questions to validate your real-world underst
             </div>
 
             {/* SIDE TITLE NAVIGATION */}
-            {showAssessment && !showResults && (
+            {showAssessment && (
               <div className="min-w-16 bg-white ml-4 self-start sticky top-[25px]">
-                <div className="space-y-3">
+                <div className="space-y-3 pl-[70px]">
                   {questionSets.map((set) => {
                     const completed = getSetCompletedCount(set.start, set.end);
                     const total = set.end - set.start;
@@ -759,7 +759,7 @@ Level 3: dives into pure technical questions to validate your real-world underst
       <div className="bg-white">
         <div
           className={` ${
-            showAssessment && !showResults ? "max-w-5xl" : "max-w-3xl"
+            showAssessment ? "max-w-5xl" : "max-w-3xl"
           } mx-auto pb-6`}
         >
           <form
