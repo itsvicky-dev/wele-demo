@@ -178,7 +178,7 @@ export function Home() {
             <div className="flex items-start gap-8">
               <div className="flex-shrink-0">
                 <img 
-                  src="src/assets/images/student.png" 
+                  src="src/assets/images/student.svg" 
                   alt="Student" 
                   className=" w-40 rounded-xl object-cover"
                 />
