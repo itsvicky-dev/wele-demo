@@ -2,6 +2,7 @@ import { ArrowRight, ArrowRightIcon, ChevronDown, Paperclip, Users, TrendingUp, 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChatTextArea } from "../components/ChatTextArea";
+import Student from "../assets/images/student.png";
 
 export function Home() {
   const navigate = useNavigate();
@@ -178,7 +179,7 @@ export function Home() {
             <div className="flex items-start gap-8">
               <div className="flex-shrink-0">
                 <img 
-                  src="src/assets/images/student.svg" 
+                  src={Student}
                   alt="Student" 
                   className=" w-40 rounded-xl object-cover"
                 />
