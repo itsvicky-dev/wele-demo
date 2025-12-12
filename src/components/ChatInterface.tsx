@@ -8,6 +8,7 @@ import {
   Mic,
 } from "lucide-react";
 import { Message } from "../lib/database.types";
+import { MarkdownRenderer } from "./MarkdownRenderer";
 
 interface ChatInterfaceProps {
   messages: Message[];
@@ -126,10 +127,8 @@ export function ChatInterface({
                 {message.role === "assistant" ? (
                   <div className="flex items-start space-x-3">
                     <div className="flex-1 space-y-2">
-                      <div className="prose max-w-none min-w-[768px]">
-                        <p className="text-gray-800 leading-relaxed whitespace-pre-wrap">
-                          {message.content}
-                        </p>
+                      <div className="min-w-[768px]">
+                        <MarkdownRenderer content={message.content} />
                       </div>
                     </div>
                   </div>

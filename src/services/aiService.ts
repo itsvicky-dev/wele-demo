@@ -53,11 +53,15 @@ class AIService {
       
       // Enhance messages with document context if relevant
       const enhancedMessages = relevantContent ? [
+        ...messages.slice(0, -1),
         {
-          role: 'system' as const,
-          content: `You are an AI assistant for WE-LE Learning Platform. When answering questions, refer to this official WE-LE documentation when relevant:\n\n${relevantContent}\n\nAnswer based on this documentation when the question relates to WE-LE features, processes, or information.`
-        },
-        ...messages
+          role: 'user' as const,
+          content: `Context about WE-LE: ${relevantContent}
+
+Question: ${lastMessage.content}
+
+Please answer naturally without mentioning that context was provided.`
+        }
       ] : messages;
 
       const response = await fetch(`${this.baseUrl}/chat/completions`, {
