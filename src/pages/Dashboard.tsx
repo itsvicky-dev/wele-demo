@@ -1,4 +1,4 @@
-import { Sparkles, ArrowRight, ChevronLeft, ChevronRight, FileText, Code, Trophy, Users, Calendar, Target, Clock, CheckCircle, XCircle, Circle, BookOpen, Zap, TrendingUp, Star, MessageCircle, Lightbulb, Gift, BarChart3, Heart, Share2, Bookmark, MoreHorizontal, Flame, Award, Crown, BookCheck, LayoutDashboard } from "lucide-react";
+import { Sparkles, ArrowRight, ChevronLeft, ChevronRight, FileText, Code, Trophy, Users, Calendar, Target, Clock, CheckCircle, XCircle, Circle, BookOpen, Zap, TrendingUp, Star, MessageCircle, Lightbulb, Gift, BarChart3, Heart, Share2, Bookmark, MoreHorizontal, Flame, Award, Crown, BookCheck, LayoutDashboard, Home } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ChatTextArea } from "../components/ChatTextArea";
 
@@ -73,7 +73,60 @@ export function Dashboard() {
     { skill: "Data Analysis", percentage: 45, color: "bg-[#00bf53]" },
     { skill: "Machine Learning", percentage: 38, color: "bg-[#00bf53]" }
   ];
-  
+const session = {
+  title: "JavaScript Advanced Concepts",
+  courseName: "JavaScript Mastery Program",
+  description: "Deep dive into closures, event loop, async patterns, and performance.",
+  duration: "42 min",
+};
+
+  const suggestions = [
+    {
+      id: "1",
+      text: "Show my tasks for today",
+    },
+    {
+      id: "2",
+      text: "Generate a study plan for today",
+    },
+  ];
+  const sessions = [
+    {
+      id: 1,
+      title: "Session 1: Introduction to JavaScript",
+      date: "July 08, 2025",
+      duration: "45 min",
+      status: "completed" as const,
+    },
+    {
+      id: 2,
+      title: "Session 2: Variables and Data Types",
+      date: "July 10, 2025",
+      duration: "50 min",
+      status: "completed" as const,
+    },
+    {
+      id: 3,
+      title: "Session 3: Functions and Scope",
+      date: "July 12, 2025",
+      duration: "55 min",
+      status: "current" as const,
+    },
+    {
+      id: 4,
+      title: "Session 4: Objects and Arrays",
+      date: "July 15, 2025",
+      duration: "60 min",
+      status: "locked" as const,
+    },
+    {
+      id: 5,
+      title: "Session 5: DOM Manipulation",
+      date: "July 17, 2025",
+      duration: "65 min",
+      status: "locked" as const,
+    },
+  ];
   useEffect(() => {
     const interval = setInterval(() => {
       const randomActivity = allActivities[Math.floor(Math.random() * allActivities.length)];
@@ -122,7 +175,7 @@ export function Dashboard() {
         </div>
       </div>
       
-      <div className="mx-auto px-32 py-4 pt-0 relative">
+      <div className="max-w-[calc(100vw-450px)] mx-auto px-6 space-y-6 py-6 relative">
         {activeTab === 'for-you' && (
           <>
             {/* Main Layout: Left 3 + Right 1 */}
@@ -517,7 +570,7 @@ export function Dashboard() {
                   </div>
                   
                   {/* Current Level */}
-                  <div className="bg-white rounded-xl p-4 border border-gray-200">
+                  <div className="bg-white rounded-xl p-4 border border-gray-200 mb-4">
                     <div className="flex items-center gap-2 mb-3">
                       <Award size={16} className="text-[#00bf53]" />
                       <h3 className="font-semibold text-gray-900 text-sm">Current Level</h3>
@@ -542,7 +595,29 @@ export function Dashboard() {
             </div>
           </>
         )}
-        
+        <div
+              className="sticky bottom-[20px] z-[60]"
+              style={{
+                width: "80%",
+                margin:"auto",
+                left:"0px",
+                right:"0px"
+              }}
+            >
+              <ChatTextArea
+                placeholder="Ask AI about this dashboard..."
+                suggestions={suggestions}
+                sessionContext={{
+                  title: "Dashboard",
+                  courseName: "Learning Dashboard",
+                  description: "Your personalized learning hub",
+                  duration:300,
+                }}
+                onSendMessage={(message) =>
+                  console.log("Chat message:", message)
+                }
+              />
+        </div>
         {activeTab === 'career-hub' && (
           <div className="text-center py-20">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Career Hub</h2>
@@ -572,28 +647,6 @@ export function Dashboard() {
         )}
       </div>
       
-      {/* Chat TextArea */}
-      <div
-        className="fixed bottom-[20px] z-[60]"
-        style={{
-          left: "calc(50% + 364px - 50vw)",
-          width: "calc(100vw - 450px - 320px - 48px - 24px)",
-        }}
-      >
-        <ChatTextArea
-          placeholder="Ask AI about this dashboard..."
-          suggestions={[]}
-          sessionContext={{
-            title: "Dashboard",
-            courseName: "Learning Dashboard",
-            description: "Your personalized learning hub",
-            duration: "Always Available",
-          }}
-          onSendMessage={(message) =>
-            console.log("Chat message:", message)
-          }
-        />
-      </div>
     </div>
   );
 }
