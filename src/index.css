@@ -117,8 +117,18 @@ input[type="radio"]:checked::after {
   -ms-overflow-style: none !important;
   scrollbar-color: rgba(156, 163, 175, 0) transparent;
 }
+
 .scrollbar-hide::-webkit-scrollbar {
   display: none !important;
+}
+
+.scrollbar-show {
+  -ms-overflow-style: auto !important;
+  scrollbar-color: rgba(156, 163, 175, 0) transparent;
+}
+
+.scrollbar-show::-webkit-scrollbar {
+  display: block !important;
 }
 
 @keyframes fadeIn {

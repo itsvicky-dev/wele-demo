@@ -8,7 +8,7 @@ import {
   X,
 } from "lucide-react";
 import Interview from "../assets/videos/interview.mp4";
-import WelePdf from "../assets/document/wele.pdf";
+import WelePdf from "../assets/document/cc.pdf";
 import { useState, useEffect, useRef } from "react";
 
 export function MockInterviews() {
