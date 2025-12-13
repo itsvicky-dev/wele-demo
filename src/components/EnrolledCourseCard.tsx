@@ -36,7 +36,7 @@ export function EnrolledCourseCard({
   status,
 }: EnrolledCourseCardProps) {
   return (
-    <div className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-200 flex-shrink-0 w-[280px] relative">
+    <div className="bg-white rounded-[30px] overflow-hidden shadow-sm border border-gray-200 flex-shrink-0 w-[280px] relative">
       <div className="p-4 relative" style={{ backgroundImage: 'url(/assets/images/course-bg.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="text-xs font-medium text-gray-700 mb-3">{type}</div>
         <div className="flex items-center gap-3 mb-3">
@@ -44,7 +44,7 @@ export function EnrolledCourseCard({
           <h3 className="text-base font-bold text-gray-900">{title}</h3>
         </div>
         {status && (
-          <div className="absolute bottom-3 right-3 px-2 py-1 bg-white text-[#00BF53] text-xs font-medium rounded shadow-lg">
+          <div className="absolute bottom-3 right-3 px-2 py-1 bg-white text-gray-800 text-xs font-medium rounded shadow-lg">
             {status}
           </div>
         )}
@@ -78,7 +78,7 @@ export function EnrolledCourseCard({
             <span className="font-medium">{nextSession}:</span> {nextTopic}
           </div>
           <div className="flex items-center gap-3 text-xs">
-            <div className="flex items-center gap-1 text-green-600">
+            <div className="flex items-center gap-1 text-gray-700">
               <Calendar className="w-3 h-3" />
               <span>{sessionDate}</span>
             </div>
@@ -92,9 +92,9 @@ export function EnrolledCourseCard({
         <div className="flex gap-2 mb-3 flex-wrap">
           {tags.map((tag, index) => (
             <div key={index} className="flex items-center gap-1 text-xs">
-              {tag.includes('Must') && <span className="text-green-600 font-medium">{tag}</span>}
+              {tag.includes('Must') && <span className="text-gray-800 font-medium">{tag}</span>}
               {tag.includes('Value') && (
-                <span className="flex items-center gap-1 text-green-600">
+                <span className="flex items-center gap-1 text-gray-800">
                   <CheckCircle2 className="w-3 h-3" />
                   {tag}
                 </span>
@@ -104,10 +104,10 @@ export function EnrolledCourseCard({
         </div>
 
         <button
-          className={`w-full py-2 font-medium rounded-md transition-colors text-xs ${
+          className={`w-full py-2 font-medium rounded-full transition-colors text-xs ${
             buttonType === 'primary'
-              ? 'bg-green-600 text-white hover:bg-green-700'
-              : 'border-2 border-green-600 text-green-600 hover:bg-green-50'
+              ? 'text-gray-800 border border-gray-400  hover:text-[#00BF5C] hover:border-[#00BF5C]'
+              : 'border border-gray-400 text-gray-800 hover:text-[#00BF5C] hover:border-[#00BF5C]'
           }`}
         >
           {buttonText}

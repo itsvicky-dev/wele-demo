@@ -1,37 +1,61 @@
 import {
-  Code2,
-  Palette,
   Atom,
   Coffee,
   Smartphone,
   Server,
   ChevronLeft,
   ChevronRight,
+  MoreHorizontal,
+  GraduationCap,
 } from "lucide-react";
 import { EnrolledCourseCard } from "../components/EnrolledCourseCard";
 import { CourseCard } from "../components/CourseCard";
+import { ChatTextArea } from "../components/ChatTextArea";
 
 export function Courses() {
+  const suggestions = [
+    {
+      id: "1",
+      text: "Summarize this session.",
+    },
+    {
+      id: "2",
+      text: "Can you explain the difference between let, const, and var?",
+    },
+  ];
   return (
-    <div className="min-h-screen bg-white overflow-y-scroll ">
-      <div className="max-w-7xl mx-auto px-6 py-8">
+    <div className="min-h-screen bg-white overflow-y-auto w-full flex-1 flex flex-col relative">
+      <div className="sticky top-0 z-20 border-b border-[#0d0d0d0d] bg-white px-4 py-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <GraduationCap size={16} className="text-gray-700" />
+            <h1 className=" text-md text-gray-700 font-medium">Courses</h1>
+          </div>
+          <div className="flex items-center space-x-2">
+            <button className="p-1.5 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+              <MoreHorizontal size={16} />
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className="max-w-5xl mx-auto px-6 pt-6 pb-[6rem]">
         {/* Badge Tabs */}
-        <div className="flex gap-3 mb-8">
-          <div className="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium border border-green-200">
+        <div className="flex gap-3 mb-4">
+          <div className="bg-green-100 text-green-800 px-4 py-2 rounded-full text-xs font-medium border border-green-200">
             Course
           </div>
-          <div className="text-green-700 px-4 py-2 rounded-full text-sm font-medium border border-green-200 hover:bg-green-100 cursor-pointer">
+          <div className="text-gray-500 px-4 py-2 rounded-full text-xs font-medium border border-gray-200 hover:bg-green-100 cursor-pointer">
             Events
           </div>
-          <div className="text-green-700 px-4 py-2 rounded-full text-sm font-medium border border-green-200 hover:bg-green-100 cursor-pointer">
+          <div className="text-gray-500 px-4 py-2 rounded-full text-xs font-medium border border-gary-200 hover:bg-green-100 cursor-pointer">
             Progress
           </div>
         </div>
 
-        <div className="flex gap-8">
-          <div className="flex-1">
+        <div className="flex gap-5">
+          <div className="flex-1 relative">
             <div className="flex items-center justify-between mb-6">
-              <h1 className="text-2xl font-bold text-gray-900">My Course</h1>
+              <h1 className="text-xl font-bold text-gray-900">My Course</h1>
               {/* <button className="text-sm text-green-600 font-medium hover:text-green-700">
                 See all
               </button> */}
@@ -48,7 +72,7 @@ export function Courses() {
                 title="JavaScript"
                 courseName="Modern JavaScript From The Beginning Course 2.0 (2025)"
                 price={199}
-                duration="01:30 hrs"
+                duration="02:20 hrs"
                 progress={40}
                 nextSession="Next Session"
                 nextTopic="Variables & Data Types"
@@ -77,7 +101,7 @@ export function Courses() {
                 title="HTML & CSS"
                 courseName="Modern HTML & CSS From The Beginning 2.0"
                 price={199}
-                duration="01:30 hrs"
+                duration="01:00 hrs"
                 progress={0}
                 nextSession="Next Session"
                 nextTopic="Introduction"
@@ -87,7 +111,7 @@ export function Courses() {
                   "Must learning class for Javascript!",
                   "Value added Class",
                 ]}
-                buttonText="Enroll Now"
+                buttonText="Start Now"
                 status="Ongoing"
               />
 
@@ -111,7 +135,7 @@ export function Courses() {
                   "Must learning class for Javascript!",
                   "Value added Class",
                 ]}
-                buttonText="Enroll Now"
+                buttonText="Start Now"
               />
             </div>
 
@@ -126,7 +150,7 @@ export function Courses() {
                   description="Full Stack Java Dev: Masterclass for Beginners"
                   price={1299}
                   sessions={12}
-                  enrolledMembers={1689}
+                  enrolledMembers={1289}
                   bgColor=""
                   icon={
                     <div className="w-12 h-12 rounded-full flex items-center justify-center">
@@ -141,7 +165,7 @@ export function Courses() {
                   description="Flutter & Dart - The Complete Guide [2025 Edition]"
                   price={1299}
                   sessions={12}
-                  enrolledMembers={1689}
+                  enrolledMembers={2639}
                   bgColor=""
                   icon={
                     <div className="w-12 h-12 rounded-lg flex items-center justify-center">
@@ -183,7 +207,7 @@ export function Courses() {
                     }}
                     className="p-2 flex-shrink-0"
                   >
-                    <ChevronLeft className="text-gray-300"/>
+                    <ChevronLeft className="text-gray-300" />
                   </button>
 
                   <div
@@ -234,12 +258,12 @@ export function Courses() {
                 </div>
               </div>
 
-              <h2 className="text-xl font-bold text-gray-900 mb-6">
+              <h2 className="text-lg font-bold text-gray-900 mb-6">
                 Personalized Specializations for You
               </h2>
 
               <div className="grid grid-cols-4 gap-4">
-                <div className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+                <div className="bg-white rounded-[25px] border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
                   <div className="relative">
                     <img
                       src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&h=150&fit=crop"
@@ -268,7 +292,7 @@ export function Courses() {
                   </div>
                 </div>
 
-                <div className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+                <div className="bg-white rounded-[25px] border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
                   <div className="relative">
                     <img
                       src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=300&h=150&fit=crop"
@@ -291,7 +315,7 @@ export function Courses() {
                   </div>
                 </div>
 
-                <div className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+                <div className="bg-white rounded-[25px] border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
                   <div className="relative">
                     <img
                       src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=300&h=150&fit=crop"
@@ -312,7 +336,7 @@ export function Courses() {
                   </div>
                 </div>
 
-                <div className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+                <div className="bg-white rounded-[25px] border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
                   <div className="relative">
                     <img
                       src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=300&h=150&fit=crop"
@@ -348,6 +372,20 @@ export function Courses() {
             </div>
           </div>
         </div>
+      </div>
+      {/* Chat Text Area - Centered within course section */}
+      <div
+        className="fixed bottom-[20px] z-[60]"
+        style={{
+          left: "calc(50% + 500px - 50vw)",
+          width: "calc(100vw - 760px)",
+        }}
+      >
+        <ChatTextArea
+          placeholder="Ask AI about this session..."
+          suggestions={suggestions}
+          onSendMessage={(message) => console.log("Chat message:", message)}
+        />
       </div>
     </div>
   );
