@@ -1,8 +1,10 @@
-import { MoreHorizontal, UserCircle, Star, ChevronLeft, ChevronRight, Crown } from "lucide-react";
+import {  UserCircle, Star, ChevronLeft, ChevronRight, Crown } from "lucide-react";
 import { ChatTextArea } from "../components/ChatTextArea";
-import { useState } from "react";
-import bgpattern from "../assets/images/bgpattern.png"
+import { useNavigate } from "react-router-dom";
+import bgpattern from "../assets/images/bgpatternnew.png"
+import bgpatternnew2 from "../assets/images/bgpatternnew2.png"
 export function Mentors() {
+  const navigate = useNavigate();
   const mentors = [
     {
       id: 1,
@@ -119,11 +121,15 @@ export function Mentors() {
   const suggestions = [
     {
       id: "1",
-      text: "Show my tasks for today",
+      text: "Show my upcoming mentor sessions",
     },
     {
       id: "2",
-      text: "Generate a study plan for today",
+      text: "Who can help me with my current skill gap?",
+    },
+    {
+      id: "3",
+      text: "Top-rated mentors for my career path",
     },
   ];
   return (
@@ -174,7 +180,7 @@ export function Mentors() {
          
         
         <div className="grid grid-cols-3 gap-4 pt-4">
-          {topMentors.map((mentor) => (
+          {topMentors.map((mentor, index) => (
                             <div className="relative">
                               <div className="absolute top-[-10px] left-0 right-0 w-[max-content] m-auto bg-gray-200 text-black/80 px-2 py-1 rounded-full text-xs font-medium z-[20]">
                   Top Rated
@@ -182,8 +188,8 @@ export function Mentors() {
             <div key={mentor.id} className="bg-white rounded-3xl border border-gray-200  hover:shadow-md transition-shadow relative overflow-hidden">
               <div className="bg-white h-20 relative">
 
-                <div className="absolute top-0 left-0 w-full h-full ">
-                  <img src={bgpattern} alt="image" className="opacity-25 "/>
+                <div className="absolute top-0 left-0 h-[70px]">
+                  <img src={index % 2 === 0 ? bgpattern : bgpatternnew2} alt="image" className="opacity-90 h-full w-full object-cover"/>
                 </div>
               </div>
               <div className="p-4 -mt-8">
@@ -205,7 +211,10 @@ export function Mentors() {
                   </div>
                   <p className="text-xs text-gray-600 mb-1">{mentor.title}</p>
                   <p className="text-xs text-gray-500 mb-4">{mentor.subtitle}</p>
-                  <button className="w-[max-content] border border-gray-400 text-gray-700 py-1 px-4 rounded-xl text-xs font-medium hover:text-[#00BF53] transition-colors">
+                  <button 
+                    onClick={() => navigate('/mentor-profile')}
+                    className="w-[max-content] border border-gray-400 text-gray-700 py-1 px-4 rounded-xl text-xs font-medium hover:text-[#00BF53] transition-colors"
+                  >
                     View Profile
                   </button>
                 </div>
@@ -221,14 +230,14 @@ export function Mentors() {
               </span> */}
         </div>
         <div className="grid grid-cols-3 gap-4 pb-8">
-          {mentors.map((mentor) => (
+          {mentors.map((mentor,index) => (
             <div key={mentor.id} className="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-md transition-shadow relative">
               <div className="bg-white h-20 relative">
                 {/* <div className="absolute top-2 left-2 bg-black/30 text-black/80 px-2 py-1 rounded text-xs font-medium z-9">
                   {mentor.rank}
                 </div> */}
-                <div className="absolute top-0 left-0 w-full h-full ">
-                  <img src={bgpattern} alt="image" className="opacity-25"/>
+                <div className="absolute top-0 left-0 h-[70px]">
+                  <img src={index % 2 === 0 ? bgpattern : bgpatternnew2} alt="image" className="opacity-90 h-full w-full object-cover"/>
                 </div>
               </div>
               <div className="p-4 -mt-8">

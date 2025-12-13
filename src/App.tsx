@@ -9,6 +9,7 @@ import { LearningCommunity } from "./pages/LearningCommunity";
 import { Courses } from "./pages/Courses";
 import { Webinars } from "./pages/Webinars";
 import { Mentors } from "./pages/Mentors";
+import { MentorProfile } from "./pages/MentorProfile";
 import { SkillShowcase } from "./pages/SkillShowcase";
 import { ChatHistory } from "./pages/ChatHistory";
 import { WhatIsBest } from "./pages/WhatIsBest";
@@ -30,6 +31,7 @@ function App() {
           <Route path="/courses" element={<Courses />} />
           <Route path="/webinars" element={<Webinars />} />
           <Route path="/mentors" element={<Mentors />} />
+          <Route path="/mentor-profile" element={<MentorProfile />} />
           <Route path="/skill-showcase" element={<SkillShowcase />} />
           <Route path="/chat-history" element={<ChatHistory />} />
           <Route path="/what-is-best" element={<WhatIsBest />} />
