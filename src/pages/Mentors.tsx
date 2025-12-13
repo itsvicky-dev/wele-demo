@@ -65,7 +65,7 @@ export function Mentors() {
   const topMentors = [
     {
       id: 1,
-      name: "Sophia Chen",
+      name: "Suriya Prakash",
       title: "VP Engineering @Notion",
       subtitle: "Stanford CS, Ex-Facebook, Airbnb",
       rating: 5,
@@ -212,7 +212,7 @@ export function Mentors() {
                   <p className="text-xs text-gray-600 mb-1">{mentor.title}</p>
                   <p className="text-xs text-gray-500 mb-4">{mentor.subtitle}</p>
                   <button 
-                    onClick={() => navigate('/mentor-profile')}
+                    onClick={() => index === 0 && navigate('/mentor-profile')}
                     className="w-[max-content] border border-gray-400 text-gray-700 py-1 px-4 rounded-xl text-xs font-medium hover:text-[#00BF53] transition-colors"
                   >
                     View Profile

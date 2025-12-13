@@ -34,12 +34,12 @@ export function MentorProfile() {
 
   const reviews = [
     {
-      name: "Sundar pichai",
+      name: "Krishna",
       rating: 5.0,
       text: "Having Scarlett Johnson as my mentor has been a transformative experience. Their ability to break down complex concepts into clear, actionable steps has accelerated my learning far beyond my expectations. "
     },
     {
-      name: "Sundar pichai", 
+      name: "Ram Kumar", 
       rating: 5.0,
       text: "Having Scarlett Johnson as my mentor has been a transformative experience. Their ability to break down complex concepts into clear, actionable steps has accelerated my learning far beyond my expectations. "
     }
