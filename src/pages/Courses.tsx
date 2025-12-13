@@ -16,11 +16,11 @@ export function Courses() {
   const suggestions = [
     {
       id: "1",
-      text: "Summarize this session.",
+      text: "Summarize my course.",
     },
     {
       id: "2",
-      text: "Can you explain the difference between let, const, and var?",
+      text: "Which course suits me best?",
     },
   ];
   return (
