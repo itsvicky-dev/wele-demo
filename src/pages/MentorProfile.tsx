@@ -30,23 +30,18 @@ export function MentorProfile() {
       duration: "4:00 to 4:30 PM IST", 
       type: "Book Now"
     },
-    {
-      title: "Quick Chat | Mentorship on any topic",
-      duration: "6:00 to 6:30 PM IST",
-      type: "Book Now"
-    }
   ];
 
   const reviews = [
     {
       name: "Sundar pichai",
       rating: 5.0,
-      text: "Having Scarlett Johnson as my mentor has been a transformative experience. Their ability to break down complex concepts into clear, actionable steps has accelerated my learning far beyond my expectations. They're not only knowledgeable but also genuinely invested in my growth, providing guidance, encouragement, and constructive feedback at every step. Their mentorship has helped me gain confidence, develop new skills, and see opportunities I hadn't considered before. I'm truly grateful for their support and highly recommend them to anyone seeking both professional and personal development."
+      text: "Having Scarlett Johnson as my mentor has been a transformative experience. Their ability to break down complex concepts into clear, actionable steps has accelerated my learning far beyond my expectations. "
     },
     {
       name: "Sundar pichai", 
       rating: 5.0,
-      text: "Having Scarlett Johnson as my mentor has been a transformative experience. Their ability to break down complex concepts into clear, actionable steps has accelerated my learning far beyond my expectations. They're not only knowledgeable but also genuinely invested in my growth, providing guidance."
+      text: "Having Scarlett Johnson as my mentor has been a transformative experience. Their ability to break down complex concepts into clear, actionable steps has accelerated my learning far beyond my expectations. "
     }
   ];
     const suggestions = [
@@ -241,7 +236,7 @@ export function MentorProfile() {
           </div>
 
           {/* Reviews */}
-          <div className="w-[35%] bg-white rounded-xl border border-gray-200 p-6">
+          <div className="w-[35%] bg-white rounded-xl border border-gray-200 p-6 h-[max-content]">
             <div className="flex items-center gap-2 mb-6">
               <span className="text-sm font-bold text-gray-900">5.0</span>
               <div className="flex">
