@@ -9,6 +9,7 @@ import {
 import { useState, useEffect, useRef } from "react";
 import { aiService } from "../services/aiService";
 import type { AIMessage } from "../services/aiService";
+import ReportURL from '../assets/document/cc.pdf'
 
 interface MCQOption {
   id: string;
@@ -647,18 +648,31 @@ Level 3: dives into pure technical questions to validate your real-world underst
                           <p className="text-gray-800">
                             {generateRecommendation()}
                           </p>
-                          <button
-                            onClick={() => {
-                              setShowAssessment(false);
-                              setUserAnswers({});
-                              setShowResults(false);
-                              setAssessmentTerminated(false);
-                              setCurrentQuestionIndex(0);
-                            }}
-                            className="mt-4 border border-black px-4 py-2 hover:border-[#00BF53] hover:text-[#00BF53] rounded-lg transition-colors"
-                          >
-                            Take Assessment Again
-                          </button>
+                          <div className="mt-4 space-x-3">
+                            <button
+                              onClick={() => {
+                                const link = document.createElement('a');
+                                link.href = ReportURL;
+                                link.download = 'wele-report.pdf';
+                                link.click();
+                              }}
+                              className="border border-[#00BF53] text-[#00BF53] hover:bg-[#00BF53]/[0.1] px-4 py-2 rounded-lg transition-colors"
+                            >
+                              Download Report
+                            </button>
+                            <button
+                              onClick={() => {
+                                setShowAssessment(false);
+                                setUserAnswers({});
+                                setShowResults(false);
+                                setAssessmentTerminated(false);
+                                setCurrentQuestionIndex(0);
+                              }}
+                              className="px-4 py-2 hover:border-[#00BF53] hover:text-[#00BF53] rounded-lg transition-colors hover:underline"
+                            >
+                              Take Assessment Again
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>

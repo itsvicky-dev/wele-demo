@@ -26,7 +26,7 @@ import {
   ClipboardList,
   BookOpen,
 } from "lucide-react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { VideoPlayer } from "./VideoPlayer";
 import { ChatTextArea } from "./ChatTextArea";
 import { MCQAssessment } from "./MCQAssessment";
@@ -143,6 +143,23 @@ export function SessionDetailsPage({
     },
   ];
   const [showSessionDropdown, setShowSessionDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowSessionDropdown(false);
+      }
+    };
+
+    if (showSessionDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showSessionDropdown]);
 
   const suggestions = [
     {
@@ -177,7 +194,7 @@ export function SessionDetailsPage({
           </span>
 
           <ChevronRight className="w-4 h-4" />
-          <div className="relative">
+          <div className="relative" ref={dropdownRef}>
             <span
               className="text-gray-900 font-medium flex items-center gap-1 cursor-pointer"
               onClick={() => setShowSessionDropdown(!showSessionDropdown)}

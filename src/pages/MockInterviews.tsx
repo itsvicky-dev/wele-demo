@@ -8,7 +8,7 @@ import {
   X,
 } from "lucide-react";
 import Interview from "../assets/videos/interview.mp4";
-import WelePdf from "../assets/document/wele.pdf";
+import WelePdf from "../assets/document/cc.pdf";
 import { useState, useEffect, useRef } from "react";
 
 export function MockInterviews() {
@@ -765,7 +765,7 @@ export function MockInterviews() {
                       className={`p-2 rounded-full ${
                         inputValue.trim()
                           ? "bg-[#00BF53] text-white hover:bg-[#00BF53]/90"
-                          : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                          : "bg-gray-300 text-white cursor-not-allowed"
                       }`}
                       onClick={handleTextSubmit}
                       disabled={!inputValue.trim()}
