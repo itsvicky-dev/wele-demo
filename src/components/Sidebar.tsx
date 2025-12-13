@@ -133,7 +133,7 @@ export function Sidebar() {
     <div className="w-60 bg-[#f9fafb] flex flex-col h-screen border-r border-[#0d0d0d0d]">
       <div className="p-3.5">
         <Link to="/" className="flex items-center gap-2 mb-1">
-          <img src={Logo} alt="" />
+          <img src={Logo} alt="" width={'60%'}/>
         </Link>
       </div>
 
