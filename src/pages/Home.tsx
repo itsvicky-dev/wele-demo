@@ -1,4 +1,4 @@
-import { ArrowRight, ArrowRightIcon, ChevronDown, Paperclip, Users, TrendingUp, Target } from "lucide-react";
+import { ArrowRight, ArrowRightIcon, ChevronDown, Paperclip, Users, TrendingUp, Target, Zap } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChatTextArea } from "../components/ChatTextArea";
@@ -11,6 +11,8 @@ export function Home() {
   const [selectedSession, setSelectedSession] = useState("");
   const [showCourseDropdown, setShowCourseDropdown] = useState(false);
   const [showSessionDropdown, setShowSessionDropdown] = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
 
   const courses = ["React Basics", "Advanced TypeScript", "Node.js", "Python"];
   const handleCourseSelect = (course: string) => {
@@ -38,8 +40,57 @@ export function Home() {
     },
   ];
   return (
-    <div className="flex-1 flex flex-col items-center mt-24 p-8 overflow-y-auto">
-      <div className="">
+    <div className="flex-1 flex flex-col items-center  mt-24 p-8 overflow-y-auto">
+       <div className="absolute top-4 right-4">
+        <div className="absolute top-0 right-0 group relative">
+  {/* MAIN BUTTON */}
+  <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-full text-sm font-medium transition-colors flex items-center gap-2">
+    <div className="flex items-center gap-1">
+      <Zap size={16} /> 100
+    </div>
+    <span className="bg-[#00BF53] text-white rounded-full px-4 py-1" >
+      Upgrade
+    </span>
+  </button>
+
+  {/* HOVER POPUP */}
+  <div className="absolute right-0 mt-3 w-72 opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-all duration-200 z-50">
+    <div className="bg-white rounded-xl shadow-xl border border-gray-200 p-4">
+      
+      {/* HEADER */}
+      <div className="flex items-center justify-between mb-3">
+        <h4 className="font-semibold text-gray-900">Free Plan</h4>
+        <button className="text-xs border border-gray-300 rounded-full px-3 py-1 hover:bg-gray-100" >
+          Upgrade
+        </button>
+      </div>
+
+      {/* CREDITS */}
+      <div className="bg-gray-100 from-blue-50 to-purple-50 rounded-lg p-3 mb-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-gray-800 text-xs font-medium">
+            <Zap size={16} className="text-[#00BF53]" />
+            Credits
+            <span className="font-bold text-xs">100</span>
+          </div>
+          <button className="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1">
+            View Usage →
+          </button>
+        </div>
+      </div>
+
+      {/* FOOTER */}
+      <div className="text-sm text-gray-700 font-medium">
+        Free Monthly Credits
+        <span className="float-right font-semibold text-xs">100/100</span>
+      </div>
+    </div>
+  </div>
+</div>
+       </div>
+
+      <div className="relative w-full">
+       
         <p className="text-3xl font-bold text-gray-900 text-center mb-4">
           Hi Vicky S, I'm personalized AI from WeLe
         </p>
@@ -383,6 +434,104 @@ export function Home() {
           </div>
         </div>
       </div>
+      
+      {showUpgradeModal && (
+  <div className="fixed inset-0 z-[100] flex items-center justify-center">
+    {/* BACKDROP */}
+    <div
+      className="absolute inset-0 bg-black/40"
+      onClick={() => setShowUpgradeModal(false)}
+    />
+
+    {/* MODAL */}
+    <div className="relative bg-white rounded-2xl w-[90%] max-w-4xl p-6 shadow-2xl">
+      
+      {/* CLOSE */}
+      <button
+        onClick={() => setShowUpgradeModal(false)}
+        className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl"
+      >
+        ×
+      </button>
+
+      {/* HEADER */}
+      <h2 className="text-2xl font-bold text-center mb-2">
+        Upgrade to Pro to Get More Credits
+      </h2>
+      <p className="text-sm text-gray-500 text-center mb-6">
+        Unlock higher credit limits and advanced export features to boost your workflow.
+      </p>
+
+      {/* BILLING TOGGLE */}
+      <div className="flex justify-center mb-8">
+        <div className="bg-gray-100 rounded-full p-1 flex">
+          <button
+            onClick={() => setBilling("monthly")}
+            className={`px-6 py-2 rounded-full text-sm font-medium ${
+              billing === "monthly" ? "bg-white shadow" : "text-gray-500"
+            }`}
+          >
+            Monthly
+          </button>
+          <button
+            onClick={() => setBilling("annual")}
+            className={`px-6 py-2 rounded-full text-sm font-medium ${
+              billing === "annual" ? "bg-white shadow" : "text-gray-500"
+            }`}
+          >
+            Annual <span className="text-red-500 ml-1">Save 20%</span>
+          </button>
+        </div>
+      </div>
+
+      {/* PLANS */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        {/* FREE */}
+        <div className="border rounded-xl p-6">
+          <h3 className="font-semibold mb-2">Starter</h3>
+          <p className="text-3xl font-bold mb-4">Free</p>
+
+          <button className="w-full py-2 border rounded-full text-sm text-gray-400 cursor-not-allowed">
+            Current Plan
+          </button>
+
+          <ul className="mt-6 space-y-3 text-sm text-gray-600">
+            <li className="flex gap-2">
+              <Zap size={14} className="text-[#00BF53]" /> 100 credits / month
+            </li>
+            <li>✔ Export as images (PNG, JPEG, WebP)</li>
+          </ul>
+        </div>
+
+        {/* PRO */}
+        <div className="border-2 border-[#00BF53] rounded-xl p-6">
+          <h3 className="font-semibold mb-2">Pro</h3>
+          <p className="text-3xl font-bold mb-4">
+            ₹{billing === "monthly" ? "1499" : "1199"}
+            <span className="text-sm font-normal text-gray-500"> / month</span>
+          </p>
+
+          <button className="w-full py-2 bg-black text-white rounded-full text-sm">
+            Upgrade to Pro
+          </button>
+
+          <ul className="mt-6 space-y-3 text-sm text-gray-600">
+            <li>✔ Everything in Free</li>
+            <li className="flex gap-2">
+              <Zap size={14} className="text-[#00BF53]" /> 1000 credits / month
+            </li>
+            <li>✔ Copy UI to Figma</li>
+            <li>✔ Export production-ready code</li>
+            <li>✔ Download project ZIPs</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 }
