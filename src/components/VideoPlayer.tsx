@@ -4,9 +4,10 @@ import { useState, useRef, useEffect } from 'react';
 interface VideoPlayerProps {
   videoSrc: string;
   onCourseDetailsClick: () => void;
+  isMiniPlayer?: boolean;
 }
 
-export function VideoPlayer({ videoSrc, onCourseDetailsClick }: VideoPlayerProps) {
+export function VideoPlayer({ videoSrc, onCourseDetailsClick, isMiniPlayer = false }: VideoPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -61,10 +62,20 @@ export function VideoPlayer({ videoSrc, onCourseDetailsClick }: VideoPlayerProps
   };
 
   const toggleFullscreen = () => {
-    if (!document.fullscreenElement && containerRef.current) {
-      containerRef.current.requestFullscreen();
-    } else if (document.fullscreenElement) {
-      document.exitFullscreen();
+    if (isMiniPlayer) {
+      // In mini player, make the video element fullscreen
+      if (!document.fullscreenElement && videoRef.current) {
+        videoRef.current.requestFullscreen();
+      } else if (document.fullscreenElement) {
+        document.exitFullscreen();
+      }
+    } else {
+      // In main player, make the container fullscreen
+      if (!document.fullscreenElement && containerRef.current) {
+        containerRef.current.requestFullscreen();
+      } else if (document.fullscreenElement) {
+        document.exitFullscreen();
+      }
     }
   };
 

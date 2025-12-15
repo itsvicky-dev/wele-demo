@@ -150,8 +150,9 @@ const communityMessages: { [key: string]: Message[] } = {
       isCurrentUser: true,
       replyTo: {
         userName: "Priya",
-        content: "I'm still struggling with flexbox vs grid. When should I use which?"
-      }
+        content:
+          "I'm still struggling with flexbox vs grid. When should I use which?",
+      },
     },
     {
       id: "4",
@@ -222,8 +223,9 @@ const communityMessages: { [key: string]: Message[] } = {
       isCurrentUser: true,
       replyTo: {
         userName: "Abi",
-        content: "Just learned about useEffect! Finally understanding how to handle side effects properly."
-      }
+        content:
+          "Just learned about useEffect! Finally understanding how to handle side effects properly.",
+      },
     },
     {
       id: "3",
@@ -303,8 +305,9 @@ const communityMessages: { [key: string]: Message[] } = {
       isCurrentUser: true,
       replyTo: {
         userName: "Sathish",
-        content: "Can someone explain async/await vs Promises? I keep getting confused between them."
-      }
+        content:
+          "Can someone explain async/await vs Promises? I keep getting confused between them.",
+      },
     },
     {
       id: "3",
@@ -344,8 +347,9 @@ const communityMessages: { [key: string]: Message[] } = {
       isCurrentUser: true,
       replyTo: {
         userName: "Meera",
-        content: "I'm working with APIs and getting CORS errors. Any tips on handling this?"
-      }
+        content:
+          "I'm working with APIs and getting CORS errors. Any tips on handling this?",
+      },
     },
     {
       id: "7",
@@ -388,8 +392,9 @@ const communityMessages: { [key: string]: Message[] } = {
       isCurrentUser: true,
       replyTo: {
         userName: "Vennila",
-        content: "Working on my first PHP project! Building a simple contact form with validation."
-      }
+        content:
+          "Working on my first PHP project! Building a simple contact form with validation.",
+      },
     },
     {
       id: "3",
@@ -429,8 +434,9 @@ const communityMessages: { [key: string]: Message[] } = {
       isCurrentUser: true,
       replyTo: {
         userName: "Ravi",
-        content: "I'm learning Laravel. The Eloquent ORM is so much easier than writing raw SQL queries!"
-      }
+        content:
+          "I'm learning Laravel. The Eloquent ORM is so much easier than writing raw SQL queries!",
+      },
     },
     {
       id: "7",
@@ -460,6 +466,11 @@ export function LearningCommunity() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [hoveredMessage, setHoveredMessage] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showAllGroups, setShowAllGroups] = useState(false);
+  const [showMembersList, setShowMembersList] = useState(false);
+  const [showAllHorizontalGroups, setShowAllHorizontalGroups] = useState(false);
+  const [showGroupsMenu, setShowGroupsMenu] = useState(false);
 
   const reactionEmojis = ["👍", "❤️", "😂", "😮", "😢", "😡"];
 
@@ -510,10 +521,7 @@ export function LearningCommunity() {
             <div className="bg-white">
               <div className="flex items-center justify-between border-b border-gray-200 py-4 px-6">
                 <div className="flex items-center space-x-4">
-                  <button
-                    onClick={() => setSelectedCommunity(null)}
-                    className="text-gray-600 hover:text-gray-800"
-                  >
+                  <button className="text-gray-600 hover:text-gray-800">
                     <ArrowLeft size={20} />
                   </button>
                   <div className="flex items-center space-x-3">
@@ -533,28 +541,81 @@ export function LearningCommunity() {
               </div>
 
               {/* Group Tabs */}
-              <div className="flex items-center space-x-4 mt-4 max-w-5xl mx-auto">
-                <span className="text-sm text-gray-600">All Groups:</span>
-                <div className="flex space-x-2">
-                  {communities.map((community) => (
-                    <button
-                      key={community.id}
-                      onClick={() => loadCommunityMessages(community)}
-                      className={`flex items-center space-x-2 px-3 py-1 rounded-full text-sm ${
-                        selectedCommunity.id === community.id
-                          ? "bg-green-100 text-green-700 border border-green-200"
-                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                      }`}
-                    >
-                      <img
-                        src={community.icon}
-                        alt={community.name}
-                        className="w-5 h-5"
-                      />
-                      <span>{community.name}</span>
-                    </button>
-                  ))}
+              <div className="relative flex items-center justify-between mt-4 max-w-5xl mx-auto">
+                <div className="flex items-center space-x-4">
+                  <span className="text-sm text-gray-600">All Groups:</span>
+                  <div className="flex space-x-2 flex-wrap">
+                    {communities
+                      .slice(
+                        0,
+                        showAllHorizontalGroups ? communities.length : 3
+                      )
+                      .map((community) => (
+                        <button
+                          key={community.id}
+                          onClick={() => loadCommunityMessages(community)}
+                          className={`flex items-center space-x-2 px-3 py-1 rounded-full text-sm ${
+                            selectedCommunity.id === community.id
+                              ? "bg-green-100 text-green-700 border border-green-200"
+                              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                          }`}
+                        >
+                          <img
+                            src={community.icon}
+                            alt={community.name}
+                            className="w-5 h-5"
+                          />
+                          <span>{community.name}</span>
+                        </button>
+                      ))}
+                  </div>
                 </div>
+                {communities.length > 3 && (
+                  <button
+                    onClick={() => setShowGroupsMenu(!showGroupsMenu)}
+                    className="text-green-600 hover:text-green-700 text-sm font-medium"
+                  >
+                    {showAllHorizontalGroups ? "Show Less" : "Show More"}
+                  </button>
+                )}
+
+                {showGroupsMenu && (
+                  <div className="absolute right-0 top-8 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-40">
+                    <div className="p-3 border-b border-gray-200">
+                      <h3 className="font-medium text-gray-800">All Groups</h3>
+                    </div>
+                    <div className="max-h-60 overflow-y-auto">
+                      {communities.map((community) => (
+                        <button
+                          key={community.id}
+                          onClick={() => {
+                            loadCommunityMessages(community);
+                            setShowGroupsMenu(false);
+                          }}
+                          className={`w-full flex items-center space-x-3 p-3 hover:bg-gray-50 transition-colors ${
+                            selectedCommunity?.id === community.id
+                              ? "bg-green-50"
+                              : ""
+                          }`}
+                        >
+                          <img
+                            src={community.icon}
+                            alt={community.name}
+                            className="w-8 h-8"
+                          />
+                          <div className="flex-1 text-left">
+                            <div className="font-medium text-gray-800 text-sm">
+                              {community.name}
+                            </div>
+                            <div className="text-xs text-gray-500">
+                              {community.members} members
+                            </div>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
             <div className="bg-[#FBFBFB] border border-[#0000001A] max-w-5xl mx-auto w-full px-4 mt-4 rounded-[14px]">
@@ -580,126 +641,195 @@ export function LearningCommunity() {
                       </div>
                     </div>
                   </div>
-                  <button className="flex space-x-2 text-gray-600 hover:text-gray-800">
-                    <Search size={20} />
-                    <MoreHorizontal size={16} />
-                  </button>
+                  <div className="flex space-x-2">
+                    <button className="text-gray-600 hover:text-gray-800">
+                      <Search size={20} />
+                    </button>
+                    <div className="relative">
+                      <button
+                        onClick={() => setShowMembersList(!showMembersList)}
+                        className="text-gray-600 hover:text-gray-800"
+                      >
+                        <MoreHorizontal size={16} />
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
               {/* Messages */}
-              <div className="flex-1 overflow-y-auto p-6 space-y-6 pb-20 max-h-[calc(100vh-235px)] scrollbar-hide">
-                <div className="max-w-5xl mx-auto">
-                  <div className="text-center">
-                    <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-                      Yesterday
-                    </span>
-                  </div>
+              <div className="relative">
+                <div
+                  className={`flex-1 overflow-y-auto p-6 space-y-6 pb-20 max-h-[calc(100vh-235px)] scrollbar-hide ${
+                    showMembersList ? "mr-80" : ""
+                  }`}
+                >
+                  <div className="max-w-5xl mx-auto">
+                    <div className="text-center">
+                      <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                        Yesterday
+                      </span>
+                    </div>
 
-                  {messages.map((message) => (
-                    <div
-                      key={message.id}
-                      className={`flex space-x-3 ${
-                        message.isCurrentUser ? "justify-end" : ""
-                      }`}
-                      onMouseEnter={() => setHoveredMessage(message.id)}
-                      onMouseLeave={() => setHoveredMessage(null)}
-                    >
-                      {!message.isCurrentUser && (
-                        <img
-                          src={message.userAvatar}
-                          alt={message.userName}
-                          className="w-8 h-8 rounded-full"
-                        />
-                      )}
+                    {messages.map((message) => (
                       <div
-                        className={`max-w-2xl mb-4 relative ${
-                          message.isCurrentUser ? "text-right" : ""
+                        key={message.id}
+                        className={`flex space-x-3 ${
+                          message.isCurrentUser ? "justify-end" : ""
                         }`}
+                        onMouseEnter={() => setHoveredMessage(message.id)}
+                        onMouseLeave={() => setHoveredMessage(null)}
                       >
+                        {!message.isCurrentUser && (
+                          <img
+                            src={message.userAvatar}
+                            alt={message.userName}
+                            className="w-8 h-8 rounded-full"
+                          />
+                        )}
                         <div
-                          className={`flex items-center ${
-                            message.isCurrentUser && "justify-end"
-                          }  space-x-2 mb-1`}
-                        >
-                          <span className="text-sm font-medium text-gray-800">
-                            {message.userName}
-                          </span>
-                        </div>
-                        <div
-                          className={`p-3 rounded-lg text-sm text-left relative ${
-                            message.isCurrentUser
-                              ? "bg-[#f1fdf054] text-black"
-                              : "bg-gray-100 text-gray-800"
+                          className={`max-w-2xl mb-4 relative ${
+                            message.isCurrentUser ? "text-right" : ""
                           }`}
                         >
-                          {message.replyTo && (
-                            <div className="mb-2 p-2 bg-white bg-opacity-50 rounded border-l-4 border-green-500">
-                              <div className="text-xs font-medium text-green-600 mb-1">
-                                {message.replyTo.userName}
+                          <div
+                            className={`flex items-center ${
+                              message.isCurrentUser && "justify-end"
+                            }  space-x-2 mb-1`}
+                          >
+                            <span className="text-sm font-medium text-gray-800">
+                              {message.userName}
+                            </span>
+                          </div>
+                          <div
+                            className={`p-3 rounded-lg text-sm text-left relative ${
+                              message.isCurrentUser
+                                ? "bg-[#f1fdf054] text-black"
+                                : "bg-gray-100 text-gray-800"
+                            }`}
+                          >
+                            {message.replyTo && (
+                              <div className="mb-2 p-2 bg-white bg-opacity-50 rounded border-l-4 border-green-500">
+                                <div className="text-xs font-medium text-green-600 mb-1">
+                                  {message.replyTo.userName}
+                                </div>
+                                <div className="text-xs text-gray-600 truncate">
+                                  {message.replyTo.content.length > 50
+                                    ? message.replyTo.content.substring(0, 50) +
+                                      "..."
+                                    : message.replyTo.content}
+                                </div>
                               </div>
-                              <div className="text-xs text-gray-600 truncate">
-                                {message.replyTo.content.length > 50 
-                                  ? message.replyTo.content.substring(0, 50) + "..."
-                                  : message.replyTo.content
-                                }
-                              </div>
-                            </div>
-                          )}
-                          {message.content}
+                            )}
+                            {message.content}
 
-                          {/* Emoji Reactions Popup */}
-                          {hoveredMessage === message.id && (
-                            <div
-                              className={`absolute -top-12 ${
-                                message.isCurrentUser ? "right-0" : "left-0"
-                              } bg-white border border-gray-200 rounded-full px-2 py-1 shadow-lg flex space-x-1 z-20`}
-                            >
-                              {reactionEmojis.map((emoji) => (
-                                <button
-                                  key={emoji}
-                                  onClick={() =>
-                                    handleReaction(message.id, emoji)
-                                  }
-                                  className="hover:bg-gray-100 p-1 rounded text-lg"
-                                >
-                                  {emoji}
-                                </button>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Display Reactions */}
-                        {message.reactions &&
-                          Object.keys(message.reactions).length > 0 && (
-                            <div
-                              className={`flex space-x-1 mt-1 ${
-                                message.isCurrentUser
-                                  ? "justify-end"
-                                  : "justify-start"
-                              }`}
-                            >
-                              {Object.entries(message.reactions).map(
-                                ([emoji, count]) => (
-                                  <span
+                            {/* Emoji Reactions Popup */}
+                            {hoveredMessage === message.id && (
+                              <div
+                                className={`absolute -top-12 ${
+                                  message.isCurrentUser ? "right-0" : "left-0"
+                                } bg-white border border-gray-200 rounded-full px-2 py-1 shadow-lg flex space-x-1 z-20`}
+                              >
+                                {reactionEmojis.map((emoji) => (
+                                  <button
                                     key={emoji}
-                                    className="bg-gray-200 rounded-full px-2 py-1 text-xs flex items-center space-x-1"
+                                    onClick={() =>
+                                      handleReaction(message.id, emoji)
+                                    }
+                                    className="hover:bg-gray-100 p-1 rounded text-lg"
                                   >
-                                    <span>{emoji}</span>
-                                    <span>{count}</span>
-                                  </span>
-                                )
-                              )}
-                            </div>
-                          )}
+                                    {emoji}
+                                  </button>
+                                ))}
+                              </div>
+                            )}
+                          </div>
 
-                        <div className="text-[10px] text-gray-500 mt-1">
-                          {message.timestamp}
+                          {/* Display Reactions */}
+                          {message.reactions &&
+                            Object.keys(message.reactions).length > 0 && (
+                              <div
+                                className={`flex space-x-1 mt-1 ${
+                                  message.isCurrentUser
+                                    ? "justify-end"
+                                    : "justify-start"
+                                }`}
+                              >
+                                {Object.entries(message.reactions).map(
+                                  ([emoji, count]) => (
+                                    <span
+                                      key={emoji}
+                                      className="bg-gray-200 rounded-full px-2 py-1 text-xs flex items-center space-x-1"
+                                    >
+                                      <span>{emoji}</span>
+                                      <span>{count}</span>
+                                    </span>
+                                  )
+                                )}
+                              </div>
+                            )}
+
+                          <div className="text-[10px] text-gray-500 mt-1">
+                            {message.timestamp}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
+
+                {/* Members Sidebar */}
+                {showMembersList && (
+                  <div className="absolute right-0 top-0 h-full w-80 bg-white border-l border-gray-200 z-30 shadow-lg">
+                    <div className="p-4 border-b border-gray-200">
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-semibold text-gray-800">
+                          Members ({selectedCommunity?.members})
+                        </h3>
+                        <button
+                          onClick={() => setShowMembersList(false)}
+                          className="text-gray-600 hover:text-gray-800"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    </div>
+                    <div className="p-4 space-y-3 overflow-y-auto h-full">
+                      {selectedCommunity?.avatars.map((avatar, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center space-x-3"
+                        >
+                          <img
+                            src={avatar}
+                            alt="Member"
+                            className="w-8 h-8 rounded-full"
+                          />
+                          <div>
+                            <div className="text-sm font-medium text-gray-800">
+                              Member {index + 1}
+                            </div>
+                            <div className="text-xs text-gray-500">Online</div>
+                          </div>
+                        </div>
+                      ))}
+                      {/* Additional mock members */}
+                      {Array.from({ length: 10 }, (_, i) => (
+                        <div
+                          key={`extra-${i}`}
+                          className="flex items-center space-x-3"
+                        >
+                          <div className="w-8 h-8 rounded-full bg-gray-300"></div>
+                          <div>
+                            <div className="text-sm font-medium text-gray-800">
+                              Member {selectedCommunity?.avatars.length + i + 1}
+                            </div>
+                            <div className="text-xs text-gray-500">Offline</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -708,7 +838,9 @@ export function LearningCommunity() {
               className="fixed bottom-[25px] bg-white rounded-[16px] border border-gray-200 px-4 z-10 my-4"
               style={{
                 left: "calc(50% + 500px - 50vw)",
-                width: "calc(100vw - 760px)",
+                width: showMembersList
+                  ? "calc(100vw - 1080px)"
+                  : "calc(100vw - 760px)",
               }}
             >
               <div className="flex items-center space-x-3">
@@ -773,52 +905,88 @@ export function LearningCommunity() {
 
             {/* Communities List */}
             <div className="flex-1 p-6 max-w-5xl mx-auto w-full">
+              {/* Search Field */}
+              <div className="mb-6">
+                <div className="relative">
+                  <Search
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                    size={20}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Search communities..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+
+              {/* Show More Button */}
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-lg font-semibold text-gray-800">
+                  All Groups
+                </h2>
+              </div>
+
               <div className="space-y-4">
-                {communities.map((community) => (
-                  <div
-                    key={community.id}
-                    onClick={() => loadCommunityMessages(community)}
-                    className="bg-white rounded-[16px] p-4 border border-gray-200 bg-[#F9F9F9] hover:border-gray-400 cursor-pointer transition-colors"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
-                          <img
-                            src={community.icon}
-                            alt={community.name}
-                            className="w-8 h-8"
-                          />
+                {communities
+                  .filter(
+                    (community) =>
+                      community.name
+                        .toLowerCase()
+                        .includes(searchQuery.toLowerCase()) ||
+                      community.description
+                        .toLowerCase()
+                        .includes(searchQuery.toLowerCase())
+                  )
+                  .map((community) => (
+                    <div
+                      key={community.id}
+                      onClick={() => loadCommunityMessages(community)}
+                      className="bg-white rounded-[16px] p-4 border border-gray-200 bg-[#F9F9F9] hover:border-gray-400 cursor-pointer transition-colors"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                          <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                            <img
+                              src={community.icon}
+                              alt={community.name}
+                              className="w-8 h-8"
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-medium text-gray-800 mb-1">
+                              {community.name}
+                            </h3>
+                            <p className="text-sm text-gray-600 mb-2">
+                              {community.description}
+                            </p>
+                          </div>
                         </div>
-                        <div className="flex-1">
-                          <h3 className="font-medium text-gray-800 mb-1">
-                            {community.name}
-                          </h3>
-                          <p className="text-sm text-gray-600 mb-2">
-                            {community.description}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-4">
-                        <div className="flex items-center space-x-1">
-                          {community.avatars
-                            .slice(0, 4)
-                            .map((avatar, index) => (
-                              <img
-                                key={index}
-                                src={avatar}
-                                alt=""
-                                className="w-6 h-6 rounded-full border border-white"
-                                style={{ marginLeft: index > 0 ? "-8px" : "0" }}
-                              />
-                            ))}
-                          <span className="text-sm text-gray-600 ml-2">
-                            +{community.members} more...
-                          </span>
+                        <div className="flex items-center space-x-4">
+                          <div className="flex items-center space-x-1">
+                            {community.avatars
+                              .slice(0, 4)
+                              .map((avatar, index) => (
+                                <img
+                                  key={index}
+                                  src={avatar}
+                                  alt=""
+                                  className="w-6 h-6 rounded-full border border-white"
+                                  style={{
+                                    marginLeft: index > 0 ? "-8px" : "0",
+                                  }}
+                                />
+                              ))}
+                            <span className="text-sm text-gray-600 ml-2">
+                              +{community.members} more...
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             </div>
           </>
