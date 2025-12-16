@@ -28,6 +28,10 @@ import {
   BookOpen,
   ArrowUpRight,
   ArrowUpLeft,
+  Users,
+  Trophy,
+  Medal,
+  Crown,
 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { VideoPlayer } from "./VideoPlayer";
@@ -108,7 +112,7 @@ export function SessionDetailsPage({
   onSessionChange,
 }: SessionDetailsProps) {
   const [activeTab, setActiveTab] = useState<
-    "test" | "comments" | "notes" | "mentors"
+    "test" | "comments" | "notes" | "mentors" | "trainer-chat" | "co-learners"
   >("test");
   const [showSummary, setShowSummary] = useState(false);
   const [summaryText, setSummaryText] = useState("");
@@ -118,12 +122,33 @@ export function SessionDetailsPage({
   const [showCourseDetails, setShowCourseDetails] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [showMiniPlayer, setShowMiniPlayer] = useState(false);
+  const [isTabsSticky, setIsTabsSticky] = useState(false);
+  const [miniPlayerPosition, setMiniPlayerPosition] = useState({
+    x: 24,
+    y: 24,
+  });
+  const [miniPlayerSize, setMiniPlayerSize] = useState({
+    width: 320,
+    height: 192,
+  });
+  const [isDragging, setIsDragging] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
+  const [resizeDirection, setResizeDirection] = useState("");
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [resizeStart, setResizeStart] = useState({
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+  });
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const videoSectionRef = useRef<HTMLDivElement>(null);
   const testSectionRef = useRef<HTMLDivElement>(null);
   const commentsSectionRef = useRef<HTMLDivElement>(null);
   const notesSectionRef = useRef<HTMLDivElement>(null);
   const tabsScrollRef = useRef<HTMLDivElement>(null);
+  const tabsRef = useRef<HTMLDivElement>(null);
+  const miniPlayerRef = useRef<HTMLDivElement>(null);
 
   const mentors = [
     {
@@ -170,6 +195,87 @@ export function SessionDetailsPage({
       score: 92,
     },
   ];
+
+  const trainerMessages = [
+    {
+      id: 1,
+      sender: "trainer",
+      name: trainer.name,
+      avatar: trainer.avatar,
+      message: "Welcome to today's session! Feel free to ask any questions.",
+      time: "2 hours ago",
+    },
+    {
+      id: 2,
+      sender: "student",
+      name: "You",
+      avatar: "https://api.dicebear.com/9.x/notionists/svg?seed=current-user",
+      message: "Thank you! Looking forward to learning more about JavaScript.",
+      time: "2 hours ago",
+    },
+    {
+      id: 3,
+      sender: "trainer",
+      name: trainer.name,
+      avatar: trainer.avatar,
+      message:
+        "Great! We'll cover variables, functions, and scope today. Make sure to practice the examples.",
+      time: "1 hour ago",
+    },
+  ];
+
+  const coLearners = [
+    {
+      id: 1,
+      name: "Alex Johnson",
+      avatar: "https://api.dicebear.com/9.x/notionists/svg?seed=alex",
+      rank: 2,
+      score: 2450,
+      progress: 85,
+      isCurrentUser: false,
+    },
+    {
+      id: 2,
+      name: "Sarah Chen",
+      avatar: "https://api.dicebear.com/9.x/notionists/svg?seed=sarah",
+      rank: 1,
+      score: 2680,
+      progress: 92,
+      isCurrentUser: false,
+    },
+    {
+      id: 3,
+      name: "Vicky S",
+      avatar: "https://api.dicebear.com/9.x/notionists/svg?seed=varient5",
+      rank: 5,
+      score: 1890,
+      progress: 78,
+      isCurrentUser: true,
+    },
+    {
+      id: 4,
+      name: "Mike Rodriguez",
+      avatar: "https://api.dicebear.com/9.x/notionists/svg?seed=mike",
+      rank: 3,
+      score: 2200,
+      progress: 80,
+      isCurrentUser: false,
+    },
+    {
+      id: 5,
+      name: "Emma Davis",
+      avatar: "https://api.dicebear.com/9.x/notionists/svg?seed=emma",
+      rank: 4,
+      score: 2050,
+      progress: 75,
+      isCurrentUser: false,
+    },
+  ];
+
+  const currentUser = coLearners.find((learner) => learner.isCurrentUser);
+  const topLearners = coLearners
+    .filter((learner) => !learner.isCurrentUser)
+    .sort((a, b) => a.rank - b.rank);
   const [showSessionDropdown, setShowSessionDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -196,6 +302,7 @@ export function SessionDetailsPage({
     const handleScroll = () => {
       const container = scrollContainerRef.current;
       const videoSection = videoSectionRef.current;
+      const tabsSection = tabsRef.current;
       if (!container || !videoSection) return;
 
       setShowScrollTop(container.scrollTop > 300);
@@ -204,6 +311,13 @@ export function SessionDetailsPage({
       const videoRect = videoSection.getBoundingClientRect();
       const containerRect = container.getBoundingClientRect();
       setShowMiniPlayer(videoRect.bottom < containerRect.top + 100);
+
+      // Check if tabs are sticky
+      if (tabsSection) {
+        const tabsRect = tabsSection.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        setIsTabsSticky(tabsRect.top <= containerRect.top);
+      }
     };
 
     const container = scrollContainerRef.current;
@@ -256,6 +370,142 @@ export function SessionDetailsPage({
   const handleCourseDetailsToggle = () => {
     setShowCourseDetails(!showCourseDetails);
   };
+
+  // Mini player drag handlers
+  const handleMouseDown = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    if (
+      !target.classList.contains("resize-handle") &&
+      !target.closest("button")
+    ) {
+      setIsDragging(true);
+      setDragStart({
+        x: e.clientX - miniPlayerPosition.x,
+        y: e.clientY - miniPlayerPosition.y,
+      });
+    }
+  };
+
+  const handleResizeMouseDown = (e: React.MouseEvent, direction: string) => {
+    e.stopPropagation();
+    setIsResizing(true);
+    setResizeDirection(direction);
+    setResizeStart({
+      x: e.clientX,
+      y: e.clientY,
+      width: miniPlayerSize.width,
+      height: miniPlayerSize.height,
+    });
+  };
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (isDragging) {
+        const newX = Math.max(
+          0,
+          Math.min(
+            window.innerWidth - miniPlayerSize.width,
+            e.clientX - dragStart.x
+          )
+        );
+        const newY = Math.max(
+          0,
+          Math.min(
+            window.innerHeight - miniPlayerSize.height,
+            e.clientY - dragStart.y
+          )
+        );
+        setMiniPlayerPosition({ x: newX, y: newY });
+      }
+
+      if (isResizing) {
+        const deltaX = e.clientX - resizeStart.x;
+        const deltaY = e.clientY - resizeStart.y;
+        let newWidth = resizeStart.width;
+        let newHeight = resizeStart.height;
+        let newX = miniPlayerPosition.x;
+        let newY = miniPlayerPosition.y;
+
+        switch (resizeDirection) {
+          case "se":
+            newWidth = Math.max(240, Math.min(600, resizeStart.width + deltaX));
+            newHeight = Math.max(
+              135,
+              Math.min(400, resizeStart.height + deltaY)
+            );
+            break;
+          case "sw":
+            newWidth = Math.max(240, Math.min(600, resizeStart.width - deltaX));
+            newHeight = Math.max(
+              135,
+              Math.min(400, resizeStart.height + deltaY)
+            );
+            newX = miniPlayerPosition.x + (resizeStart.width - newWidth);
+            break;
+          case "ne":
+            newWidth = Math.max(240, Math.min(600, resizeStart.width + deltaX));
+            newHeight = Math.max(
+              135,
+              Math.min(400, resizeStart.height - deltaY)
+            );
+            newY = miniPlayerPosition.y + (resizeStart.height - newHeight);
+            break;
+          case "nw":
+            newWidth = Math.max(240, Math.min(600, resizeStart.width - deltaX));
+            newHeight = Math.max(
+              135,
+              Math.min(400, resizeStart.height - deltaY)
+            );
+            newX = miniPlayerPosition.x + (resizeStart.width - newWidth);
+            newY = miniPlayerPosition.y + (resizeStart.height - newHeight);
+            break;
+          case "n":
+            newHeight = Math.max(
+              135,
+              Math.min(400, resizeStart.height - deltaY)
+            );
+            newY = miniPlayerPosition.y + (resizeStart.height - newHeight);
+            break;
+          case "s":
+            newHeight = Math.max(
+              135,
+              Math.min(400, resizeStart.height + deltaY)
+            );
+            break;
+          case "e":
+            newWidth = Math.max(240, Math.min(600, resizeStart.width + deltaX));
+            break;
+          case "w":
+            newWidth = Math.max(240, Math.min(600, resizeStart.width - deltaX));
+            newX = miniPlayerPosition.x + (resizeStart.width - newWidth);
+            break;
+        }
+
+        // Ensure the resized player stays within screen bounds
+        newX = Math.max(0, Math.min(window.innerWidth - newWidth, newX));
+        newY = Math.max(0, Math.min(window.innerHeight - newHeight, newY));
+
+        setMiniPlayerSize({ width: newWidth, height: newHeight });
+        setMiniPlayerPosition({ x: newX, y: newY });
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+      setIsResizing(false);
+      setResizeDirection("");
+    };
+
+    if (isDragging || isResizing) {
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+    }
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isDragging, isResizing, dragStart, resizeStart, miniPlayerSize]);
 
   return (
     <div className="flex-1 bg-white flex flex-col h-screen relative">
@@ -507,7 +757,7 @@ export function SessionDetailsPage({
                 <div className="flex items-center gap-2">
                   <div className="flex bg-gray-100 rounded-full transition-colors p-2">
                     <button className="flex items-center gap-2 px-2 text-sm font-medium">
-                      <ThumbsUpIcon size={16} className="text-gray-600" /> 120K
+                      <ThumbsUpIcon size={16} className="text-gray-600" /> 120
                     </button>
                     <button className="flex items-center gap-2 border-l border-gray-300 px-2">
                       <ThumbsDownIcon size={16} className="text-gray-600" />
@@ -519,14 +769,17 @@ export function SessionDetailsPage({
           </div>
 
           {/* Sticky Tabs */}
-          <div className="sticky top-0 z-30 bg-white">
-            <div className="flex">
+          <div ref={tabsRef} className="sticky top-0 z-1 pb-8 relative">
+            <div className="flex shadow-[0_0px_0px_-1px_rgba(0,0,0,0.1)] bg-white">
+              {isTabsSticky && (
+                <div className="absolute bottom-[16px] left-0 right-0 h-4 bg-gradient-to-b from-[#0000001d] to-transparent pointer-events-none"></div>
+              )}
               <button
                 onClick={() => setActiveTab("test")}
-                className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
+                className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors bg-white ${
                   activeTab === "test"
                     ? "border-black text-black"
-                    : "border-transparent text-gray-600 hover:text-gray-900"
+                    : "border-gray-100 text-gray-600 hover:text-gray-900"
                 }`}
               >
                 <div className="flex items-center gap-2">
@@ -536,10 +789,10 @@ export function SessionDetailsPage({
               </button>
               <button
                 onClick={() => setActiveTab("notes")}
-                className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
+                className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors bg-white ${
                   activeTab === "notes"
                     ? "border-black text-black"
-                    : "border-transparent text-gray-600 hover:text-gray-900"
+                    : "border-gray-100 text-gray-600 hover:text-gray-900"
                 }`}
               >
                 <div className="flex items-center gap-2">
@@ -549,10 +802,10 @@ export function SessionDetailsPage({
               </button>
               <button
                 onClick={() => setActiveTab("comments")}
-                className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
+                className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors bg-white ${
                   activeTab === "comments"
                     ? "border-black text-black"
-                    : "border-transparent text-gray-600 hover:text-gray-900"
+                    : "border-gray-100 text-gray-600 hover:text-gray-900"
                 }`}
               >
                 <div className="flex items-center gap-2">
@@ -561,11 +814,24 @@ export function SessionDetailsPage({
                 </div>
               </button>
               <button
+                onClick={() => setActiveTab("trainer-chat")}
+                className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors bg-white ${
+                  activeTab === "trainer-chat"
+                    ? "border-black text-black"
+                    : "border-gray-100 text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <MessageSquare className="w-4 h-4" />
+                  Trainer Chat
+                </div>
+              </button>
+              <button
                 onClick={() => setActiveTab("mentors")}
-                className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
+                className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors bg-white ${
                   activeTab === "mentors"
                     ? "border-black text-black"
-                    : "border-transparent text-gray-600 hover:text-gray-900"
+                    : "border-gray-100 text-gray-600 hover:text-gray-900"
                 }`}
               >
                 <div className="flex items-center gap-2">
@@ -573,11 +839,24 @@ export function SessionDetailsPage({
                   Mentors
                 </div>
               </button>
+              <button
+                onClick={() => setActiveTab("co-learners")}
+                className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors bg-white ${
+                  activeTab === "co-learners"
+                    ? "border-black text-black"
+                    : "border-gray-100 text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <Users className="w-4 h-4" />
+                  Co-learners ({coLearners.length})
+                </div>
+              </button>
             </div>
           </div>
 
           {/* Tab Content */}
-          <div className="py-6 pb-32">
+          <div className="pb-[50rem]">
             {activeTab === "test" && (
               <div className="">
                 {/* Header */}
@@ -673,10 +952,11 @@ export function SessionDetailsPage({
                 {/* Header */}
                 <div className="mb-8">
                   <h2 className="text-2xl font-semibold text-gray-900 mb-2">
-                    Session Notes
+                     This is your personal space for session notes and materials.
                   </h2>
                   <p className="text-gray-600">
-                    Access your study materials and resources
+                    Everything shared for this session is saved here, so you can
+                    revisit and revise anytime.
                   </p>
                 </div>
 
@@ -786,56 +1066,244 @@ export function SessionDetailsPage({
               <div>
                 <div className="mb-6">
                   <h2 className="text-xl font-bold text-gray-900 mb-2">
-                    Connect with Expert Mentors
+                    You’ve unlocked Mentor Connect 🎉
                   </h2>
                   <p className="text-gray-600">
-                    Get personalized guidance from industry professionals
+                    Based on your learning progress, goals, and career
+                    direction, we’ve handpicked mentors just for you.
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                  {mentors.map((mentor) => (
-                    <div
-                      key={mentor.id}
-                      className="bg-white rounded-lg border p-6"
-                    >
-                      <div className="flex gap-4 mb-4">
-                        {/* Profile Image with Green Border */}
-                        <div className="w-12 h-12 rounded-full border-4 border-green-500 p-1 flex-shrink-0">
-                          <img
-                            src={`https://api.dicebear.com/9.x/notionists/svg?seed=${mentor.avatar}`}
-                            alt={mentor.name}
-                            className="w-full h-full rounded-full object-cover"
-                          />
-                        </div>
-
-                        {/* Name and Rating on Right */}
-                        <div className="flex-1">
-                          <h6 className="font-semibold text-gray-900 mb-1">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {mentors.slice(0, 3).map((mentor) => (
+                    <div key={mentor.id} className="bg-gray-50 rounded-lg p-4">
+                      {/* Profile Section */}
+                      <div className="flex items-center gap-3 mb-3">
+                        <img
+                          src={`https://api.dicebear.com/9.x/notionists/svg?seed=${mentor.avatar}`}
+                          alt={mentor.name}
+                          className="w-12 h-12 rounded-full"
+                        />
+                        <div>
+                          <h6 className="font-semibold text-gray-900 text-sm">
                             {mentor.name}
                           </h6>
+                          <p className="text-xs text-gray-600 mb-1">
+                            {mentor.domain}
+                          </p>
                           <div className="flex items-center gap-1">
                             {[...Array(5)].map((_, i) => (
                               <Star
                                 key={i}
-                                className="w-4 h-4 fill-yellow-400 text-yellow-400"
+                                className="w-3 h-3 fill-green-500 text-green-500"
                               />
                             ))}
                           </div>
                         </div>
                       </div>
 
-                      {/* Domain */}
-                      <p className="text-sm text-gray-600 mb-3">
-                        {mentor.domain}
-                      </p>
+                      {/* Best Works Section */}
+                      <div className="mb-3">
+                        <h4 className="font-semibold text-gray-900 text-sm mb-2">
+                          Best Works
+                        </h4>
+                        <p className="text-xs text-gray-600 leading-relaxed">
+                          You show strong consistency in your learning. Your
+                          problem-solving approach, clean coding style, and
+                          ability to break tasks into smaller steps stand out.
+                          Your pace is steady, and you clearly understand core
+                          concepts better than most learners in your batch.
+                        </p>
+                      </div>
 
                       {/* Book a Slot Button */}
-                      <button className="w-full px-6 py-2 border border-gray-300 text-gray-700 rounded-full hover:text-[#00BF53] transition-colors text-sm">
+                      <button className="w-full px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:text-[#00BF53] hover:border-[#00BF53] transition-colors text-sm">
                         Book a Slot
                       </button>
                     </div>
                   ))}
+                </div>
+              </div>
+            )}
+
+            {activeTab === "trainer-chat" && (
+              <div>
+                <div className="mb-4">
+                  <h2 className="text-xl font-bold text-gray-900 mb-1">
+                    Trainer Discussion
+                  </h2>
+                  <p className="text-gray-800 font-medium text-sm">
+                    This space is just for you and your Trainer
+                  </p>
+                  <p className="text-gray-600 text-sm">
+                    Ask questions, get clarity, and learn with personal
+                    guidance.
+                  </p>
+                </div>
+
+                {/* Add Message */}
+                <div className="mb-6">
+                  <div className="flex gap-3">
+                    <img
+                      src="https://api.dicebear.com/9.x/notionists/svg?seed=current-user"
+                      alt="You"
+                      className="w-8 h-8 rounded-full"
+                    />
+                    <div className="flex-1">
+                      <input
+                        type="text"
+                        placeholder="Ask a question or share your thoughts..."
+                        className="w-full py-2 border-0 border-b border-gray-300 focus:outline-none focus:border-[#00BF53] text-sm bg-transparent"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Thread-style Chat */}
+                <div className="space-y-6">
+                  {trainerMessages.map((msg) => (
+                    <div key={msg.id} className="flex items-start gap-3">
+                      <img
+                        src={msg.avatar}
+                        alt={msg.name}
+                        className="w-8 h-8 rounded-full flex-shrink-0"
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-medium text-sm text-gray-900">
+                            {msg.name}
+                          </span>
+                          {msg.sender === "trainer" && (
+                            <span className="px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full">
+                              Trainer
+                            </span>
+                          )}
+                          <span className="text-xs text-gray-500">
+                            {msg.time}
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-700 mb-2">
+                          {msg.message}
+                        </p>
+                        <div className="flex items-center gap-4">
+                          <button className="flex items-center gap-1 text-xs text-gray-600 hover:text-[#00BF53]">
+                            <ThumbsUp className="w-3 h-3" /> Like
+                          </button>
+                          <button className="text-xs text-gray-600 hover:text-[#00BF53]">
+                            Reply
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {activeTab === "co-learners" && (
+              <div>
+                <div className="mb-4">
+                  <h2 className="text-xl font-bold text-gray-900 mb-1">
+                    Co-learners
+                  </h2>
+                  <p className="text-gray-600 text-sm">
+                    Connect with fellow students and track progress
+                  </p>
+                </div>
+
+                {/* Right: Rankings */}
+                <div>
+                  {/* Current User Rank */}
+                  {currentUser && (
+                    <div className="border border-[#00BF56] rounded-lg p-4 mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="relative">
+                          <img
+                            src={currentUser.avatar}
+                            alt={currentUser.name}
+                            className="w-12 h-12 rounded-full border border-[#00BF53]"
+                          />
+                          <div className="absolute -top-1 -right-1 bg-yellow-400 text-black rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">
+                            #{currentUser.rank}
+                          </div>
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-bold">Your Rank</h3>
+                          <p className="text-gray-600 text-sm">
+                            {currentUser.score} points • {currentUser.progress}%
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Leaderboard */}
+                  <div className="bg-white border rounded-lg">
+                    <div className="p-3 border-b">
+                      <h3 className="font-semibold text-gray-900 flex items-center gap-2 text-sm">
+                        <Trophy className="w-4 h-4 text-yellow-500" />
+                        Top Performers
+                      </h3>
+                    </div>
+
+                    <div className="divide-y">
+                      {topLearners.slice(0, 5).map((learner) => (
+                        <div
+                          key={learner.id}
+                          className="p-3 flex items-center gap-3"
+                        >
+                          <div className="relative">
+                            {learner.rank === 1 && (
+                              <Crown className="absolute -top-1 -left-1 w-4 h-4 text-yellow-500" />
+                            )}
+                            <img
+                              src={learner.avatar}
+                              alt={learner.name}
+                              className="w-8 h-8 rounded-full"
+                            />
+                            <div
+                              className={`absolute -bottom-1 -right-1 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold ${
+                                learner.rank === 1
+                                  ? "bg-yellow-500 text-white"
+                                  : learner.rank === 2
+                                  ? "bg-gray-400 text-white"
+                                  : learner.rank === 3
+                                  ? "bg-orange-500 text-white"
+                                  : "bg-gray-200 text-gray-700"
+                              }`}
+                            >
+                              {learner.rank <= 3 ? (
+                                <Medal className="w-2 h-2" />
+                              ) : (
+                                learner.rank
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex-1">
+                            <h4 className="font-medium text-gray-900 text-sm">
+                              {learner.name}
+                            </h4>
+                            <div className="text-xs text-gray-600">
+                              {learner.score} points
+                            </div>
+                          </div>
+                          <div
+                            className={`text-sm font-bold ${
+                              learner.rank === 1
+                                ? "text-yellow-600"
+                                : learner.rank === 2
+                                ? "text-gray-600"
+                                : learner.rank === 3
+                                ? "text-orange-600"
+                                : "text-gray-900"
+                            }`}
+                          >
+                            #{learner.rank}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
@@ -864,8 +1332,8 @@ export function SessionDetailsPage({
 
           {/* MCQ Test Drawer Overlay */}
           {showMCQDrawer && (
-            <div className="fixed inset-0 bg-black/20 z-[70] flex justify-center items-center">
-              <div className="w-full max-w-2xl bg-white shadow-2xl rounded-lg transform transition-transform duration-300 ease-out mx-4">
+            <div className="fixed inset-y-0 z-50 right-0 w-[calc(100vw-240px)] bg-white shadow-xl border-l z-50 flex flex-col">
+              <div className="w-full h-screen bg-white shadow-2xl rounded-lg transform transition-transform duration-300 ease-out">
                 {/* Drawer Header */}
                 <div className="flex items-center justify-between p-4 border-b">
                   <h2 className="text-lg font-semibold text-gray-900">
@@ -880,7 +1348,7 @@ export function SessionDetailsPage({
                 </div>
 
                 {/* MCQ Content */}
-                <div className="max-h-[70vh] overflow-y-auto">
+                <div className="overflow-y-auto">
                   <MCQAssessment
                     title={`${session.courseName} Assessment`}
                     description={`Test your knowledge on ${session.title}`}
@@ -945,7 +1413,11 @@ export function SessionDetailsPage({
             <button
               onClick={scrollToTop}
               className="fixed right-6 z-40 w-10 h-10 border border-[#00BF53] text-[#00BF53] rounded-full shadow-lg transition-all duration-200 flex items-center justify-center"
-              style={{ bottom: showMiniPlayer ? "14rem" : "1.5rem" }}
+              style={{
+                bottom: showMiniPlayer
+                  ? `${miniPlayerPosition.y + miniPlayerSize.height + 24}px`
+                  : "1.5rem",
+              }}
             >
               <ChevronUp className="w-6 h-6" />
             </button>
@@ -953,8 +1425,18 @@ export function SessionDetailsPage({
 
           {/* Mini Player */}
           {showMiniPlayer && (
-            <div className="fixed bottom-6 right-6 z-50 w-80 h-48 bg-black rounded-lg shadow-2xl transition-all duration-300 transform">
-              <div className="relative w-full h-full">
+            <div
+              ref={miniPlayerRef}
+              className="fixed z-50 bg-black rounded-lg shadow-2xl select-none group"
+              style={{
+                left: `${miniPlayerPosition.x}px`,
+                top: `${miniPlayerPosition.y}px`,
+                width: `${miniPlayerSize.width}px`,
+                height: `${miniPlayerSize.height}px`,
+              }}
+              onMouseDown={handleMouseDown}
+            >
+              <div className="relative w-full h-full cursor-move">
                 <VideoPlayer
                   videoSrc={session.videoUrl}
                   onCourseDetailsClick={handleCourseDetailsToggle}
@@ -962,18 +1444,53 @@ export function SessionDetailsPage({
                 />
                 <button
                   onClick={scrollToVideo}
-                  className="absolute top-2 left-2 w-6 h-6 bg-black/60 hover:bg-black/80 rounded-full flex items-center justify-center transition-colors"
+                  className="absolute top-2 left-2 w-6 h-6 bg-black/60 hover:bg-black/80 rounded-full flex items-center justify-center transition-colors z-10"
                   title="Go to main player"
                 >
                   <ArrowUpLeft className="w-4 h-4 text-white" />
                 </button>
                 <button
                   onClick={() => setShowMiniPlayer(false)}
-                  className="absolute top-2 right-2 w-6 h-6 bg-black/60 hover:bg-black/80 rounded-full flex items-center justify-center transition-colors"
+                  className="absolute top-2 right-2 w-6 h-6 bg-black/60 hover:bg-black/80 rounded-full flex items-center justify-center transition-colors z-10"
                   title="Close mini player"
                 >
                   <X className="w-4 h-4 text-white" />
                 </button>
+
+                {/* Resize handles */}
+                <div
+                  className="resize-handle absolute -top-1 -left-1 w-3 h-3 cursor-nw-resize opacity-0 group-hover:opacity-100 transition-opacity"
+                  onMouseDown={(e) => handleResizeMouseDown(e, "nw")}
+                />
+                <div
+                  className="resize-handle absolute -top-1 -right-1 w-3 h-3 cursor-ne-resize opacity-0 group-hover:opacity-100 transition-opacity"
+                  onMouseDown={(e) => handleResizeMouseDown(e, "ne")}
+                />
+                <div
+                  className="resize-handle absolute -bottom-1 -left-1 w-3 h-3 cursor-sw-resize opacity-0 group-hover:opacity-100 transition-opacity"
+                  onMouseDown={(e) => handleResizeMouseDown(e, "sw")}
+                />
+                <div
+                  className="resize-handle absolute -bottom-1 -right-1 w-3 h-3 cursor-se-resize bg-white/20 hover:bg-white/40 transition-colors"
+                  onMouseDown={(e) => handleResizeMouseDown(e, "se")}
+                  style={{ clipPath: "polygon(100% 0%, 0% 100%, 100% 100%)" }}
+                />
+                <div
+                  className="resize-handle absolute -top-1 left-3 right-3 h-2 cursor-n-resize opacity-0 group-hover:opacity-100 transition-opacity"
+                  onMouseDown={(e) => handleResizeMouseDown(e, "n")}
+                />
+                <div
+                  className="resize-handle absolute -bottom-1 left-3 right-3 h-2 cursor-s-resize opacity-0 group-hover:opacity-100 transition-opacity"
+                  onMouseDown={(e) => handleResizeMouseDown(e, "s")}
+                />
+                <div
+                  className="resize-handle absolute -left-1 top-3 bottom-3 w-2 cursor-w-resize opacity-0 group-hover:opacity-100 transition-opacity"
+                  onMouseDown={(e) => handleResizeMouseDown(e, "w")}
+                />
+                <div
+                  className="resize-handle absolute -right-1 top-3 bottom-3 w-2 cursor-e-resize opacity-0 group-hover:opacity-100 transition-opacity"
+                  onMouseDown={(e) => handleResizeMouseDown(e, "e")}
+                />
               </div>
             </div>
           )}

@@ -209,7 +209,7 @@ export function ChatTextArea({
   return (
     <div
       ref={containerRef}
-      className={`${showSuggestions && suggestions.length > 0 ? "bg-white" : ""}`}
+      className={`${showSuggestions && suggestions.length > 0 ? "bg-white rounded-t-[20px]" : ""}`}
     >
       {/* Suggestions */}
       {showSuggestions && (
@@ -265,7 +265,7 @@ export function ChatTextArea({
 
       {/* Right Drawer */}
       {showDrawer && (
-        <div className="fixed inset-y-0 right-0 w-[calc(100vw-240px)] bg-white shadow-xl border-l z-50 flex flex-col">
+        <div className="fixed inset-y-0 z-50 right-0 w-[calc(100vw-240px)] bg-white shadow-xl border-l z-50 flex flex-col">
           {/* Header */}
           <div className="border-b border-gray-200 bg-white px-4 py-3">
             <div className="flex items-center justify-between">

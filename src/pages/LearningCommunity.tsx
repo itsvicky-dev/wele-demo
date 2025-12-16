@@ -521,9 +521,6 @@ export function LearningCommunity() {
             <div className="bg-white">
               <div className="flex items-center justify-between border-b border-gray-200 py-4 px-6">
                 <div className="flex items-center space-x-4">
-                  <button className="text-gray-600 hover:text-gray-800">
-                    <ArrowLeft size={20} />
-                  </button>
                   <div className="flex items-center space-x-3">
                     <Users size={20} className="text-gray-600" />
                     <span className="text-lg font-medium">
@@ -905,8 +902,13 @@ export function LearningCommunity() {
 
             {/* Communities List */}
             <div className="flex-1 p-6 max-w-5xl mx-auto w-full">
-              {/* Search Field */}
-              <div className="mb-6">
+              {/* Show More Button */}
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-lg font-semibold text-gray-800">
+                  All Groups
+                </h2>
+
+                {/* Search Field */}
                 <div className="relative">
                   <Search
                     className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
@@ -920,13 +922,6 @@ export function LearningCommunity() {
                     className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   />
                 </div>
-              </div>
-
-              {/* Show More Button */}
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold text-gray-800">
-                  All Groups
-                </h2>
               </div>
 
               <div className="space-y-4">
