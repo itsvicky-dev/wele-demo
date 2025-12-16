@@ -151,7 +151,22 @@ export function Mentors() {
         </div>
       </div>
       
-      <div className="max-w-[calc(100vw-450px)] mx-auto px-6 space-y-3 py-6 relative">
+      <div className="max-w-[calc(100vw-450px)] mx-auto px-6 space-y-2 py-6 relative">
+        
+        <div className="text-center mb-6 space-y-2">
+          <p className="text-gray-700 text-lg font-medium leading-relaxed">
+            You're seeing mentors who truly fit your learning journey.
+          </p>
+          <p className="text-gray-700 text-sm leading-relaxed">
+            This list is carefully curated using the courses you're enrolled in, the domain you're exploring, and the skills you want to build.
+         
+            We also consider your interests and progress, so the guidance you get feels relevant — not generic.
+          
+            Each mentor here understands where you are right now and what comes next.
+    
+            Connect, ask freely, and move forward with clarity and confidence.
+          </p>
+        </div>
 
          <div >
         <div className="flex items-center justify-center gap-0  w-[100%]">

@@ -121,6 +121,8 @@ export function VideoPlayer({ videoSrc, onCourseDetailsClick, isMiniPlayer = fal
         onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
+        controlsList={isFullscreen ? "nodownload" : undefined}
+        onContextMenu={isFullscreen ? (e) => e.preventDefault() : undefined}
       />
       
       {/* Video Controls Overlay */}
@@ -181,72 +183,76 @@ export function VideoPlayer({ videoSrc, onCourseDetailsClick, isMiniPlayer = fal
               {isPlaying ? <Pause className="w-5 h-5 text-white" /> : <Play className="w-5 h-5 text-white fill-white" />}
             </button>
             
-            {/* Volume Controls */}
-            <div className="flex items-center gap-2 group/volume">
-              <button onClick={toggleMute} className="text-white hover:text-[#00BF53] transition-colors">
-                {isMuted || volume === 0 ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
-              </button>
-              <div className="w-0 group-hover/volume:w-20 overflow-hidden transition-all duration-200">
-                <input
-                  type="range"
-                  min="0"
-                  max="1"
-                  step="0.1"
-                  value={isMuted ? 0 : volume}
-                  onChange={handleVolumeChange}
-                  className="w-20 h-1 bg-white/30 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#00BF53] [&::-webkit-slider-track]:bg-white/30 [&::-webkit-slider-track]:rounded-lg"
-                />
+            {/* Volume Controls - Hidden in mini player */}
+            {!isMiniPlayer && (
+              <div className="flex items-center gap-2 group/volume">
+                <button onClick={toggleMute} className="text-white hover:text-[#00BF53] transition-colors">
+                  {isMuted || volume === 0 ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+                </button>
+                <div className="w-0 group-hover/volume:w-20 overflow-hidden transition-all duration-200">
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.1"
+                    value={isMuted ? 0 : volume}
+                    onChange={handleVolumeChange}
+                    className="w-20 h-1 bg-white/30 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#00BF53] [&::-webkit-slider-track]:bg-white/30 [&::-webkit-slider-track]:rounded-lg"
+                  />
+                </div>
               </div>
-            </div>
+            )}
 
             <span className="text-white text-sm font-medium">{formatTime(currentTime)} / {formatTime(duration)}</span>
             
             <div className="flex-1" />
             
-            {/* Settings */}
-            <div className="relative">
-              <button 
-                onClick={() => setShowSettings(!showSettings)}
-                className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
-                  showSettings ? 'bg-[#00BF53] text-white' : 'text-white hover:text-[#00BF53]'
-                }`}
-              >
-                <Settings className="w-5 h-5" />
-              </button>
-              
-              {showSettings && (
-                <div className="absolute bottom-full right-0 mb-2 bg-black/90 rounded-lg p-3 min-w-48 backdrop-blur-sm">
-                  <div className="text-white text-sm font-medium mb-2">Playback Speed</div>
-                  <div className="space-y-1">
-                    {[0.5, 0.75, 1, 1.25, 1.5, 2].map((rate) => (
-                      <button
-                        key={rate}
-                        onClick={() => handlePlaybackRateChange(rate)}
-                        className={`w-full text-left px-2 py-1 text-sm rounded transition-colors ${
-                          playbackRate === rate ? 'bg-[#00BF53] text-white' : 'text-gray-300 hover:text-white hover:bg-white/10'
-                        }`}
-                      >
-                        {rate}x
-                      </button>
-                    ))}
+            {/* Settings - Hidden in mini player */}
+            {!isMiniPlayer && (
+              <div className="relative">
+                <button 
+                  onClick={() => setShowSettings(!showSettings)}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
+                    showSettings ? 'bg-[#00BF53] text-white' : 'text-white hover:text-[#00BF53]'
+                  }`}
+                >
+                  <Settings className="w-5 h-5" />
+                </button>
+                
+                {showSettings && (
+                  <div className="absolute bottom-full right-0 mb-2 bg-black/90 rounded-lg p-3 min-w-48 backdrop-blur-sm">
+                    <div className="text-white text-sm font-medium mb-2">Playback Speed</div>
+                    <div className="space-y-1">
+                      {[0.5, 0.75, 1, 1.25, 1.5, 2].map((rate) => (
+                        <button
+                          key={rate}
+                          onClick={() => handlePlaybackRateChange(rate)}
+                          className={`w-full text-left px-2 py-1 text-sm rounded transition-colors ${
+                            playbackRate === rate ? 'bg-[#00BF53] text-white' : 'text-gray-300 hover:text-white hover:bg-white/10'
+                          }`}
+                        >
+                          {rate}x
+                        </button>
+                      ))}
+                    </div>
+                    <div className="text-white text-sm font-medium mb-2 mt-3">Quality</div>
+                    <div className="space-y-1">
+                      {['Auto', '1080p', '720p', '480p'].map((q) => (
+                        <button
+                          key={q}
+                          onClick={() => setQuality(q)}
+                          className={`w-full text-left px-2 py-1 text-sm rounded transition-colors ${
+                            quality === q ? 'bg-[#00BF53] text-white' : 'text-gray-300 hover:text-white hover:bg-white/10'
+                          }`}
+                        >
+                          {q}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                  <div className="text-white text-sm font-medium mb-2 mt-3">Quality</div>
-                  <div className="space-y-1">
-                    {['Auto', '1080p', '720p', '480p'].map((q) => (
-                      <button
-                        key={q}
-                        onClick={() => setQuality(q)}
-                        className={`w-full text-left px-2 py-1 text-sm rounded transition-colors ${
-                          quality === q ? 'bg-[#00BF53] text-white' : 'text-gray-300 hover:text-white hover:bg-white/10'
-                        }`}
-                      >
-                        {q}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            )}
             
             <button 
               onClick={toggleFullscreen}

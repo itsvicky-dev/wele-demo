@@ -36,7 +36,7 @@ export function EnrolledCourseCard({
   status,
 }: EnrolledCourseCardProps) {
   return (
-    <div className="bg-white rounded-[30px] overflow-hidden shadow-sm border border-gray-200 flex-shrink-0 w-[280px] relative">
+    <div className="bg-white rounded-[30px] overflow-hidden shadow-sm border border-gray-200 flex-shrink-0 relative">
       <div className="p-4 relative" style={{ backgroundImage: 'url(/assets/images/course-bg.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="text-xs font-medium text-gray-700 mb-3">{type}</div>
         <div className="flex items-center gap-3 mb-3">

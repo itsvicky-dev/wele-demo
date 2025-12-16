@@ -37,6 +37,7 @@ import { useState, useRef, useEffect } from "react";
 import { VideoPlayer } from "./VideoPlayer";
 import { ChatTextArea } from "./ChatTextArea";
 import { MCQAssessment } from "./MCQAssessment";
+import { ResizableMiniPlayer } from "./ResizableMiniPlayer";
 
 interface Comment {
   id: number;
@@ -112,7 +113,13 @@ export function SessionDetailsPage({
   onSessionChange,
 }: SessionDetailsProps) {
   const [activeTab, setActiveTab] = useState<
-    "test" | "comments" | "notes" | "mentors" | "trainer-chat" | "co-learners"
+    | "test"
+    | "comments"
+    | "notes"
+    | "mentors"
+    | "trainer-chat"
+    | "co-learners"
+    | "ai-history"
   >("test");
   const [showSummary, setShowSummary] = useState(false);
   const [summaryText, setSummaryText] = useState("");
@@ -122,6 +129,10 @@ export function SessionDetailsPage({
   const [showCourseDetails, setShowCourseDetails] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [showMiniPlayer, setShowMiniPlayer] = useState(false);
+  const [miniPlayerManuallyClosed, setMiniPlayerManuallyClosed] =
+    useState(false);
+  const [hasScrolledToTop, setHasScrolledToTop] = useState(false);
+  const [hasScrolledToBottom, setHasScrolledToBottom] = useState(false);
   const [isTabsSticky, setIsTabsSticky] = useState(false);
   const [miniPlayerPosition, setMiniPlayerPosition] = useState({
     x: 24,
@@ -224,6 +235,69 @@ export function SessionDetailsPage({
     },
   ];
 
+  const chatHistories = [
+    {
+      id: 1,
+      name: "JavaScript Variables Discussion",
+      date: "Yesterday, 3:45 PM",
+      messages: [
+        {
+          id: 1,
+          sender: "user",
+          message: "Can you explain the difference between let, const, and var?",
+          time: "Yesterday, 3:45 PM",
+        },
+        {
+          id: 2,
+          sender: "ai",
+          message:
+            "Great question! Here are the key differences:\n\n• **var**: Function-scoped, can be redeclared, hoisted\n• **let**: Block-scoped, cannot be redeclared, temporal dead zone\n• **const**: Block-scoped, cannot be reassigned or redeclared\n\nUse const by default, let when you need to reassign, avoid var in modern JavaScript.",
+          time: "Yesterday, 3:45 PM",
+        },
+      ],
+    },
+    {
+      id: 2,
+      name: "Session Summary",
+      date: "Today, 10:30 AM",
+      messages: [
+        {
+          id: 3,
+          sender: "user",
+          message: "Summarize this session.",
+          time: "Today, 10:30 AM",
+        },
+        {
+          id: 4,
+          sender: "ai",
+          message:
+            "This session covered JavaScript fundamentals including:\n\n• Variable declarations (let, const, var)\n• Function syntax and arrow functions\n• Scope and closures\n• Basic data types and operations\n\nKey takeaway: Understanding scope is crucial for writing clean, bug-free JavaScript code.",
+          time: "Today, 10:30 AM",
+        },
+      ],
+    },
+    {
+      id: 3,
+      name: "Closures Explanation",
+      date: "Today, 2:15 PM",
+      messages: [
+        {
+          id: 5,
+          sender: "user",
+          message: "What are closures in JavaScript?",
+          time: "Today, 2:15 PM",
+        },
+        {
+          id: 6,
+          sender: "ai",
+          message:
+            "A closure is a function that has access to variables in its outer (enclosing) scope even after the outer function has returned.\n\nExample:\n```javascript\nfunction outer(x) {\n  return function inner(y) {\n    return x + y; // inner has access to x\n  };\n}\n```\n\nClosures are useful for data privacy, callbacks, and creating function factories.",
+          time: "Today, 2:15 PM",
+        },
+      ],
+    },
+  ];
+
   const coLearners = [
     {
       id: 1,
@@ -270,6 +344,96 @@ export function SessionDetailsPage({
       progress: 75,
       isCurrentUser: false,
     },
+    {
+      id: 6,
+      name: "James Wilson",
+      avatar: "https://api.dicebear.com/9.x/notionists/svg?seed=james",
+      rank: 6,
+      score: 1750,
+      progress: 72,
+      isCurrentUser: false,
+    },
+    {
+      id: 7,
+      name: "Lisa Park",
+      avatar: "https://api.dicebear.com/9.x/notionists/svg?seed=lisa",
+      rank: 7,
+      score: 1680,
+      progress: 68,
+      isCurrentUser: false,
+    },
+    {
+      id: 8,
+      name: "David Kim",
+      avatar: "https://api.dicebear.com/9.x/notionists/svg?seed=david",
+      rank: 8,
+      score: 1620,
+      progress: 65,
+      isCurrentUser: false,
+    },
+    {
+      id: 9,
+      name: "Anna Thompson",
+      avatar: "https://api.dicebear.com/9.x/notionists/svg?seed=anna",
+      rank: 9,
+      score: 1580,
+      progress: 63,
+      isCurrentUser: false,
+    },
+    {
+      id: 10,
+      name: "Ryan Lee",
+      avatar: "https://api.dicebear.com/9.x/notionists/svg?seed=ryan",
+      rank: 10,
+      score: 1520,
+      progress: 60,
+      isCurrentUser: false,
+    },
+    {
+      id: 11,
+      name: "Sophie Brown",
+      avatar: "https://api.dicebear.com/9.x/notionists/svg?seed=sophie",
+      rank: 11,
+      score: 1480,
+      progress: 58,
+      isCurrentUser: false,
+    },
+    {
+      id: 12,
+      name: "Tom Garcia",
+      avatar: "https://api.dicebear.com/9.x/notionists/svg?seed=tom",
+      rank: 12,
+      score: 1420,
+      progress: 55,
+      isCurrentUser: false,
+    },
+    {
+      id: 13,
+      name: "Maya Patel",
+      avatar: "https://api.dicebear.com/9.x/notionists/svg?seed=maya",
+      rank: 13,
+      score: 1380,
+      progress: 52,
+      isCurrentUser: false,
+    },
+    {
+      id: 14,
+      name: "Chris Anderson",
+      avatar: "https://api.dicebear.com/9.x/notionists/svg?seed=chris",
+      rank: 14,
+      score: 1340,
+      progress: 50,
+      isCurrentUser: false,
+    },
+    {
+      id: 15,
+      name: "Zoe Martinez",
+      avatar: "https://api.dicebear.com/9.x/notionists/svg?seed=zoe",
+      rank: 15,
+      score: 1300,
+      progress: 48,
+      isCurrentUser: false,
+    },
   ];
 
   const currentUser = coLearners.find((learner) => learner.isCurrentUser);
@@ -277,6 +441,9 @@ export function SessionDetailsPage({
     .filter((learner) => !learner.isCurrentUser)
     .sort((a, b) => a.rank - b.rank);
   const [showSessionDropdown, setShowSessionDropdown] = useState(false);
+  const [showAllLearners, setShowAllLearners] = useState(false);
+  const [selectedChatHistory, setSelectedChatHistory] = useState<number | null>(null);
+  const [showChatHistoryModal, setShowChatHistoryModal] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -310,7 +477,28 @@ export function SessionDetailsPage({
       // Show mini player when video section is scrolled out of view
       const videoRect = videoSection.getBoundingClientRect();
       const containerRect = container.getBoundingClientRect();
-      setShowMiniPlayer(videoRect.bottom < containerRect.top + 100);
+      const shouldShowMiniPlayer = videoRect.bottom < containerRect.top + 100;
+
+      // Track scroll positions
+      const isAtTop = container.scrollTop === 0;
+      const isAtBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 10;
+      
+      // State machine for tracking scroll sequence
+      if (miniPlayerManuallyClosed) {
+        if (isAtTop && !hasScrolledToTop) {
+          setHasScrolledToTop(true);
+          setHasScrolledToBottom(false);
+        } else if (hasScrolledToTop && isAtBottom && !hasScrolledToBottom) {
+          setHasScrolledToBottom(true);
+        } else if (hasScrolledToTop && hasScrolledToBottom) {
+          setMiniPlayerManuallyClosed(false);
+          setHasScrolledToTop(false);
+          setHasScrolledToBottom(false);
+        }
+      }
+
+      // Only show mini player if not manually closed
+      setShowMiniPlayer(shouldShowMiniPlayer && !miniPlayerManuallyClosed);
 
       // Check if tabs are sticky
       if (tabsSection) {
@@ -330,14 +518,14 @@ export function SessionDetailsPage({
         container.removeEventListener("scroll", handleScroll);
       }
     };
-  }, []);
+  }, [miniPlayerManuallyClosed, hasScrolledToTop, hasScrolledToBottom]);
 
   const scrollToTop = () => {
     scrollContainerRef.current?.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const scrollToVideo = () => {
-    videoSectionRef.current?.scrollIntoView({ behavior: "smooth" });
+    scrollContainerRef.current?.scrollTo({ top: 0, behavior: "smooth" });
     setShowMiniPlayer(false);
   };
 
@@ -769,7 +957,7 @@ export function SessionDetailsPage({
           </div>
 
           {/* Sticky Tabs */}
-          <div ref={tabsRef} className="sticky top-0 z-1 pb-8 relative">
+          <div ref={tabsRef} className="sticky top-0 z-[1] pb-8">
             <div className="flex shadow-[0_0px_0px_-1px_rgba(0,0,0,0.1)] bg-white">
               {isTabsSticky && (
                 <div className="absolute bottom-[16px] left-0 right-0 h-4 bg-gradient-to-b from-[#0000001d] to-transparent pointer-events-none"></div>
@@ -852,25 +1040,37 @@ export function SessionDetailsPage({
                   Co-learners ({coLearners.length})
                 </div>
               </button>
+              <button
+                onClick={() => setActiveTab("ai-history")}
+                className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors bg-white ${
+                  activeTab === "ai-history"
+                    ? "border-black text-black"
+                    : "border-gray-100 text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4" />
+                  AI History
+                </div>
+              </button>
             </div>
           </div>
 
           {/* Tab Content */}
-          <div className="pb-[50rem]">
+          <div className="pb-[30rem]">
             {activeTab === "test" && (
               <div className="">
                 {/* Header */}
                 <div className="mb-2">
-                  <h2 className="text-2xl font-semibold text-gray-900 mb-2">
-                    Assessments
+                  <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                    See how you are doing in this session.
                   </h2>
                   <p className="text-gray-600 mb-2">
-                    Test your knowledge and track your progress
+                    Each test you take shows how much you’ve learned so far.
                   </p>
                   <p className="text-gray-600 text-sm leading-relaxed">
-                    You're making excellent progress in your learning journey.
-                    Testing your knowledge helps reinforce what you've learned
-                    and builds confidence. Keep up the momentum!
+                    Use your results to understand your strengths and improve
+                    step by step.
                   </p>
                 </div>
 
@@ -893,8 +1093,8 @@ export function SessionDetailsPage({
                 {/* Motivational Message */}
                 <div className="mb-8">
                   <p className="text-gray-600 text-sm">
-                    Challenge yourself and see how much you've learned. Every
-                    test brings you closer to mastery!
+                    Keep going — you’re learning well and moving in the right
+                    direction.
                   </p>
                 </div>
 
@@ -951,8 +1151,8 @@ export function SessionDetailsPage({
               <div className="space-y-6">
                 {/* Header */}
                 <div className="mb-8">
-                  <h2 className="text-2xl font-semibold text-gray-900 mb-2">
-                     This is your personal space for session notes and materials.
+                  <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                    This is your personal space for session notes and materials.
                   </h2>
                   <p className="text-gray-600">
                     Everything shared for this session is saved here, so you can
@@ -1130,11 +1330,8 @@ export function SessionDetailsPage({
               <div>
                 <div className="mb-4">
                   <h2 className="text-xl font-bold text-gray-900 mb-1">
-                    Trainer Discussion
-                  </h2>
-                  <p className="text-gray-800 font-medium text-sm">
                     This space is just for you and your Trainer
-                  </p>
+                  </h2>
                   <p className="text-gray-600 text-sm">
                     Ask questions, get clarity, and learn with personal
                     guidance.
@@ -1200,19 +1397,56 @@ export function SessionDetailsPage({
               </div>
             )}
 
+            {activeTab === "ai-history" && (
+              <div>
+                <div className="mb-4">
+                  <h2 className="text-xl font-bold text-gray-900 mb-1">
+                    AI Chat History
+                  </h2>
+                  <p className="text-gray-600 text-sm">
+                    Review your previous conversations with AI assistant
+                  </p>
+                </div>
+
+                {/* Chat History List */}
+                <div className="space-y-3">
+                  {chatHistories.map((chat) => (
+                    <button
+                      key={chat.id}
+                      onClick={() => {
+                        setSelectedChatHistory(chat.id);
+                        setShowChatHistoryModal(true);
+                      }}
+                      className="w-full text-left p-4 border border-gray-200 rounded-lg hover:border-[#00BF53] hover:shadow-sm transition-all"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="font-medium text-gray-900 mb-1">
+                            {chat.name}
+                          </h3>
+                          <p className="text-sm text-gray-500">{chat.date}</p>
+                        </div>
+                        <ChevronRight className="w-4 h-4 text-gray-400" />
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {activeTab === "co-learners" && (
               <div>
                 <div className="mb-4">
                   <h2 className="text-xl font-bold text-gray-900 mb-1">
-                    Co-learners
+                    Learning Network
                   </h2>
                   <p className="text-gray-600 text-sm">
                     Connect with fellow students and track progress
                   </p>
                 </div>
 
-                {/* Right: Rankings */}
-                <div>
+                {/* Cards with Top Learners and Other Learners */}
+                <div className="max-w-lg">
                   {/* Current User Rank */}
                   {currentUser && (
                     <div className="border border-[#00BF56] rounded-lg p-4 mb-4">
@@ -1236,72 +1470,177 @@ export function SessionDetailsPage({
                       </div>
                     </div>
                   )}
-
-                  {/* Leaderboard */}
-                  <div className="bg-white border rounded-lg">
-                    <div className="p-3 border-b">
-                      <h3 className="font-semibold text-gray-900 flex items-center gap-2 text-sm">
+                  <div className="border rounded-lg">
+                    {/* Top Learners Card */}
+                    <div className="rounded-lg p-3">
+                      <h3 className="font-semibold text-gray-900 flex items-center gap-2 text-sm mb-3">
                         <Trophy className="w-4 h-4 text-yellow-500" />
-                        Top Performers
+                        Top Learners
                       </h3>
-                    </div>
-
-                    <div className="divide-y">
-                      {topLearners.slice(0, 5).map((learner) => (
-                        <div
-                          key={learner.id}
-                          className="p-3 flex items-center gap-3"
-                        >
-                          <div className="relative">
-                            {learner.rank === 1 && (
-                              <Crown className="absolute -top-1 -left-1 w-4 h-4 text-yellow-500" />
-                            )}
-                            <img
-                              src={learner.avatar}
-                              alt={learner.name}
-                              className="w-8 h-8 rounded-full"
-                            />
+                      <div className="divide-y">
+                        {topLearners.slice(0, 3).map((learner) => (
+                          <div
+                            key={learner.id}
+                            className="py-2 flex items-center gap-3"
+                          >
+                            <div className="relative">
+                              {learner.rank === 1 && (
+                                <Crown className="absolute -top-1 -left-1 w-4 h-4 text-yellow-500" />
+                              )}
+                              <img
+                                src={learner.avatar}
+                                alt={learner.name}
+                                className="w-8 h-8 rounded-full"
+                              />
+                              <div
+                                className={`absolute -bottom-1 -right-1 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold ${
+                                  learner.rank === 1
+                                    ? "bg-yellow-500 text-white"
+                                    : "bg-gray-200 text-gray-700"
+                                }`}
+                              >
+                                {learner.rank <= 3 ? (
+                                  <Medal className="w-2 h-2" />
+                                ) : (
+                                  learner.rank
+                                )}
+                              </div>
+                            </div>
+                            <div className="flex-1">
+                              <h4 className="font-medium text-gray-900 text-sm">
+                                {learner.name}
+                              </h4>
+                              <div className="text-xs text-gray-600">
+                                {learner.score} points
+                              </div>
+                            </div>
                             <div
-                              className={`absolute -bottom-1 -right-1 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold ${
+                              className={`text-sm font-bold ${
                                 learner.rank === 1
-                                  ? "bg-yellow-500 text-white"
-                                  : learner.rank === 2
-                                  ? "bg-gray-400 text-white"
-                                  : learner.rank === 3
-                                  ? "bg-orange-500 text-white"
-                                  : "bg-gray-200 text-gray-700"
+                                  ? "text-yellow-600"
+                                  : "text-gray-900"
                               }`}
                             >
-                              {learner.rank <= 3 ? (
-                                <Medal className="w-2 h-2" />
-                              ) : (
-                                learner.rank
-                              )}
+                              #{learner.rank}
                             </div>
                           </div>
-                          <div className="flex-1">
-                            <h4 className="font-medium text-gray-900 text-sm">
-                              {learner.name}
-                            </h4>
-                            <div className="text-xs text-gray-600">
-                              {learner.score} points
-                            </div>
-                          </div>
-                          <div
-                            className={`text-sm font-bold ${
-                              learner.rank === 1
-                                ? "text-yellow-600"
-                                : learner.rank === 2
-                                ? "text-gray-600"
-                                : learner.rank === 3
-                                ? "text-orange-600"
-                                : "text-gray-900"
-                            }`}
-                          >
-                            #{learner.rank}
-                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Other Learners Card */}
+                    <div className="rounded-lg p-3">
+                      <h3 className="font-semibold text-gray-900 flex items-center gap-2 text-sm mb-3">
+                        <Users className="w-4 h-4 text-gray-500" />
+                        Other Learners
+                      </h3>
+                      <div className="relative">
+                        <div className="divide-y">
+                          {coLearners
+                            .filter(
+                              (learner) =>
+                                !topLearners
+                                  .slice(0, 3)
+                                  .some((top) => top.id === learner.id)
+                            )
+                            .slice(0, showAllLearners ? undefined : 3)
+                            .map((learner, index, filteredArray) => {
+                              const isLastItem =
+                                !showAllLearners &&
+                                index === filteredArray.length - 1 &&
+                                filteredArray.length >= 3;
+                              return (
+                                <div
+                                  key={learner.id}
+                                  className={`py-2 flex items-center gap-3 relative ${
+                                    learner.isCurrentUser
+                                      ? "bg-green-50 -mx-3 px-3 rounded"
+                                      : ""
+                                  } ${isLastItem ? "overflow-hidden" : ""}`}
+                                >
+                                  <div className="relative">
+                                    <img
+                                      src={learner.avatar}
+                                      alt={learner.name}
+                                      className={`w-8 h-8 rounded-full ${
+                                        learner.isCurrentUser
+                                          ? "border border-[#00BF53]"
+                                          : ""
+                                      }`}
+                                    />
+                                    <div
+                                      className={`absolute -bottom-1 -right-1 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold ${
+                                        learner.rank === 1
+                                          ? "bg-yellow-500 text-white"
+                                          : learner.rank === 2
+                                          ? "bg-gray-400 text-white"
+                                          : learner.rank === 3
+                                          ? "bg-orange-500 text-white"
+                                          : "bg-gray-200 text-gray-700"
+                                      }`}
+                                    >
+                                      {learner.rank <= 3 ? (
+                                        <Medal className="w-2 h-2" />
+                                      ) : (
+                                        learner.rank
+                                      )}
+                                    </div>
+                                  </div>
+                                  <div className="flex-1">
+                                    <h4
+                                      className={`font-medium text-sm ${
+                                        learner.isCurrentUser
+                                          ? "text-[#00BF53]"
+                                          : "text-gray-900"
+                                      }`}
+                                    >
+                                      {learner.name}{" "}
+                                      {learner.isCurrentUser && "(You)"}
+                                    </h4>
+                                    <div className="text-xs text-gray-600">
+                                      {learner.score} points •{" "}
+                                      {learner.progress}%
+                                    </div>
+                                  </div>
+                                  <div
+                                    className={`text-sm font-bold ${
+                                      learner.rank === 1
+                                        ? "text-yellow-600"
+                                        : learner.rank === 2
+                                        ? "text-gray-600"
+                                        : learner.rank === 3
+                                        ? "text-orange-600"
+                                        : "text-gray-900"
+                                    }`}
+                                  >
+                                    #{learner.rank}
+                                  </div>
+                                  {isLastItem && (
+                                    <div className="absolute inset-0 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none" />
+                                  )}
+                                </div>
+                              );
+                            })}
                         </div>
-                      ))}
+                        {coLearners.filter(
+                          (learner) =>
+                            !topLearners
+                              .slice(0, 3)
+                              .some((top) => top.id === learner.id)
+                        ).length > 3 && (
+                          <div className="relative">
+                            <button
+                              onClick={() =>
+                                setShowAllLearners(!showAllLearners)
+                              }
+                              className="absolute inset-0 w-full h-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-sm text-gray-600 hover:text-[#00BF53] transition-colors z-10 rounded"
+                            >
+                              {showAllLearners ? "Show Less" : "Show More"}
+                            </button>
+                            <div className="h-12 w-full" />
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1311,7 +1650,7 @@ export function SessionDetailsPage({
 
           {/* Chat Text Area at Bottom */}
           <div
-            className="fixed bottom-[20px] w-full max-w-4xl px-6"
+            className="fixed bottom-[20px] z-50 w-full max-w-4xl px-6"
             style={{
               left: "calc(50% + 500px - 50vw)",
               width: "calc(-760px + 100vw)",
@@ -1425,72 +1764,76 @@ export function SessionDetailsPage({
 
           {/* Mini Player */}
           {showMiniPlayer && (
-            <div
-              ref={miniPlayerRef}
-              className="fixed z-50 bg-black rounded-lg shadow-2xl select-none group"
-              style={{
-                left: `${miniPlayerPosition.x}px`,
-                top: `${miniPlayerPosition.y}px`,
-                width: `${miniPlayerSize.width}px`,
-                height: `${miniPlayerSize.height}px`,
+            <ResizableMiniPlayer
+              videoSrc={session.videoUrl}
+              onCourseDetailsClick={() => console.log("Course details clicked")}
+              isVisible={showMiniPlayer}
+              onClose={() => {
+                setShowMiniPlayer(false);
+                setMiniPlayerManuallyClosed(true);
               }}
-              onMouseDown={handleMouseDown}
-            >
-              <div className="relative w-full h-full cursor-move">
-                <VideoPlayer
-                  videoSrc={session.videoUrl}
-                  onCourseDetailsClick={handleCourseDetailsToggle}
-                  isMiniPlayer={true}
-                />
-                <button
-                  onClick={scrollToVideo}
-                  className="absolute top-2 left-2 w-6 h-6 bg-black/60 hover:bg-black/80 rounded-full flex items-center justify-center transition-colors z-10"
-                  title="Go to main player"
-                >
-                  <ArrowUpLeft className="w-4 h-4 text-white" />
-                </button>
-                <button
-                  onClick={() => setShowMiniPlayer(false)}
-                  className="absolute top-2 right-2 w-6 h-6 bg-black/60 hover:bg-black/80 rounded-full flex items-center justify-center transition-colors z-10"
-                  title="Close mini player"
-                >
-                  <X className="w-4 h-4 text-white" />
-                </button>
+              onScrollToVideo={scrollToVideo}
+            />
+          )}
 
-                {/* Resize handles */}
-                <div
-                  className="resize-handle absolute -top-1 -left-1 w-3 h-3 cursor-nw-resize opacity-0 group-hover:opacity-100 transition-opacity"
-                  onMouseDown={(e) => handleResizeMouseDown(e, "nw")}
-                />
-                <div
-                  className="resize-handle absolute -top-1 -right-1 w-3 h-3 cursor-ne-resize opacity-0 group-hover:opacity-100 transition-opacity"
-                  onMouseDown={(e) => handleResizeMouseDown(e, "ne")}
-                />
-                <div
-                  className="resize-handle absolute -bottom-1 -left-1 w-3 h-3 cursor-sw-resize opacity-0 group-hover:opacity-100 transition-opacity"
-                  onMouseDown={(e) => handleResizeMouseDown(e, "sw")}
-                />
-                <div
-                  className="resize-handle absolute -bottom-1 -right-1 w-3 h-3 cursor-se-resize bg-white/20 hover:bg-white/40 transition-colors"
-                  onMouseDown={(e) => handleResizeMouseDown(e, "se")}
-                  style={{ clipPath: "polygon(100% 0%, 0% 100%, 100% 100%)" }}
-                />
-                <div
-                  className="resize-handle absolute -top-1 left-3 right-3 h-2 cursor-n-resize opacity-0 group-hover:opacity-100 transition-opacity"
-                  onMouseDown={(e) => handleResizeMouseDown(e, "n")}
-                />
-                <div
-                  className="resize-handle absolute -bottom-1 left-3 right-3 h-2 cursor-s-resize opacity-0 group-hover:opacity-100 transition-opacity"
-                  onMouseDown={(e) => handleResizeMouseDown(e, "s")}
-                />
-                <div
-                  className="resize-handle absolute -left-1 top-3 bottom-3 w-2 cursor-w-resize opacity-0 group-hover:opacity-100 transition-opacity"
-                  onMouseDown={(e) => handleResizeMouseDown(e, "w")}
-                />
-                <div
-                  className="resize-handle absolute -right-1 top-3 bottom-3 w-2 cursor-e-resize opacity-0 group-hover:opacity-100 transition-opacity"
-                  onMouseDown={(e) => handleResizeMouseDown(e, "e")}
-                />
+          {/* Chat History Modal */}
+          {showChatHistoryModal && selectedChatHistory && (
+            <div className="fixed inset-y-0 z-[9999] right-0 w-[calc(100vw-240px)] bg-white shadow-xl border-l flex flex-col">
+              {/* Header */}
+              <div className="border-b border-gray-200 bg-white px-4 py-3">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-lg text-gray-900">
+                    {chatHistories.find((chat) => chat.id === selectedChatHistory)?.name}
+                  </h2>
+                  <button
+                    onClick={() => {
+                      setShowChatHistoryModal(false);
+                      setSelectedChatHistory(null);
+                    }}
+                    className="p-1.5 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Messages */}
+              <div className="flex-1 overflow-y-auto scrollbar-hide p-4 space-y-4 max-w-3xl min-w-[48rem] mx-auto">
+                {chatHistories
+                  .find((chat) => chat.id === selectedChatHistory)
+                  ?.messages.map((msg) => (
+                    <div key={msg.id}>
+                      {msg.sender === "ai" ? (
+                        /* AI Message - Left aligned */
+                        <div className="flex items-start space-x-3">
+                          <div className="flex-1">
+                            <div className="text-gray-800 px-3 py-2 rounded-2xl rounded-tl-md max-w-[80%]">
+                              <p className="whitespace-pre-line text-sm leading-relaxed">
+                                {msg.message}
+                              </p>
+                            </div>
+                            {/* <div className="flex items-center gap-4 mt-2">
+                              <button className="flex items-center gap-1 text-xs text-gray-600 hover:text-[#00BF53]">
+                                <ThumbsUp className="w-3 h-3" /> Helpful
+                              </button>
+                              <button className="text-xs text-gray-600 hover:text-[#00BF53]">
+                                Copy
+                              </button>
+                            </div> */}
+                          </div>
+                        </div>
+                      ) : (
+                        /* User Message - Right aligned */
+                        <div className="text-right">
+                          <div className="inline-block bg-gray-100 text-gray-800 px-3 py-2 rounded-2xl rounded-tr-md max-w-[80%]">
+                            <p className="whitespace-pre-wrap text-sm">
+                              {msg.message}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
               </div>
             </div>
           )}
