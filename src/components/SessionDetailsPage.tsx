@@ -1971,70 +1971,68 @@ export function SessionDetailsPage({
                   <div className="flex-1">
                     {aiChatContext.type === 'voice-summarize' ? (
                       /* Voice Message Bubble */
-                      <div className="bg-blue-50 border border-blue-200 rounded-2xl rounded-tl-md p-4 max-w-[80%]">
-                        <div className="flex items-start gap-3">
-                          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <div className="p-4 max-w-md">
+                        <div className="mb-3">
+                          <p className="text-sm font-medium text-gray-900 mb-1">
+                            Here's the transcription for {aiChatContext.chapter}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            {aiChatContext.chapter}: Introduction
+                          </p>
+                        </div>
+                        
+                        <div className="flex items-center gap-3 mb-3 bg-gray-50 border border-gray-200 rounded-lg p-4">
+                          <button 
+                            onClick={() => {
+                              setIsVoicePlaying(!isVoicePlaying);
+                              if (!isVoicePlaying) {
+                                setTimeout(() => setIsVoicePlaying(false), 3000);
+                              }
+                            }}
+                            className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors"
+                          >
                             {isVoicePlaying ? (
-                              <div className="w-4 h-4 bg-blue-500 rounded-full animate-pulse" />
+                              <Pause className="w-4 h-4 text-gray-700" />
                             ) : (
-                              <Mic className="w-4 h-4 text-blue-600" />
+                              <Play className="w-4 h-4 text-gray-700" />
                             )}
-                          </div>
+                          </button>
                           
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm text-gray-800 leading-relaxed mb-2">
-                              🎤 Voice summary for "{aiChatContext.chapter}"
-                            </p>
-                            
-                            {isVoicePlaying && (
-                              <div className="flex items-center gap-2 mb-2">
-                                <div className="flex gap-1">
-                                  <div className="w-1 h-3 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0ms' }} />
-                                  <div className="w-1 h-3 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '150ms' }} />
-                                  <div className="w-1 h-3 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '300ms' }} />
-                                </div>
-                                <span className="text-xs text-gray-500">Playing...</span>
-                              </div>
-                            )}
-                            
-                            <div className="flex gap-2">
-                              <button 
-                                onClick={() => {
-                                  setIsVoicePlaying(true);
-                                  setTimeout(() => setIsVoicePlaying(false), 3000);
-                                }}
-                                disabled={isVoicePlaying}
-                                className="px-3 py-1 bg-blue-600 text-white text-xs rounded-full hover:bg-blue-700 transition-colors disabled:opacity-50"
-                              >
-                                {isVoicePlaying ? 'Playing...' : '▶️ Play'}
-                              </button>
-                              {!isVoicePlaying && (
-                                <button 
-                                  onClick={() => {
-                                    setIsVoicePlaying(true);
-                                    setTimeout(() => setIsVoicePlaying(false), 3000);
-                                  }}
-                                  className="px-3 py-1 border border-blue-600 text-blue-600 text-xs rounded-full hover:bg-blue-50 transition-colors"
-                                >
-                                  🔄 Replay
-                                </button>
-                              )}
+                          <div className="flex-1">
+                            <div className="flex justify-between items-center gap-2 text-xs text-gray-600 mb-1">
+                              <span>00:00</span>
+                              <span>45:00 mins</span>
+                            </div>
+                            <div className="w-full bg-gray-200 rounded-full h-1">
+                              <div 
+                                className="bg-green-500 h-1 rounded-full transition-all duration-300"
+                                style={{ width: isVoicePlaying ? '25%' : '0%' }}
+                              />
                             </div>
                           </div>
+                        </div>
+                        
+                        <div className="flex gap-2">
+                          <button className="px-3 py-1 border border-gray-200 text-gray-700 text-xs rounded-full">
+                            Transcription
+                          </button>
                         </div>
                       </div>
                     ) : (
                       /* Regular Text Message */
                       <div className="text-gray-800 px-3 py-2 rounded-2xl rounded-tl-md max-w-[80%]">
                         <p className="whitespace-pre-line text-sm leading-relaxed">
-                          📝 Here's a summary of "{aiChatContext.chapter}" from {session.title}:
+                          📝 Here's a summary of "{aiChatContext.chapter}" from {session.title}:<br />
 
-• Core concepts and terminology
-• Step-by-step explanations
-• Practical code examples
-• Best practices and common pitfalls
+                            • **What is JavaScript**: A high-level, interpreted programming language that runs in browsers and servers<br />
+                            • **Key Features**: Dynamic typing, first-class functions, prototype-based inheritance, and event-driven programming<br />
+                            • **JavaScript Engine**: How browsers execute JavaScript code using V8, SpiderMonkey, and other engines<br />
+                            • **Basic Syntax**: Variables (let, const, var), data types (string, number, boolean, object, array)<br />
+                            • **DOM Interaction**: How JavaScript manipulates HTML elements and responds to user events<br />
+                            • **Modern JavaScript**: ES6+ features like arrow functions, template literals, and destructuring<br />
+                            • **Development Setup**: Browser console, code editors, and debugging tools<br />
 
-Would you like me to dive deeper into any specific topic?
+                            Would you like me to dive deeper into any specific topic?
                         </p>
                       </div>
                     )}
@@ -2043,14 +2041,13 @@ Would you like me to dive deeper into any specific topic?
               </div>
               
               {/* Chat Input */}
-              <div className="border-t border-gray-200 p-4">
+              <div className="p-4 max-w-3xl min-w-[48rem] mx-auto">
                 <ChatTextArea
                   placeholder={`Ask about "${aiChatContext.chapter}"...`}
-                  suggestions={[
-                    { id: '1', text: 'Explain the key concepts in detail' },
-                    { id: '2', text: 'Provide practical examples' },
-                    { id: '3', text: 'What are the main takeaways?' }
-                  ]}
+                  // suggestions={[
+                  //   { id: '1', text: 'Explain the key concepts in detail' },
+                  //   { id: '2', text: 'Provide practical examples' },
+                  // ]}
                   sessionContext={{
                     title: session.title,
                     courseName: session.courseName,
