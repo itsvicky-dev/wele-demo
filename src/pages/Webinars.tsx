@@ -179,7 +179,7 @@ export function Webinars() {
                     >
                       {webinar.level}
                     </span>
-                    <span className="px-2 py-1 text-xs font-medium bg-black/10 rounded">
+                    <span className="px-2 py-1 text-xs font-medium bg-[#0000000f] rounded">
                       {webinar.duration}
                     </span>
                     {webinar.isLive && (

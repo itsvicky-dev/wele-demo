@@ -32,6 +32,7 @@ import {
   Trophy,
   Medal,
   Crown,
+  Mic,
 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { VideoPlayer } from "./VideoPlayer";
@@ -134,6 +135,7 @@ export function SessionDetailsPage({
   const [hasScrolledToTop, setHasScrolledToTop] = useState(false);
   const [hasScrolledToBottom, setHasScrolledToBottom] = useState(false);
   const [isTabsSticky, setIsTabsSticky] = useState(false);
+  const [isProgrammaticScroll, setIsProgrammaticScroll] = useState(false);
   const [miniPlayerPosition, setMiniPlayerPosition] = useState({
     x: 24,
     y: 24,
@@ -160,6 +162,7 @@ export function SessionDetailsPage({
   const tabsScrollRef = useRef<HTMLDivElement>(null);
   const tabsRef = useRef<HTMLDivElement>(null);
   const miniPlayerRef = useRef<HTMLDivElement>(null);
+  const tabContentRef = useRef<HTMLDivElement>(null);
 
   const mentors = [
     {
@@ -445,6 +448,37 @@ export function SessionDetailsPage({
   const [selectedChatHistory, setSelectedChatHistory] = useState<number | null>(null);
   const [showChatHistoryModal, setShowChatHistoryModal] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  
+  // Shared video state for synchronization between main and mini player
+  const [sharedVideoState, setSharedVideoState] = useState({
+    currentTime: 0,
+    isPlaying: false,
+    duration: 0
+  });
+  
+  const handleVideoStateChange = (state: { currentTime: number; isPlaying: boolean; duration: number }) => {
+    setSharedVideoState(state);
+  };
+  
+  const chapters = [
+    { id: 1, title: "Introduction to JavaScript", startTime: 0, duration: 25 },
+    { id: 2, title: "Variables and Data Types", startTime: 25, duration: 30 },
+    { id: 3, title: "Functions and Scope", startTime: 55, duration: 27 },
+    { id: 4, title: "Objects and Arrays", startTime: 82, duration: 22 },
+    { id: 5, title: "DOM Manipulation", startTime: 104, duration: 18 }
+  ];
+  
+  // AI Chat Modal state
+  const [showAIChatModal, setShowAIChatModal] = useState(false);
+  const [aiChatContext, setAIChatContext] = useState<{ type: string; chapter: string } | null>(null);
+  const [showVoiceBubble, setShowVoiceBubble] = useState(false);
+  const [voiceBubbleText, setVoiceBubbleText] = useState('');
+  const [isVoicePlaying, setIsVoicePlaying] = useState(false);
+  
+  const handleAIRequest = (type: 'summarize' | 'voice-summarize', chapterTitle: string) => {
+    setAIChatContext({ type, chapter: chapterTitle });
+    setShowAIChatModal(true);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -500,8 +534,8 @@ export function SessionDetailsPage({
       // Only show mini player if not manually closed
       setShowMiniPlayer(shouldShowMiniPlayer && !miniPlayerManuallyClosed);
 
-      // Check if tabs are sticky
-      if (tabsSection) {
+      // Check if tabs are sticky (only if not programmatic scroll)
+      if (tabsSection && !isProgrammaticScroll) {
         const tabsRect = tabsSection.getBoundingClientRect();
         const containerRect = container.getBoundingClientRect();
         setIsTabsSticky(tabsRect.top <= containerRect.top);
@@ -767,6 +801,12 @@ export function SessionDetailsPage({
               <VideoPlayer
                 videoSrc={session.videoUrl}
                 onCourseDetailsClick={handleCourseDetailsToggle}
+                sharedVideoState={sharedVideoState}
+                onVideoStateChange={handleVideoStateChange}
+                chapters={chapters}
+                courseName={course.title}
+                sessionName={session.title}
+                onAIRequest={handleAIRequest}
               />
 
               {/* Course Details Overlay */}
@@ -957,13 +997,21 @@ export function SessionDetailsPage({
           </div>
 
           {/* Sticky Tabs */}
-          <div ref={tabsRef} className="sticky top-0 z-[1] pb-8">
+          <div ref={tabsRef} className={`${isTabsSticky ? 'sticky top-0' : ''} z-[1] pb-8`}>
             <div className="flex shadow-[0_0px_0px_-1px_rgba(0,0,0,0.1)] bg-white">
               {isTabsSticky && (
                 <div className="absolute bottom-[16px] left-0 right-0 h-4 bg-gradient-to-b from-[#0000001d] to-transparent pointer-events-none"></div>
               )}
               <button
-                onClick={() => setActiveTab("test")}
+                onClick={() => {
+                  setActiveTab("test");
+                  if (tabContentRef.current) {
+                    setIsProgrammaticScroll(true);
+                    const offsetTop = tabContentRef.current.offsetTop - 130;
+                    scrollContainerRef.current?.scrollTo({ top: offsetTop, behavior: "smooth" });
+                    setTimeout(() => setIsProgrammaticScroll(false), 1000);
+                  }
+                }}
                 className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors bg-white ${
                   activeTab === "test"
                     ? "border-black text-black"
@@ -976,7 +1024,15 @@ export function SessionDetailsPage({
                 </div>
               </button>
               <button
-                onClick={() => setActiveTab("notes")}
+                onClick={() => {
+                  setActiveTab("notes");
+                  if (tabContentRef.current) {
+                    setIsProgrammaticScroll(true);
+                    const offsetTop = tabContentRef.current.offsetTop - 130;
+                    scrollContainerRef.current?.scrollTo({ top: offsetTop, behavior: "smooth" });
+                    setTimeout(() => setIsProgrammaticScroll(false), 1000);
+                  }
+                }}
                 className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors bg-white ${
                   activeTab === "notes"
                     ? "border-black text-black"
@@ -989,7 +1045,15 @@ export function SessionDetailsPage({
                 </div>
               </button>
               <button
-                onClick={() => setActiveTab("comments")}
+                onClick={() => {
+                  setActiveTab("comments");
+                  if (tabContentRef.current) {
+                    setIsProgrammaticScroll(true);
+                    const offsetTop = tabContentRef.current.offsetTop - 130;
+                    scrollContainerRef.current?.scrollTo({ top: offsetTop, behavior: "smooth" });
+                    setTimeout(() => setIsProgrammaticScroll(false), 1000);
+                  }
+                }}
                 className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors bg-white ${
                   activeTab === "comments"
                     ? "border-black text-black"
@@ -1002,7 +1066,15 @@ export function SessionDetailsPage({
                 </div>
               </button>
               <button
-                onClick={() => setActiveTab("trainer-chat")}
+                onClick={() => {
+                  setActiveTab("trainer-chat");
+                  if (tabContentRef.current) {
+                    setIsProgrammaticScroll(true);
+                    const offsetTop = tabContentRef.current.offsetTop - 130;
+                    scrollContainerRef.current?.scrollTo({ top: offsetTop, behavior: "smooth" });
+                    setTimeout(() => setIsProgrammaticScroll(false), 1000);
+                  }
+                }}
                 className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors bg-white ${
                   activeTab === "trainer-chat"
                     ? "border-black text-black"
@@ -1015,7 +1087,15 @@ export function SessionDetailsPage({
                 </div>
               </button>
               <button
-                onClick={() => setActiveTab("mentors")}
+                onClick={() => {
+                  setActiveTab("mentors");
+                  if (tabContentRef.current) {
+                    setIsProgrammaticScroll(true);
+                    const offsetTop = tabContentRef.current.offsetTop - 130;
+                    scrollContainerRef.current?.scrollTo({ top: offsetTop, behavior: "smooth" });
+                    setTimeout(() => setIsProgrammaticScroll(false), 1000);
+                  }
+                }}
                 className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors bg-white ${
                   activeTab === "mentors"
                     ? "border-black text-black"
@@ -1028,7 +1108,15 @@ export function SessionDetailsPage({
                 </div>
               </button>
               <button
-                onClick={() => setActiveTab("co-learners")}
+                onClick={() => {
+                  setActiveTab("co-learners");
+                  if (tabContentRef.current) {
+                    setIsProgrammaticScroll(true);
+                    const offsetTop = tabContentRef.current.offsetTop - 130;
+                    scrollContainerRef.current?.scrollTo({ top: offsetTop, behavior: "smooth" });
+                    setTimeout(() => setIsProgrammaticScroll(false), 1000);
+                  }
+                }}
                 className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors bg-white ${
                   activeTab === "co-learners"
                     ? "border-black text-black"
@@ -1041,7 +1129,15 @@ export function SessionDetailsPage({
                 </div>
               </button>
               <button
-                onClick={() => setActiveTab("ai-history")}
+                onClick={() => {
+                  setActiveTab("ai-history");
+                  if (tabContentRef.current) {
+                    setIsProgrammaticScroll(true);
+                    const offsetTop = tabContentRef.current.offsetTop - 130;
+                    scrollContainerRef.current?.scrollTo({ top: offsetTop, behavior: "smooth" });
+                    setTimeout(() => setIsProgrammaticScroll(false), 1000);
+                  }
+                }}
                 className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors bg-white ${
                   activeTab === "ai-history"
                     ? "border-black text-black"
@@ -1057,7 +1153,7 @@ export function SessionDetailsPage({
           </div>
 
           {/* Tab Content */}
-          <div className="pb-[30rem]">
+          <div ref={tabContentRef} className="pb-[30rem]">
             {activeTab === "test" && (
               <div className="">
                 {/* Header */}
@@ -1748,7 +1844,7 @@ export function SessionDetailsPage({
           )}
 
           {/* Scroll to Top Button */}
-          {showScrollTop && (
+          {showScrollTop && isTabsSticky && (
             <button
               onClick={scrollToTop}
               className="fixed right-6 z-40 w-10 h-10 border border-[#00BF53] text-[#00BF53] rounded-full shadow-lg transition-all duration-200 flex items-center justify-center"
@@ -1773,6 +1869,8 @@ export function SessionDetailsPage({
                 setMiniPlayerManuallyClosed(true);
               }}
               onScrollToVideo={scrollToVideo}
+              sharedVideoState={sharedVideoState}
+              onVideoStateChange={handleVideoStateChange}
             />
           )}
 
@@ -1834,6 +1932,133 @@ export function SessionDetailsPage({
                       )}
                     </div>
                   ))}
+              </div>
+            </div>
+          )}
+          
+
+
+          {/* AI Chat Modal for Chapter Requests */}
+          {showAIChatModal && aiChatContext && (
+            <div className="fixed inset-y-0 z-[9999] right-0 w-[calc(100vw-240px)] bg-white shadow-xl border-l flex flex-col">
+              {/* Header */}
+              <div className="border-b border-gray-200 bg-white px-4 py-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-lg text-gray-900">
+                      {aiChatContext.type === 'voice-summarize' ? 'Voice Summary' : 'Chapter Summary'}
+                    </h2>
+                    <p className="text-sm text-gray-600">
+                      {aiChatContext.chapter} - {course.title}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setShowAIChatModal(false);
+                      setAIChatContext(null);
+                    }}
+                    className="p-1.5 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Chat Interface */}
+              <div className="flex-1 overflow-y-auto scrollbar-hide p-4 space-y-4 max-w-3xl min-w-[48rem] mx-auto">
+                {/* Initial AI Response */}
+                <div className="flex items-start space-x-3">
+                  <div className="flex-1">
+                    {aiChatContext.type === 'voice-summarize' ? (
+                      /* Voice Message Bubble */
+                      <div className="bg-blue-50 border border-blue-200 rounded-2xl rounded-tl-md p-4 max-w-[80%]">
+                        <div className="flex items-start gap-3">
+                          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            {isVoicePlaying ? (
+                              <div className="w-4 h-4 bg-blue-500 rounded-full animate-pulse" />
+                            ) : (
+                              <Mic className="w-4 h-4 text-blue-600" />
+                            )}
+                          </div>
+                          
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm text-gray-800 leading-relaxed mb-2">
+                              🎤 Voice summary for "{aiChatContext.chapter}"
+                            </p>
+                            
+                            {isVoicePlaying && (
+                              <div className="flex items-center gap-2 mb-2">
+                                <div className="flex gap-1">
+                                  <div className="w-1 h-3 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0ms' }} />
+                                  <div className="w-1 h-3 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '150ms' }} />
+                                  <div className="w-1 h-3 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '300ms' }} />
+                                </div>
+                                <span className="text-xs text-gray-500">Playing...</span>
+                              </div>
+                            )}
+                            
+                            <div className="flex gap-2">
+                              <button 
+                                onClick={() => {
+                                  setIsVoicePlaying(true);
+                                  setTimeout(() => setIsVoicePlaying(false), 3000);
+                                }}
+                                disabled={isVoicePlaying}
+                                className="px-3 py-1 bg-blue-600 text-white text-xs rounded-full hover:bg-blue-700 transition-colors disabled:opacity-50"
+                              >
+                                {isVoicePlaying ? 'Playing...' : '▶️ Play'}
+                              </button>
+                              {!isVoicePlaying && (
+                                <button 
+                                  onClick={() => {
+                                    setIsVoicePlaying(true);
+                                    setTimeout(() => setIsVoicePlaying(false), 3000);
+                                  }}
+                                  className="px-3 py-1 border border-blue-600 text-blue-600 text-xs rounded-full hover:bg-blue-50 transition-colors"
+                                >
+                                  🔄 Replay
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      /* Regular Text Message */
+                      <div className="text-gray-800 px-3 py-2 rounded-2xl rounded-tl-md max-w-[80%]">
+                        <p className="whitespace-pre-line text-sm leading-relaxed">
+                          📝 Here's a summary of "{aiChatContext.chapter}" from {session.title}:
+
+• Core concepts and terminology
+• Step-by-step explanations
+• Practical code examples
+• Best practices and common pitfalls
+
+Would you like me to dive deeper into any specific topic?
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              
+              {/* Chat Input */}
+              <div className="border-t border-gray-200 p-4">
+                <ChatTextArea
+                  placeholder={`Ask about "${aiChatContext.chapter}"...`}
+                  suggestions={[
+                    { id: '1', text: 'Explain the key concepts in detail' },
+                    { id: '2', text: 'Provide practical examples' },
+                    { id: '3', text: 'What are the main takeaways?' }
+                  ]}
+                  sessionContext={{
+                    title: session.title,
+                    courseName: session.courseName,
+                    description: `Chapter: ${aiChatContext.chapter}`,
+                    duration: session.duration,
+                  }}
+                  onSendMessage={(message) => console.log('AI Chat message:', message)}
+                />
               </div>
             </div>
           )}

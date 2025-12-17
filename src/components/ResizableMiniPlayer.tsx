@@ -8,6 +8,12 @@ interface ResizableMiniPlayerProps {
   isVisible: boolean;
   onClose: () => void;
   onScrollToVideo?: () => void;
+  sharedVideoState?: {
+    currentTime: number;
+    isPlaying: boolean;
+    duration: number;
+  };
+  onVideoStateChange?: (state: { currentTime: number; isPlaying: boolean; duration: number }) => void;
 }
 
 export function ResizableMiniPlayer({ 
@@ -15,7 +21,9 @@ export function ResizableMiniPlayer({
   onCourseDetailsClick, 
   isVisible, 
   onClose,
-  onScrollToVideo
+  onScrollToVideo,
+  sharedVideoState,
+  onVideoStateChange
 }: ResizableMiniPlayerProps) {
   const [size, setSize] = useState({ width: 320, height: 180 });
   const [position, setPosition] = useState(() => {
@@ -167,6 +175,8 @@ export function ResizableMiniPlayer({
           videoSrc={videoSrc}
           onCourseDetailsClick={onCourseDetailsClick}
           isMiniPlayer={true}
+          sharedVideoState={sharedVideoState}
+          onVideoStateChange={onVideoStateChange}
         />
       </div>
 

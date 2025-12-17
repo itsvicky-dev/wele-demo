@@ -1,16 +1,33 @@
-import { Play, Pause, Volume2, VolumeX, Settings, Maximize, Minimize, Info } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Settings, Maximize, Minimize, Info, MessageSquare, Mic } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
+
+interface Chapter {
+  id: number;
+  title: string;
+  startTime: number;
+  duration: number;
+}
 
 interface VideoPlayerProps {
   videoSrc: string;
   onCourseDetailsClick: () => void;
   isMiniPlayer?: boolean;
+  sharedVideoState?: {
+    currentTime: number;
+    isPlaying: boolean;
+    duration: number;
+  };
+  onVideoStateChange?: (state: { currentTime: number; isPlaying: boolean; duration: number }) => void;
+  chapters?: Chapter[];
+  courseName?: string;
+  sessionName?: string;
+  onAIRequest?: (type: 'summarize' | 'voice-summarize', chapterTitle: string) => void;
 }
 
-export function VideoPlayer({ videoSrc, onCourseDetailsClick, isMiniPlayer = false }: VideoPlayerProps) {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
+export function VideoPlayer({ videoSrc, onCourseDetailsClick, isMiniPlayer = false, sharedVideoState, onVideoStateChange, chapters = [], courseName, sessionName, onAIRequest }: VideoPlayerProps) {
+  const [isPlaying, setIsPlaying] = useState(sharedVideoState?.isPlaying || false);
+  const [currentTime, setCurrentTime] = useState(sharedVideoState?.currentTime || 0);
+  const [duration, setDuration] = useState(sharedVideoState?.duration || 0);
   const [showControls, setShowControls] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [volume, setVolume] = useState(1);
@@ -18,6 +35,8 @@ export function VideoPlayer({ videoSrc, onCourseDetailsClick, isMiniPlayer = fal
   const [showSettings, setShowSettings] = useState(false);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [quality, setQuality] = useState('Auto');
+  const [hoveredChapter, setHoveredChapter] = useState<Chapter | null>(null);
+  const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 });
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -30,14 +49,41 @@ export function VideoPlayer({ videoSrc, onCourseDetailsClick, isMiniPlayer = fal
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, []);
 
+  // Sync with shared video state
+  useEffect(() => {
+    if (sharedVideoState && videoRef.current) {
+      const video = videoRef.current;
+      
+      // Sync current time if different
+      if (Math.abs(video.currentTime - sharedVideoState.currentTime) > 1) {
+        video.currentTime = sharedVideoState.currentTime;
+      }
+      
+      // Sync play/pause state
+      if (sharedVideoState.isPlaying !== isPlaying) {
+        if (sharedVideoState.isPlaying) {
+          video.play();
+        } else {
+          video.pause();
+        }
+        setIsPlaying(sharedVideoState.isPlaying);
+      }
+      
+      setCurrentTime(sharedVideoState.currentTime);
+      setDuration(sharedVideoState.duration);
+    }
+  }, [sharedVideoState]);
+
   const togglePlay = () => {
     if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
+      const newPlayingState = !isPlaying;
+      if (newPlayingState) {
         videoRef.current.play();
+      } else {
+        videoRef.current.pause();
       }
-      setIsPlaying(!isPlaying);
+      setIsPlaying(newPlayingState);
+      onVideoStateChange?.({ currentTime, isPlaying: newPlayingState, duration });
     }
   };
 
@@ -103,7 +149,44 @@ export function VideoPlayer({ videoSrc, onCourseDetailsClick, isMiniPlayer = fal
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const getChapterMarkers = () => {
+    if (!chapters.length || isMiniPlayer || duration === 0) return [];
+    return chapters.map(chapter => ({
+      ...chapter,
+      startPosition: (chapter.startTime / duration) * 100,
+      width: (chapter.duration / duration) * 100
+    }));
+  };
+
   const progressPercentage = duration > 0 ? (currentTime / duration) * 100 : 0;
+
+  const handleProgressHover = (e: React.MouseEvent) => {
+    if (!chapters.length || isMiniPlayer) return;
+    
+    const rect = e.currentTarget.getBoundingClientRect();
+    const percent = (e.clientX - rect.left) / rect.width;
+    const time = percent * duration;
+    
+    const chapter = chapters.find(ch => time >= ch.startTime && time <= (ch.startTime + ch.duration));
+    if (chapter) {
+      setHoveredChapter(chapter);
+      setHoverPosition({ x: e.clientX, y: e.clientY });
+    } else {
+      setHoveredChapter(null);
+    }
+  };
+
+  const handleProgressLeave = () => {
+    setHoveredChapter(null);
+  };
+
+  const jumpToChapter = (startTime: number) => {
+    if (videoRef.current) {
+      videoRef.current.currentTime = startTime;
+      setCurrentTime(startTime);
+      onVideoStateChange?.({ currentTime: startTime, isPlaying, duration });
+    }
+  };
 
   return (
     <div 
@@ -117,10 +200,24 @@ export function VideoPlayer({ videoSrc, onCourseDetailsClick, isMiniPlayer = fal
         className={`w-full h-full object-contain rounded-[10px] ${!isFullscreen ? 'max-h-[455px]' : ''}`}
         src={videoSrc}
         onClick={handleVideoClick}
-        onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
-        onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
+        onTimeUpdate={(e) => {
+          const newTime = e.currentTarget.currentTime;
+          setCurrentTime(newTime);
+          onVideoStateChange?.({ currentTime: newTime, isPlaying, duration });
+        }}
+        onLoadedMetadata={(e) => {
+          const newDuration = e.currentTarget.duration;
+          setDuration(newDuration);
+          onVideoStateChange?.({ currentTime, isPlaying, duration: newDuration });
+        }}
+        onPlay={() => {
+          setIsPlaying(true);
+          onVideoStateChange?.({ currentTime, isPlaying: true, duration });
+        }}
+        onPause={() => {
+          setIsPlaying(false);
+          onVideoStateChange?.({ currentTime, isPlaying: false, duration });
+        }}
         controlsList={isFullscreen ? "nodownload" : undefined}
         onContextMenu={isFullscreen ? (e) => e.preventDefault() : undefined}
       />
@@ -156,20 +253,71 @@ export function VideoPlayer({ videoSrc, onCourseDetailsClick, isMiniPlayer = fal
         <div className="absolute bottom-0 left-0 right-0 p-4">
           {/* Progress Bar */}
           <div className="mb-4">
-            <div className="relative w-full h-1 bg-white/30 rounded-full cursor-pointer group/progress"
+            <div className="relative w-full h-1 cursor-pointer group/progress"
                  onClick={(e) => {
                    const rect = e.currentTarget.getBoundingClientRect();
                    const percent = (e.clientX - rect.left) / rect.width;
                    const time = percent * duration;
                    setCurrentTime(time);
                    if (videoRef.current) videoRef.current.currentTime = time;
-                 }}>
+                   onVideoStateChange?.({ currentTime: time, isPlaying, duration });
+                 }}
+                 onMouseMove={handleProgressHover}
+                 onMouseLeave={handleProgressLeave}>
+              
+              {/* Chapter segments */}
+              {!isMiniPlayer && chapters.length > 0 ? (
+                getChapterMarkers().map((marker, index) => {
+                  const isWatched = currentTime > marker.startTime;
+                  const isCurrentChapter = currentTime >= marker.startTime && currentTime <= (marker.startTime + marker.duration);
+                  const watchedWidth = isCurrentChapter 
+                    ? ((currentTime - marker.startTime) / marker.duration) * 100
+                    : isWatched ? 100 : 0;
+                  
+                  return (
+                    <div key={marker.id}>
+                      {/* Chapter segment background */}
+                      <div
+                        className="absolute top-0 h-full bg-white/30 hover:bg-white/40 transition-colors cursor-pointer"
+                        style={{ 
+                          left: `${marker.startPosition}%`, 
+                          width: `${marker.width}%`
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          jumpToChapter(marker.startTime);
+                        }}
+                      />
+                      {/* Watched portion of chapter */}
+                      <div
+                        className="absolute top-0 h-full bg-[#00BF53] transition-all duration-150"
+                        style={{ 
+                          left: `${marker.startPosition}%`, 
+                          width: `${(marker.width * watchedWidth) / 100}%`
+                        }}
+                      />
+                      {/* Chapter boundary */}
+                      {index < chapters.length - 1 && (
+                        <div
+                          className="absolute top-0 w-0.5 h-full bg-black/60 z-10"
+                          style={{ left: `${marker.startPosition + marker.width}%` }}
+                        />
+                      )}
+                    </div>
+                  );
+                })
+              ) : (
+                <>
+                  <div className="absolute top-0 left-0 w-full h-full bg-white/30 rounded-full" />
+                  <div 
+                    className="absolute top-0 left-0 h-full bg-[#00BF53] rounded-full transition-all duration-150"
+                    style={{ width: `${progressPercentage}%` }}
+                  />
+                </>
+              )}
+              
               <div 
-                className="absolute top-0 left-0 h-full bg-[#00BF53] rounded-full transition-all duration-150"
-                style={{ width: `${progressPercentage}%` }}
-              />
-              <div 
-                className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-[#00BF53] rounded-full opacity-0 group-hover/progress:opacity-100 transition-opacity"
+                className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-[#00BF53] rounded-full opacity-0 group-hover/progress:opacity-100 transition-opacity z-30"
                 style={{ left: `${progressPercentage}%`, transform: 'translateX(-50%) translateY(-50%)' }}
               />
             </div>
@@ -263,6 +411,38 @@ export function VideoPlayer({ videoSrc, onCourseDetailsClick, isMiniPlayer = fal
           </div>
         </div>
       </div>
+      
+      {/* Chapter Hover Tooltip */}
+      {hoveredChapter && !isMiniPlayer && (
+        <div 
+          className="fixed z-50 bg-black/90 text-white p-3 rounded-lg shadow-lg max-w-xs backdrop-blur-sm"
+          style={{
+            left: Math.max(10, Math.min(window.innerWidth - 250, hoverPosition.x - 125)),
+            top: hoverPosition.y - 106
+          }}
+          onMouseEnter={() => setHoveredChapter(hoveredChapter)}
+          onMouseLeave={() => setHoveredChapter(null)}
+        >
+          <h4 className="font-medium text-sm mb-2">{hoveredChapter.title}</h4>
+          <div className="text-xs text-gray-300 mb-3">
+            {formatTime(hoveredChapter.startTime)} - {formatTime(hoveredChapter.startTime + hoveredChapter.duration)}
+          </div>
+          <div className="flex gap-2">
+            <button 
+              className="px-2 py-1 border border-[#00BF53] hover:text-[#00BF53] text-xs rounded transition-colors"
+              onClick={() => onAIRequest?.('summarize', hoveredChapter.title)}
+            >
+              Summarize
+            </button>
+            <button 
+              className="px-2 py-1 border border-[#00BF53] text-white text-xs rounded transition-colors"
+              onClick={() => onAIRequest?.('voice-summarize', hoveredChapter.title)}
+            >
+              Voice Summary
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
