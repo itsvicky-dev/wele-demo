@@ -429,13 +429,13 @@ export function VideoPlayer({ videoSrc, onCourseDetailsClick, isMiniPlayer = fal
           </div>
           <div className="flex gap-2">
             <button 
-              className="px-2 py-1 border border-[#00BF53] hover:text-[#00BF53] text-xs rounded transition-colors"
+              className="px-2 py-1 border border-[#00BF53] text-white hover:text-[#00BF53] text-xs rounded transition-colors"
               onClick={() => onAIRequest?.('summarize', hoveredChapter.title)}
             >
               Summarize
             </button>
             <button 
-              className="px-2 py-1 border border-[#00BF53] text-white text-xs rounded transition-colors"
+              className="px-2 py-1 border border-[#00BF53] text-white hover:text-[#00BF53] text-xs rounded transition-colors"
               onClick={() => onAIRequest?.('voice-summarize', hoveredChapter.title)}
             >
               Voice Summary
