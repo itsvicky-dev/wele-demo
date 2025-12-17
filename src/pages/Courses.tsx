@@ -43,7 +43,7 @@ export function Courses() {
             </div>
           ),
           title: "JavaScript",
-          courseName: "Modern JavaScript From The Beginning Course 2.0 (2025)",
+          courseName: "Modern JavaScript From The Beginning Course",
           price: 199,
           duration: "02:20 hrs",
           progress: 40,

@@ -1146,7 +1146,7 @@ export function SessionDetailsPage({
               >
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4" />
-                  AI History
+                  History
                 </div>
               </button>
             </div>
