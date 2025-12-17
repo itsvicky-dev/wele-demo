@@ -438,12 +438,12 @@ export function Courses() {
               <div className="space-y-2 text-sm text-gray-700">
                 <p>
                   They're selected based on your interests, domain focus, and
-                  learning style. 
-                  </p>
-                  <p>Your progress and goals helped shape this
-                  list. </p>
-                 <p> Each course fits where you are right now in your
-                  journey.
+                  learning style.
+                </p>
+                <p>Your progress and goals helped shape this list. </p>
+                <p>
+                  {" "}
+                  Each course fits where you are right now in your journey.
                 </p>
                 <p className="font-medium">
                   Jump in with confidence and keep moving forward at your own
@@ -469,14 +469,6 @@ export function Courses() {
             </div>
           ))}
         </div>
-        <h2 className="text-xl font-bold text-gray-900 mb-6">
-          Our top pick courses for you:
-        </h2>
-        <div className="grid grid-cols-3 gap-4">
-          {courseData[selectedBadge]?.topPicks.map((course, index) => (
-            <CourseCard key={index} {...course} />
-          ))}
-        </div>
 
         <div className="flex gap-5">
           <div className="flex-1 relative">
@@ -488,15 +480,19 @@ export function Courses() {
             </div>
 
             <div className="pb-4 mb-8 grid grid-cols-3 gap-4">
-              {courseData[selectedBadge]?.myCourses.length > 0 ? (
-                courseData[selectedBadge].myCourses.map((course, index) => (
-                  <EnrolledCourseCard key={index} {...course} />
-                ))
-              ) : (
-                <div className="col-span-3 text-center py-8 text-gray-500">
-                  No enrolled courses in {selectedBadge} category yet.
-                </div>
-              )}
+              {courseData[selectedBadge]?.myCourses.length > 0
+                ? courseData[selectedBadge].myCourses.map((course, index) => (
+                    <EnrolledCourseCard key={index} {...course} />
+                  ))
+                : null}
+            </div>
+            <h2 className="text-xl font-bold text-gray-900 mb-6">
+              Our top pick courses for you:
+            </h2>
+            <div className="grid grid-cols-3 gap-4 mb-8">
+              {courseData[selectedBadge]?.topPicks.map((course, index) => (
+                <CourseCard key={index} {...course} />
+              ))}
             </div>
 
             <div>
