@@ -33,6 +33,8 @@ import {
   Medal,
   Crown,
   Mic,
+  ChevronLeft,
+  Languages,
 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { VideoPlayer } from "./VideoPlayer";
@@ -101,6 +103,7 @@ interface SessionDetailsProps {
   }[];
   onCourseDetailsClick: () => void;
   onSessionChange: (sessionId: number) => void;
+  onBackClick?: () => void;
 }
 
 export function SessionDetailsPage({
@@ -112,6 +115,7 @@ export function SessionDetailsPage({
   sessions,
   onCourseDetailsClick,
   onSessionChange,
+  onBackClick,
 }: SessionDetailsProps) {
   const [activeTab, setActiveTab] = useState<
     | "test"
@@ -135,7 +139,6 @@ export function SessionDetailsPage({
   const [hasScrolledToTop, setHasScrolledToTop] = useState(false);
   const [hasScrolledToBottom, setHasScrolledToBottom] = useState(false);
   const [isTabsSticky, setIsTabsSticky] = useState(false);
-  const [isProgrammaticScroll, setIsProgrammaticScroll] = useState(false);
   const [miniPlayerPosition, setMiniPlayerPosition] = useState({
     x: 24,
     y: 24,
@@ -156,13 +159,35 @@ export function SessionDetailsPage({
   });
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const videoSectionRef = useRef<HTMLDivElement>(null);
-  const testSectionRef = useRef<HTMLDivElement>(null);
-  const commentsSectionRef = useRef<HTMLDivElement>(null);
-  const notesSectionRef = useRef<HTMLDivElement>(null);
   const tabsScrollRef = useRef<HTMLDivElement>(null);
   const tabsRef = useRef<HTMLDivElement>(null);
-  const miniPlayerRef = useRef<HTMLDivElement>(null);
   const tabContentRef = useRef<HTMLDivElement>(null);
+
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(1);
+
+  const videos = [
+    {
+      id: "0",
+      title: "Introduction to React",
+      thumbnail:
+        "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=400&h=300&fit=crop",
+      src: session.videoUrl,
+    },
+    {
+      id: "1",
+      title: "State Management with Redux",
+      thumbnail:
+        "https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?w=400&h=300&fit=crop",
+      src: session.videoUrl,
+    },
+    {
+      id: "2",
+      title: "Component Lifecycle",
+      thumbnail:
+        "https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?w=400&h=300&fit=crop",
+      src: session.videoUrl,
+    },
+  ];
 
   const mentors = [
     {
@@ -247,7 +272,8 @@ export function SessionDetailsPage({
         {
           id: 1,
           sender: "user",
-          message: "Can you explain the difference between let, const, and var?",
+          message:
+            "Can you explain the difference between let, const, and var?",
           time: "Yesterday, 3:45 PM",
         },
         {
@@ -326,7 +352,7 @@ export function SessionDetailsPage({
       avatar: "https://api.dicebear.com/9.x/notionists/svg?seed=varient5",
       rank: 5,
       score: 1890,
-      progress: 78,
+      progress: 74,
       isCurrentUser: true,
     },
     {
@@ -441,41 +467,73 @@ export function SessionDetailsPage({
 
   const currentUser = coLearners.find((learner) => learner.isCurrentUser);
   const topLearners = coLearners
-    .filter((learner) => !learner.isCurrentUser)
+    // .filter((learner) => !learner.isCurrentUser)
     .sort((a, b) => a.rank - b.rank);
   const [showSessionDropdown, setShowSessionDropdown] = useState(false);
   const [showAllLearners, setShowAllLearners] = useState(false);
-  const [selectedChatHistory, setSelectedChatHistory] = useState<number | null>(null);
+  const [selectedChatHistory, setSelectedChatHistory] = useState<number | null>(
+    null
+  );
   const [showChatHistoryModal, setShowChatHistoryModal] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  
+  const languageDropdownRef = useRef<HTMLDivElement>(null);
+
   // Shared video state for synchronization between main and mini player
   const [sharedVideoState, setSharedVideoState] = useState({
     currentTime: 0,
     isPlaying: false,
-    duration: 0
+    duration: 0,
   });
-  
-  const handleVideoStateChange = (state: { currentTime: number; isPlaying: boolean; duration: number }) => {
+
+  const handleVideoStateChange = (state: {
+    currentTime: number;
+    isPlaying: boolean;
+    duration: number;
+  }) => {
     setSharedVideoState(state);
   };
-  
+
   const chapters = [
     { id: 1, title: "Introduction to JavaScript", startTime: 0, duration: 25 },
     { id: 2, title: "Variables and Data Types", startTime: 25, duration: 30 },
     { id: 3, title: "Functions and Scope", startTime: 55, duration: 27 },
     { id: 4, title: "Objects and Arrays", startTime: 82, duration: 22 },
-    { id: 5, title: "DOM Manipulation", startTime: 104, duration: 18 }
+    { id: 5, title: "DOM Manipulation", startTime: 104, duration: 18 },
   ];
-  
+
   // AI Chat Modal state
   const [showAIChatModal, setShowAIChatModal] = useState(false);
-  const [aiChatContext, setAIChatContext] = useState<{ type: string; chapter: string } | null>(null);
+  const [aiChatContext, setAIChatContext] = useState<{
+    type: string;
+    chapter: string;
+  } | null>(null);
   const [showVoiceBubble, setShowVoiceBubble] = useState(false);
-  const [voiceBubbleText, setVoiceBubbleText] = useState('');
+  const [voiceBubbleText, setVoiceBubbleText] = useState("");
   const [isVoicePlaying, setIsVoicePlaying] = useState(false);
-  
-  const handleAIRequest = (type: 'summarize' | 'voice-summarize', chapterTitle: string) => {
+  const [showTranscription, setShowTranscription] = useState(false);
+  const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState("EN");
+
+  // Scroll to tab content when tab changes and tabs are sticky
+  useEffect(() => {
+    if (isTabsSticky && tabContentRef.current && scrollContainerRef.current) {
+      const tabContentTop = tabContentRef.current.getBoundingClientRect().top;
+      const containerTop =
+        scrollContainerRef.current.getBoundingClientRect().top;
+      const currentScroll = scrollContainerRef.current.scrollTop;
+      const targetScroll = currentScroll + tabContentTop - containerTop;
+
+      scrollContainerRef.current.scrollTo({
+        top: targetScroll,
+        behavior: "smooth",
+      });
+    }
+  }, [activeTab, isTabsSticky]);
+
+  const handleAIRequest = (
+    type: "summarize" | "voice-summarize",
+    chapterTitle: string
+  ) => {
     setAIChatContext({ type, chapter: chapterTitle });
     setShowAIChatModal(true);
   };
@@ -488,16 +546,22 @@ export function SessionDetailsPage({
       ) {
         setShowSessionDropdown(false);
       }
+      if (
+        languageDropdownRef.current &&
+        !languageDropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowLanguageDropdown(false);
+      }
     };
 
-    if (showSessionDropdown) {
+    if (showSessionDropdown || showLanguageDropdown) {
       document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [showSessionDropdown]);
+  }, [showSessionDropdown, showLanguageDropdown]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -515,8 +579,10 @@ export function SessionDetailsPage({
 
       // Track scroll positions
       const isAtTop = container.scrollTop === 0;
-      const isAtBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 10;
-      
+      const isAtBottom =
+        container.scrollTop + container.clientHeight >=
+        container.scrollHeight - 10;
+
       // State machine for tracking scroll sequence
       if (miniPlayerManuallyClosed) {
         if (isAtTop && !hasScrolledToTop) {
@@ -535,7 +601,7 @@ export function SessionDetailsPage({
       setShowMiniPlayer(shouldShowMiniPlayer && !miniPlayerManuallyClosed);
 
       // Check if tabs are sticky (only if not programmatic scroll)
-      if (tabsSection && !isProgrammaticScroll) {
+      if (tabsSection) {
         const tabsRect = tabsSection.getBoundingClientRect();
         const containerRect = container.getBoundingClientRect();
         setIsTabsSticky(tabsRect.top <= containerRect.top);
@@ -734,13 +800,12 @@ export function SessionDetailsPage({
       {/* Header with Breadcrumb - Fixed */}
       <div className="bg-white border-b px-6 py-4 sticky top-0 z-40">
         <div className="flex items-center gap-2 text-sm text-gray-600">
-          <span
-            className="flex items-center"
-            // onClick={onCourseDetailsClick}
-            // className="hover:text-[#00BF53] cursor-pointer"
+          <button
+            onClick={onBackClick}
+            className="flex items-center hover:text-[#00BF53] cursor-pointer"
           >
             <BookOpen size={16} className="mr-2" /> {session.courseName}
-          </span>
+          </button>
 
           <ChevronRight className="w-4 h-4" />
           <div className="relative" ref={dropdownRef}>
@@ -799,7 +864,10 @@ export function SessionDetailsPage({
             {/* Video Player */}
             <div className="relative max-h-[455px]">
               <VideoPlayer
-                videoSrc={session.videoUrl}
+                videos={videos}
+                currentVideoIndex={currentVideoIndex}
+                onVideoChange={setCurrentVideoIndex}
+                videoSrc={videos[currentVideoIndex]?.src || session.videoUrl}
                 onCourseDetailsClick={handleCourseDetailsToggle}
                 sharedVideoState={sharedVideoState}
                 onVideoStateChange={handleVideoStateChange}
@@ -997,7 +1065,10 @@ export function SessionDetailsPage({
           </div>
 
           {/* Sticky Tabs */}
-          <div ref={tabsRef} className={`${isTabsSticky ? 'sticky top-0' : ''} z-[1] pb-8`}>
+          <div
+            ref={tabsRef}
+            className={`${isTabsSticky ? "sticky top-0" : ""} z-[1] pb-8`}
+          >
             <div className="flex shadow-[0_0px_0px_-1px_rgba(0,0,0,0.1)] bg-white">
               {isTabsSticky && (
                 <div className="absolute bottom-[16px] left-0 right-0 h-4 bg-gradient-to-b from-[#0000001d] to-transparent pointer-events-none"></div>
@@ -1005,12 +1076,6 @@ export function SessionDetailsPage({
               <button
                 onClick={() => {
                   setActiveTab("test");
-                  if (tabContentRef.current) {
-                    setIsProgrammaticScroll(true);
-                    const offsetTop = tabContentRef.current.offsetTop - 130;
-                    scrollContainerRef.current?.scrollTo({ top: offsetTop, behavior: "smooth" });
-                    setTimeout(() => setIsProgrammaticScroll(false), 1000);
-                  }
                 }}
                 className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors bg-white ${
                   activeTab === "test"
@@ -1026,12 +1091,6 @@ export function SessionDetailsPage({
               <button
                 onClick={() => {
                   setActiveTab("notes");
-                  if (tabContentRef.current) {
-                    setIsProgrammaticScroll(true);
-                    const offsetTop = tabContentRef.current.offsetTop - 130;
-                    scrollContainerRef.current?.scrollTo({ top: offsetTop, behavior: "smooth" });
-                    setTimeout(() => setIsProgrammaticScroll(false), 1000);
-                  }
                 }}
                 className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors bg-white ${
                   activeTab === "notes"
@@ -1047,12 +1106,6 @@ export function SessionDetailsPage({
               <button
                 onClick={() => {
                   setActiveTab("comments");
-                  if (tabContentRef.current) {
-                    setIsProgrammaticScroll(true);
-                    const offsetTop = tabContentRef.current.offsetTop - 130;
-                    scrollContainerRef.current?.scrollTo({ top: offsetTop, behavior: "smooth" });
-                    setTimeout(() => setIsProgrammaticScroll(false), 1000);
-                  }
                 }}
                 className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors bg-white ${
                   activeTab === "comments"
@@ -1068,12 +1121,6 @@ export function SessionDetailsPage({
               <button
                 onClick={() => {
                   setActiveTab("trainer-chat");
-                  if (tabContentRef.current) {
-                    setIsProgrammaticScroll(true);
-                    const offsetTop = tabContentRef.current.offsetTop - 130;
-                    scrollContainerRef.current?.scrollTo({ top: offsetTop, behavior: "smooth" });
-                    setTimeout(() => setIsProgrammaticScroll(false), 1000);
-                  }
                 }}
                 className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors bg-white ${
                   activeTab === "trainer-chat"
@@ -1089,12 +1136,6 @@ export function SessionDetailsPage({
               <button
                 onClick={() => {
                   setActiveTab("mentors");
-                  if (tabContentRef.current) {
-                    setIsProgrammaticScroll(true);
-                    const offsetTop = tabContentRef.current.offsetTop - 130;
-                    scrollContainerRef.current?.scrollTo({ top: offsetTop, behavior: "smooth" });
-                    setTimeout(() => setIsProgrammaticScroll(false), 1000);
-                  }
                 }}
                 className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors bg-white ${
                   activeTab === "mentors"
@@ -1110,12 +1151,6 @@ export function SessionDetailsPage({
               <button
                 onClick={() => {
                   setActiveTab("co-learners");
-                  if (tabContentRef.current) {
-                    setIsProgrammaticScroll(true);
-                    const offsetTop = tabContentRef.current.offsetTop - 130;
-                    scrollContainerRef.current?.scrollTo({ top: offsetTop, behavior: "smooth" });
-                    setTimeout(() => setIsProgrammaticScroll(false), 1000);
-                  }
                 }}
                 className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors bg-white ${
                   activeTab === "co-learners"
@@ -1131,12 +1166,6 @@ export function SessionDetailsPage({
               <button
                 onClick={() => {
                   setActiveTab("ai-history");
-                  if (tabContentRef.current) {
-                    setIsProgrammaticScroll(true);
-                    const offsetTop = tabContentRef.current.offsetTop - 130;
-                    scrollContainerRef.current?.scrollTo({ top: offsetTop, behavior: "smooth" });
-                    setTimeout(() => setIsProgrammaticScroll(false), 1000);
-                  }
                 }}
                 className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors bg-white ${
                   activeTab === "ai-history"
@@ -1153,7 +1182,10 @@ export function SessionDetailsPage({
           </div>
 
           {/* Tab Content */}
-          <div ref={tabContentRef} className="pb-[30rem]">
+          <div
+            ref={tabContentRef}
+            className={`${isTabsSticky && "pt-[50px]"} pb-[30rem]`}
+          >
             {activeTab === "test" && (
               <div className="">
                 {/* Header */}
@@ -1879,10 +1911,7 @@ export function SessionDetailsPage({
             <div className="fixed inset-y-0 z-[9999] right-0 w-[calc(100vw-240px)] bg-white shadow-xl border-l flex flex-col">
               {/* Header */}
               <div className="border-b border-gray-200 bg-white px-4 py-3">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-lg text-gray-900">
-                    {chatHistories.find((chat) => chat.id === selectedChatHistory)?.name}
-                  </h2>
+                <div className="flex items-center">
                   <button
                     onClick={() => {
                       setShowChatHistoryModal(false);
@@ -1890,8 +1919,15 @@ export function SessionDetailsPage({
                     }}
                     className="p-1.5 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
                   >
-                    <X size={16} />
+                    <ChevronLeft size={25} />
                   </button>
+                  <h2 className="text-lg text-gray-900">
+                    {
+                      chatHistories.find(
+                        (chat) => chat.id === selectedChatHistory
+                      )?.name
+                    }
+                  </h2>
                 </div>
               </div>
 
@@ -1935,23 +1971,13 @@ export function SessionDetailsPage({
               </div>
             </div>
           )}
-          
-
 
           {/* AI Chat Modal for Chapter Requests */}
           {showAIChatModal && aiChatContext && (
             <div className="fixed inset-y-0 z-[9999] right-0 w-[calc(100vw-240px)] bg-white shadow-xl border-l flex flex-col">
               {/* Header */}
               <div className="border-b border-gray-200 bg-white px-4 py-3">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-lg text-gray-900">
-                      {aiChatContext.type === 'voice-summarize' ? 'Voice Summary' : 'Chapter Summary'}
-                    </h2>
-                    <p className="text-sm text-gray-600">
-                      {aiChatContext.chapter} - {course.title}
-                    </p>
-                  </div>
+                <div className="flex items-center">
                   <button
                     onClick={() => {
                       setShowAIChatModal(false);
@@ -1959,17 +1985,46 @@ export function SessionDetailsPage({
                     }}
                     className="p-1.5 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
                   >
-                    <X size={16} />
+                    <ChevronLeft size={25} />
                   </button>
+                  <div>
+                    <h2 className="text-lg text-gray-900">
+                      {aiChatContext.type === "voice-summarize"
+                        ? "Voice Summary"
+                        : "Chapter Summary"}
+                    </h2>
+                    {/* <p className="text-sm text-gray-600">
+                      {aiChatContext.chapter} - {course.title}
+                    </p> */}
+                  </div>
                 </div>
               </div>
 
               {/* Chat Interface */}
               <div className="flex-1 overflow-y-auto scrollbar-hide p-4 space-y-4 max-w-3xl min-w-[48rem] mx-auto">
+                {/* User Request Bubble */}
+                <div className="text-right mb-4">
+                  <div className="inline-block bg-gray-100 text-gray-800 px-4 py-3 rounded-2xl rounded-tr-md max-w-[80%]">
+                    <div className="text-sm">
+                      <div className="font-medium mb-1">
+                        {aiChatContext.type === "voice-summarize"
+                          ? "Generate voice summary"
+                          : "Summarize chapter"}
+                      </div>
+                      <div className="text-xs text-gray-600">
+                        <span className="font-medium">{session.title}</span> •{" "}
+                        <span className="font-medium">
+                          {aiChatContext.chapter}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Initial AI Response */}
                 <div className="flex items-start space-x-3">
                   <div className="flex-1">
-                    {aiChatContext.type === 'voice-summarize' ? (
+                    {aiChatContext.type === "voice-summarize" ? (
                       /* Voice Message Bubble */
                       <div className="p-4 max-w-md">
                         <div className="mb-3">
@@ -1980,13 +2035,16 @@ export function SessionDetailsPage({
                             {aiChatContext.chapter}: Introduction
                           </p>
                         </div>
-                        
-                        <div className="flex items-center gap-3 mb-3 bg-gray-50 border border-gray-200 rounded-lg p-4">
-                          <button 
+
+                        <div className="flex items-center gap-3 mb-3 border border-gray-200 rounded-lg p-4">
+                          <button
                             onClick={() => {
                               setIsVoicePlaying(!isVoicePlaying);
                               if (!isVoicePlaying) {
-                                setTimeout(() => setIsVoicePlaying(false), 3000);
+                                setTimeout(
+                                  () => setIsVoicePlaying(false),
+                                  3000
+                                );
                               }
                             }}
                             className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors"
@@ -1997,53 +2055,154 @@ export function SessionDetailsPage({
                               <Play className="w-4 h-4 text-gray-700" />
                             )}
                           </button>
-                          
+
                           <div className="flex-1">
                             <div className="flex justify-between items-center gap-2 text-xs text-gray-600 mb-1">
                               <span>00:00</span>
-                              <span>45:00 mins</span>
+                              <span>5:00 mins</span>
                             </div>
                             <div className="w-full bg-gray-200 rounded-full h-1">
-                              <div 
+                              <div
                                 className="bg-green-500 h-1 rounded-full transition-all duration-300"
-                                style={{ width: isVoicePlaying ? '25%' : '0%' }}
+                                style={{ width: isVoicePlaying ? "25%" : "0%" }}
                               />
                             </div>
                           </div>
                         </div>
-                        
-                        <div className="flex gap-2">
-                          <button className="px-3 py-1 border border-gray-200 text-gray-700 text-xs rounded-full">
+
+                        <div
+                          className="flex justify-end gap-2 relative"
+                          ref={languageDropdownRef}
+                        >
+                          <button
+                            onClick={() =>
+                              setShowLanguageDropdown(!showLanguageDropdown)
+                            }
+                            className="p-1 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300 transition-colors"
+                          >
+                            <Languages className="w-4 h-3" />
+                          </button>
+                          {selectedLanguage !== "EN" && (
+                            <button className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full border border-gray-200">
+                              {selectedLanguage}
+                            </button>
+                          )}
+                          {showLanguageDropdown && (
+                            <div className="absolute top-full right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10 max-w-[160px]">
+                              {["EN", "ES", "FR", "DE", "IT", "PT"].map(
+                                (lang) => (
+                                  <button
+                                    key={lang}
+                                    onClick={() => {
+                                      setSelectedLanguage(lang);
+                                      setShowLanguageDropdown(false);
+                                    }}
+                                    className={`w-full text-left px-3 py-2 text-xs hover:bg-gray-50 transition-colors first:rounded-t-lg last:rounded-b-lg ${
+                                      selectedLanguage === lang
+                                        ? "bg-green-50 text-[#00BF53]"
+                                        : "text-gray-700"
+                                    }`}
+                                  >
+                                    {lang}
+                                  </button>
+                                )
+                              )}
+                            </div>
+                          )}
+                          <button
+                            className={`${
+                              showTranscription
+                                ? "text-[#00BF53] border-[#00BF53]"
+                                : "border-gray-200 text-gray-700"
+                            } px-3 py-1 border text-xs rounded-full hover:bg-gray-50 transition-colors`}
+                            onClick={() =>
+                              setShowTranscription(!showTranscription)
+                            }
+                          >
                             Transcription
                           </button>
+                        </div>
+
+                        {/* Transcription Text with Fade Animation */}
+                        <div
+                          className={`mt-3 overflow-hidden transition-all duration-300 ease-in-out ${
+                            showTranscription
+                              ? "max-h-96 opacity-100"
+                              : "max-h-0 opacity-0"
+                          }`}
+                        >
+                          <div className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                            <div
+                              className="flex justify-between items-center mb-2 cursor-pointer"
+                              onClick={() =>
+                                setShowTranscription(!showTranscription)
+                              }
+                            >
+                              <span className="text-gray-500">
+                                Transcription{" "}
+                              </span>
+                              <ChevronUp size={20} className="text-gray-500" />
+                            </div>
+                            <p className="text-sm text-gray-700 leading-relaxed">
+                              Welcome to this JavaScript introduction session.
+                              In this chapter, we'll explore the fundamentals of
+                              JavaScript programming language. JavaScript is a
+                              high-level, interpreted programming language that
+                              enables interactive web pages and is an essential
+                              part of web applications. We'll start by
+                              understanding what makes JavaScript unique among
+                              programming languages, including its dynamic
+                              typing system and event-driven nature. Throughout
+                              this session, you'll learn about variables, data
+                              types, functions, and how JavaScript interacts
+                              with the Document Object Model to create dynamic
+                              user experiences.
+                            </p>
+                          </div>
                         </div>
                       </div>
                     ) : (
                       /* Regular Text Message */
                       <div className="text-gray-800 px-3 py-2 rounded-2xl rounded-tl-md max-w-[80%]">
                         <p className="whitespace-pre-line text-sm leading-relaxed">
-                          📝 Here's a summary of "{aiChatContext.chapter}" from {session.title}:<br />
-
-                            • **What is JavaScript**: A high-level, interpreted programming language that runs in browsers and servers<br />
-                            • **Key Features**: Dynamic typing, first-class functions, prototype-based inheritance, and event-driven programming<br />
-                            • **JavaScript Engine**: How browsers execute JavaScript code using V8, SpiderMonkey, and other engines<br />
-                            • **Basic Syntax**: Variables (let, const, var), data types (string, number, boolean, object, array)<br />
-                            • **DOM Interaction**: How JavaScript manipulates HTML elements and responds to user events<br />
-                            • **Modern JavaScript**: ES6+ features like arrow functions, template literals, and destructuring<br />
-                            • **Development Setup**: Browser console, code editors, and debugging tools<br />
-
-                            Would you like me to dive deeper into any specific topic?
+                          📝 Here's a summary of "{aiChatContext.chapter}" from{" "}
+                          {session.title}:<br />
+                          • **What is JavaScript**: A high-level, interpreted
+                          programming language that runs in browsers and servers
+                          <br />
+                          • **Key Features**: Dynamic typing, first-class
+                          functions, prototype-based inheritance, and
+                          event-driven programming
+                          <br />
+                          • **JavaScript Engine**: How browsers execute
+                          JavaScript code using V8, SpiderMonkey, and other
+                          engines
+                          <br />
+                          • **Basic Syntax**: Variables (let, const, var), data
+                          types (string, number, boolean, object, array)
+                          <br />
+                          • **DOM Interaction**: How JavaScript manipulates HTML
+                          elements and responds to user events
+                          <br />
+                          • **Modern JavaScript**: ES6+ features like arrow
+                          functions, template literals, and destructuring
+                          <br />
+                          • **Development Setup**: Browser console, code
+                          editors, and debugging tools
+                          <br />
+                          Would you like me to dive deeper into any specific
+                          topic?
                         </p>
                       </div>
                     )}
                   </div>
                 </div>
               </div>
-              
+
               {/* Chat Input */}
               <div className="p-4 max-w-3xl min-w-[48rem] mx-auto">
                 <ChatTextArea
-                  placeholder={`Ask about "${aiChatContext.chapter}"...`}
+                  placeholder={`Ask about`}
                   // suggestions={[
                   //   { id: '1', text: 'Explain the key concepts in detail' },
                   //   { id: '2', text: 'Provide practical examples' },
@@ -2054,7 +2213,9 @@ export function SessionDetailsPage({
                     description: `Chapter: ${aiChatContext.chapter}`,
                     duration: session.duration,
                   }}
-                  onSendMessage={(message) => console.log('AI Chat message:', message)}
+                  onSendMessage={(message) =>
+                    console.log("AI Chat message:", message)
+                  }
                 />
               </div>
             </div>

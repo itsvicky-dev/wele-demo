@@ -22,6 +22,10 @@
   font-family: "Satoshi";
 }
 
+*:focus-visible {
+  outline: none;
+}
+
 @layer utilities {
   .animate-fadeIn {
     animation: fadeIn 0.3s ease-in-out forwards;
@@ -165,4 +169,14 @@ input[type="radio"]:checked::after {
 
 .animate-float-up {
   animation: float-up 4s infinite linear;
+}
+
+.before\:to-white\/30::before,
+.before\:via-white\/10::before {
+  --tw-gradient-to: none !important;
+  --tw-gradient-stops: none !important;
+}
+
+#chat-input1::placeholder {
+  color: #fff;
 }

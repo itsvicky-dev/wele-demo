@@ -429,21 +429,18 @@ export function Courses() {
       <div className="max-w-5xl mx-auto px-6 pt-6 pb-[6rem]">
         {/* Personalized Course Recommendation Section */}
         <div className="mb-8">
-          <div className="flex justify-center space-x-3">
-            <div className="flex flex-col text-center">
-              <h3 className="text-lg flex items-center text-center font-semibold text-gray-900 mb-3">
+          <div className="flex space-x-3">
+            <div className="flex flex-col">
+              <h3 className="text-xl flex items-center font-semibold text-gray-900 mb-3">
                 The courses listed below are smartly matched for you
                 <div className="text-2xl ml-1">👀</div>
               </h3>
-              <div className="space-y-2 text-sm text-gray-700">
+              <div className="space-y-2 text-sm text-gray-700 max-w-3xl">
                 <p>
                   They're selected based on your interests, domain focus, and
                   learning style.
-                </p>
-                <p>Your progress and goals helped shape this list. </p>
-                <p>
-                  {" "}
-                  Each course fits where you are right now in your journey.
+                  Your progress and goals helped shape this list. Each course
+                  fits where you are right now in your journey.
                 </p>
                 <p className="font-medium">
                   Jump in with confidence and keep moving forward at your own

@@ -5,6 +5,7 @@ import {
   Pin,
   Send,
   Users,
+  Video,
   X,
 } from "lucide-react";
 import Interview from "../assets/videos/interview.mp4";
@@ -513,22 +514,32 @@ export function MockInterviews() {
         </div>
       )}
 
-      {/* Main Content - Hidden when in interview mode */}
+      {/* Main Content*/}
       <div
         className={`flex-1 w-full h-screen bg-white flex flex-col relative ${
           mode === "interview" ? "hidden" : ""
         }`}
       >
+        <div className="sticky top-0 z-20 border-b border-[#0d0d0d0d] bg-white px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <Video size={16} className="text-gray-700" />
+              <h1 className="text-md text-gray-700 font-medium">
+                Mock Interviews
+              </h1>
+            </div>
+          </div>
+        </div>
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto px-8 pt-8 pb-2">
           {(mode === "initial" || mode === "chat") && (
             <div className="max-w-4xl mx-auto">
               {/* Welcome Content */}
-              <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">
+              <div className="mb-8">
+                <h2 className="text-xl font-semibold text-gray-800 mb-4 max-w-3xl">
                   Welcome to AI Mock Interview.
                 </h2>
-                <p className="text-md text-gray-600 mb-6">
+                <p className="text-sm text-gray-600 mb-6 max-w-3xl">
                   This smart interview simulation helps you practice real
                   company-style questions across multiple difficulty levels.
                   Each level is designed to sharpen your thinking,
@@ -540,32 +551,32 @@ export function MockInterviews() {
                   <h3 className="text-lg font-semibold mb-4 text-gray-800">
                     What You Get From This Mock Interview
                   </h3>
-                  <div className="text-center space-y-2 m-auto flex flex-col max-w-lg">
-                    <p className="text-gray-700 text-sm flex items-center">
+                  <ul className="space-y-2 list-disc list-inside">
+                    <li className="text-gray-700 text-sm">
                       Clear understanding of your communication style and how
                       confidently you present your thoughts.
-                    </p>
-                    <p className="text-gray-700 text-sm flex items-center">
+                    </li>
+                    <li className="text-gray-700 text-sm">
                       Improved problem-solving and answer structuring, just like
                       real interviews expect.
-                    </p>
-                    <p className="text-gray-700 text-sm flex items-center">
+                    </li>
+                    <li className="text-gray-700 text-sm">
                       Role-specific interview readiness with questions tailored
                       to your career path.
-                    </p>
-                    <p className="text-gray-700 text-sm flex items-center">
+                    </li>
+                    <li className="text-gray-700 text-sm">
                       Experience handling real company-style scenarios, from
                       behavioural to technical.
-                    </p>
-                    <p className="text-gray-700 text-sm flex items-center">
+                    </li>
+                    <li className="text-gray-700 text-sm">
                       Better decision-making under pressure through advanced,
                       situational questions.
-                    </p>
-                    <p className="text-gray-700 text-sm flex items-center">
+                    </li>
+                    <li className="text-gray-700 text-sm">
                       Deep insight into your strengths and improvement areas to
                       help you prepare smarter.
-                    </p>
-                  </div>
+                    </li>
+                  </ul>
                 </div>
 
                 <p className="text-md font-medium text-gray-800 mb-4">
@@ -670,9 +681,27 @@ export function MockInterviews() {
                           <div className="mt-3">
                             <button
                               onClick={handleStartInterview}
-                              disabled={index !== messages.length - 1 || (interviewEnded && index < messages.findIndex(msg => msg.text === "Your interview has ended. Thank you for participating!"))}
+                              disabled={
+                                index !== messages.length - 1 ||
+                                (interviewEnded &&
+                                  index <
+                                    messages.findIndex(
+                                      (msg) =>
+                                        msg.text ===
+                                        "Your interview has ended. Thank you for participating!"
+                                    ))
+                              }
                               className={`px-4 py-2 border rounded-lg transition-colors text-sm ${
-                                index === messages.length - 1 && !(interviewEnded && index < messages.findIndex(msg => msg.text === "Your interview has ended. Thank you for participating!"))
+                                index === messages.length - 1 &&
+                                !(
+                                  interviewEnded &&
+                                  index <
+                                    messages.findIndex(
+                                      (msg) =>
+                                        msg.text ===
+                                        "Your interview has ended. Thank you for participating!"
+                                    )
+                                )
                                   ? "border-[#00BF53] text-[#00BF53] hover:bg-[#00BF53] hover:text-white"
                                   : "border-gray-300 text-gray-400 cursor-not-allowed"
                               }`}
