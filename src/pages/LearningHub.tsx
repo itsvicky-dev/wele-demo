@@ -10,10 +10,12 @@ import {
   Clock,
   Award,
   TrendingUp,
+  Sparkles,
 } from "lucide-react";
 import { MyCourseCard } from "../components/course/MyCourseCard";
 import { ActionCard } from "../components/ActionCard";
 import sessionVideo from "../assets/videos/session.mp4";
+import { ChatTextArea } from "../components/ChatTextArea";
 
 export function LearningHub() {
   const [currentView, setCurrentView] = useState<
@@ -218,12 +220,28 @@ export function LearningHub() {
 
   if (currentView === "courseDetails") {
     return (
-      <CourseDetailsPage
-        course={courseDetails}
-        sessions={sessions}
-        onSessionClick={handleSessionClick}
-        onBackClick={handleBackToCourses}
-      />
+      <>
+        <CourseDetailsPage
+          course={courseDetails}
+          sessions={sessions}
+          onSessionClick={handleSessionClick}
+          onBackClick={handleBackToCourses}
+        />
+        {/* Chat Text Area at Bottom */}
+        <div
+          className="fixed bottom-[20px] z-50 w-full max-w-4xl px-6"
+          style={{
+            left: "calc(50% + 500px - 50vw)",
+            width: "calc(-760px + 100vw)",
+          }}
+        >
+          <ChatTextArea
+            placeholder="Ask AI about this session..."
+            // suggestions={suggestions}
+            onSendMessage={(message) => console.log("Chat message:", message)}
+          />
+        </div>
+      </>
     );
   }
 
@@ -241,8 +259,8 @@ export function LearningHub() {
       <div className="max-w-5xl mx-auto px-6 pt-6 pb-[6rem]">
         {/* Welcome Section */}
         <div className="mb-2">
-          <div className="mb-3">
-            <h1 className="text-xl font-bold text-gray-900 mb-4">
+          <div className="mb-5">
+            <h1 className="text-xl font-bold text-gray-900 mb-3">
               Welcome to Your Learning Journey! 🎓
             </h1>
             <p className="text-sm text-gray-700 mb-2 max-w-3xl">
@@ -255,10 +273,10 @@ export function LearningHub() {
 
         {/* Action Cards Section */}
         <div className="mb-2">
-          <h2 className="text-lg font-bold text-gray-900 mb-3">
-            Quick Actions
+          <h2 className="flex items-center gap-x-1 text-lg font-bold text-gray-900 mb-3">
+            Quick Actions <Sparkles className="text-gray-900 h-4 w-4" />
           </h2>
-          <div className="flex flex-col md:flex-row gap-6 mb-4">
+          <div className="flex flex-col items-center md:flex-row gap-6 mb-4">
             <div className="flex-1">
               <ActionCard
                 type="current"
@@ -269,7 +287,7 @@ export function LearningHub() {
               />
             </div>
             <div className="hidden md:flex items-center justify-center">
-              <div className="w-[0.5px] h-[90px] bg-gray-200"></div>
+              <div className="w-[0.5px] h-[70px] bg-gray-200"></div>
             </div>
             <div className="flex-1">
               <ActionCard
@@ -278,18 +296,6 @@ export function LearningHub() {
                 date="December 12, 2024"
                 time="10:00 AM - 11:30 AM"
                 onAction={() => console.log("View recording")}
-              />
-            </div>
-            <div className="hidden md:flex items-center justify-center">
-              <div className="w-[0.5px] h-[90px] bg-gray-200"></div>
-            </div>
-            <div className="flex-1">
-              <ActionCard
-                type="future"
-                title="Laravel Advanced Features"
-                date="December 18, 2024"
-                time="3:00 PM - 4:30 PM"
-                onAction={() => console.log("Set reminder")}
               />
             </div>
           </div>
@@ -310,6 +316,20 @@ export function LearningHub() {
             ))}
           </div>
         </div>
+      </div>
+      {/* Chat Text Area at Bottom */}
+      <div
+        className="fixed bottom-[20px] z-50 w-full max-w-4xl px-6"
+        style={{
+          left: "calc(50% + 500px - 50vw)",
+          width: "calc(-760px + 100vw)",
+        }}
+      >
+        <ChatTextArea
+          placeholder="Ask AI about this session..."
+          // suggestions={suggestions}
+          onSendMessage={(message) => console.log("Chat message:", message)}
+        />
       </div>
     </div>
   );

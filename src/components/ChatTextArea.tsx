@@ -209,7 +209,7 @@ export function ChatTextArea({
   return (
     <div
       ref={containerRef}
-      className={`${showSuggestions && suggestions.length > 0 ? "rounded-t-[20px]" : ""}`}
+      className={`${showSuggestions && suggestions.length > 0 ? "bg-white rounded-t-[20px]" : ""}`}
     >
       {/* Suggestions */}
       {showSuggestions && (
@@ -220,14 +220,14 @@ export function ChatTextArea({
       )}
 
       {/* Chat Input */}
-      <div className={`relative ${className}`}>
+      <div className={`bg-white rounded-full ${className}`}>
         <form onSubmit={handleSubmit} className="relative">
           <div
-            className={`flex items-center space-x-3 backdrop-blur-[50px] bg-[#fff] border border-white/20 shadow-[0_0_100px_rgba(255,255,255,0.6),0_0_200px_rgba(255,255,255,0.4),0_0_300px_rgba(255,255,255,0.2),0_0_400px_rgba(255,255,255,0.1)] before:absolute before:inset-0 before:rounded-full before:p-[1px] before:bg-gradient-to-r before:from-white/30 before:via-white/10 before:to-white/30 before:-z-10 ${
+            className={`flex items-center space-x-3 border border-gray-300 ${
               showSuggestions && suggestions.length > 0
-                ? "rounded-b-[20px] rounded-t-none before:rounded-b-[20px] before:rounded-t-none"
-                : "rounded-full before:rounded-full"
-            } p-3 relative`}
+                ? "rounded-b-[20px] rounded-t-none"
+                : "rounded-full"
+            } p-3`}
           >
             <button
               type="button"
@@ -242,7 +242,7 @@ export function ChatTextArea({
               onKeyDown={handleKeyDown}
               onClick={() => setShowSuggestions(true)}
               placeholder={placeholder}
-              className="flex-1 bg-transparent border-0 self-center outline-none resize-none text-white placeholder-[#888] min-h-[24px] max-h-32"
+              className="flex-1 bg-transparent border-0 self-center outline-none resize-none text-gray-900 placeholder-gray-500 min-h-[24px] max-h-32"
               rows={1}
               disabled={disabled || isLoading}
             />
@@ -322,9 +322,9 @@ export function ChatTextArea({
             )}
             <div ref={messagesEndRef} />
           </div>
-          <div className={`relative mb-5 ${className}`}>
+          <div className={`bg-white rounded-full mb-5 ${className}`}>
             <form onSubmit={handleSubmit} className="relative">
-              <div className="flex items-center space-x-3 backdrop-blur-[30px] text-white bg-white/10 border border-white/20 shadow-[0_0_100px_rgba(255,255,255,0.6),0_0_200px_rgba(255,255,255,0.4),0_0_300px_rgba(255,255,255,0.2),0_0_400px_rgba(255,255,255,0.1)] before:absolute before:inset-0 before:rounded-full before:p-[1px] before:bg-gradient-to-r before:from-white/30 before:via-white/10 before:to-white/30 before:-z-10 rounded-full p-3 max-w-3xl mx-auto relative">
+              <div className="flex items-center space-x-3 border border-gray-300 rounded-full p-3 max-w-3xl mx-auto">
                 <button
                   type="button"
                   className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
@@ -337,7 +337,7 @@ export function ChatTextArea({
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder={placeholder}
-                  className="flex-1 bg-transparent border-0 self-center outline-none resize-none text-white placeholder-[#888] min-h-[24px] max-h-32"
+                  className="flex-1 bg-transparent border-0 self-center outline-none resize-none text-gray-900 placeholder-gray-500 min-h-[24px] max-h-32"
                   rows={1}
                   disabled={disabled || isLoading}
                 />

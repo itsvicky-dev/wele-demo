@@ -9,7 +9,7 @@ import {
 import { useState, useEffect, useRef } from "react";
 import { aiService } from "../services/aiService";
 import type { AIMessage } from "../services/aiService";
-import ReportURL from '../assets/document/cc.pdf'
+import ReportURL from "../assets/document/cc.pdf";
 
 interface MCQOption {
   id: string;
@@ -208,32 +208,34 @@ export function CareerCompass() {
   const questionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const currentQuestionRef = useRef<HTMLDivElement>(null);
-  const [displayedContent, setDisplayedContent] = useState('');
+  const [displayedContent, setDisplayedContent] = useState("");
   const [isTyping, setIsTyping] = useState(true);
 
   const fullContent = `👏Welcome to Career Compass.
   This quick mission reveals your strengths and shows you the career path that truly fits you.
 
-Level 1: will have simple psychometric questions to understand your mindset, behaviour, and decision style.
+Level 1 : will have simple psychometric questions to understand your mindset, behaviour, and decision style.
 
-Level 2: mixes psychometric + basic technical questions to see how you connect logic with skills.
+Level 2 : mixes psychometric + basic technical questions to see how you connect logic with skills.
 
-Level 3: dives into pure technical questions to validate your real-world understanding. Ready ah? Let's find the career that actually fits you.`;
+Level 3 : dives into pure technical questions to validate your real-world understanding. Ready ah? Let's find the career that actually fits you.`;
 
   useEffect(() => {
-    let currentIndex = 0;
+    const words = fullContent.split(' ');
+    let currentWordIndex = 0;
     
-    const typeCharacter = () => {
-      if (currentIndex < fullContent.length) {
-        setDisplayedContent(fullContent.slice(0, currentIndex + 1));
-        currentIndex++;
-        setTimeout(typeCharacter, 15);
+    const typeWord = () => {
+      if (currentWordIndex < words.length) {
+        const displayText = words.slice(0, currentWordIndex + 1).join(' ');
+        setDisplayedContent(displayText);
+        currentWordIndex++;
+        setTimeout(typeWord, 50);
       } else {
         setIsTyping(false);
       }
     };
     
-    typeCharacter();
+    typeWord();
   }, []);
 
   useEffect(() => {
@@ -501,36 +503,56 @@ Level 3: dives into pure technical questions to validate your real-world underst
               <div className="">
                 <div className="flex flex-col items-center space-x-3">
                   {/* WELCOME MESSAGE */}
-                  <div className="flex flex-col items-start space-y-3" id="welcome-text">
+                  <div
+                    className="flex flex-col items-start space-y-3"
+                    id="welcome-text"
+                  >
                     <p className="text-gray-800 flex flex-col mb-3">
-                      <span className="text-center flex">
-                        {displayedContent.split('\n')[0]}
-                        {displayedContent.length < fullContent.length && displayedContent.split('\n').length === 1 && (
-                          <span className="inline-block w-4 h-4 bg-gray-400 rounded-full ml-1 animate-pulse self-center"></span>
-                        )}
+                      <span className="text-center flex items-center">
+                        {displayedContent.split("\n")[0]}
+                        {displayedContent.length < fullContent.length &&
+                          displayedContent.split("\n").length === 1 && (
+                            <span className="inline-block w-4 h-4 bg-gray-400 rounded-full ml-1 animate-pulse self-center"></span>
+                          )}
                       </span>
                     </p>
-                    {displayedContent.split('\n').slice(1).map((line, index) => (
-                      line && <p key={index + 1} className="text-gray-800 flex-1">
-                        {line.includes('Level') ? (
-                          <><b>{line.split(':')[0]}:</b>{line.split(':').slice(1).join(':')}</>
-                        ) : (
-                          line
-                        )}
-                        {index === displayedContent.split('\n').slice(1).length - 1 && displayedContent.length < fullContent.length && (
-                          <span className="inline-block w-4 h-4 bg-gray-400 rounded-full ml-1 animate-pulse self-center"></span>
-                        )}
-                      </p>
-                    ))}
+                    {displayedContent
+                      .split("\n")
+                      .slice(1)
+                      .map(
+                        (line, index) =>
+                          line && (
+                            <p
+                              key={index + 1}
+                              className="text-gray-800"
+                            >
+                              {line.includes("Level") ? (
+                                <>
+                                  <b>{line.split(":")[0]} :</b> {line.split(":").slice(1).join(":")}
+                                </>
+                              ) : (
+                                line
+                              )}
+                              {index ===
+                                displayedContent.split("\n").slice(1).length -
+                                  1 &&
+                                displayedContent.length <
+                                  fullContent.length && (
+                                  <span className="inline-block w-4 h-4 bg-gray-400 rounded-full ml-1 animate-pulse"></span>
+                                )}
+                            </p>
+                          )
+                      )}
                   </div>
-                  {!showAssessment && displayedContent.length == fullContent.length && (
-                    <button
-                      onClick={() => setShowAssessment(true)}
-                      className="px-4 py-2 mt-16 rounded-lg border border-[#00BF53] text-[#00BF53] mx-auto flex hover:bg-[#00BF53]/[0.1] transition-colors"
-                    >
-                      Start Career Assessment
-                    </button>
-                  )}
+                  {!showAssessment &&
+                    displayedContent.length == fullContent.length && (
+                      <button
+                        onClick={() => setShowAssessment(true)}
+                        className="px-4 py-2 mt-16 rounded-lg border border-[#00BF53] text-[#00BF53] mx-auto flex hover:bg-[#00BF53]/[0.1] transition-colors"
+                      >
+                        Start Career Assessment
+                      </button>
+                    )}
                 </div>
               </div>
               {showAssessment && (
@@ -651,9 +673,9 @@ Level 3: dives into pure technical questions to validate your real-world underst
                           <div className="mt-4 space-x-3">
                             <button
                               onClick={() => {
-                                const link = document.createElement('a');
+                                const link = document.createElement("a");
                                 link.href = ReportURL;
-                                link.download = 'wele-report.pdf';
+                                link.download = "wele-report.pdf";
                                 link.click();
                               }}
                               className="border border-[#00BF53] text-[#00BF53] hover:bg-[#00BF53]/[0.1] px-4 py-2 rounded-lg transition-colors"

@@ -142,7 +142,7 @@ export function CourseDetailsPage({
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-6 py-8">
+      <div className="max-w-5xl mx-auto px-6 py-8 pb-[5rem]">
         {/* Main Content */}
         <div className="flex flex-col">
           {/* Course Header */}
@@ -406,7 +406,7 @@ export function CourseDetailsPage({
               {activeTab === "comments" && (
                 <div className="space-y-6">
                   <div className="flex gap-3">
-                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-medium">
+                    <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-gray-600 text-sm font-medium">
                       U
                     </div>
                     <div className="flex-1 flex gap-2">
@@ -415,9 +415,9 @@ export function CourseDetailsPage({
                         value={newComment}
                         onChange={(e) => setNewComment(e.target.value)}
                         placeholder="Add your comment..."
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="flex-1 px-3 py-2 border-b border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
-                      <button className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center gap-2">
+                      <button className="px-4 text-[#00BF53] rounded-lg flex items-end gap-2">
                         <Send className="w-4 h-4" />
                       </button>
                     </div>
