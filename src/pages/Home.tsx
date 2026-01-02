@@ -2,17 +2,22 @@ import { ArrowRight, ArrowRightIcon, ChevronDown, Paperclip, Users, TrendingUp, 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChatTextArea } from "../components/ChatTextArea";
+import { AuthModal } from "../components/auth-modal";
+import { useUser } from "../contexts/UserContext";
 import Student from "../assets/images/student.png";
 
 export function Home() {
   const navigate = useNavigate();
+  const { user, signIn, signOut } = useUser();
   const [input, setInput] = useState("");
   const [selectedCourse, setSelectedCourse] = useState("");
   const [selectedSession, setSelectedSession] = useState("");
   const [showCourseDropdown, setShowCourseDropdown] = useState(false);
   const [showSessionDropdown, setShowSessionDropdown] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authModalTab, setAuthModalTab] = useState<"signin" | "signup">("signin");
+  const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
 
   const courses = ["React Basics", "Advanced TypeScript", "Node.js", "Python"];
   const handleCourseSelect = (course: string) => {
@@ -25,11 +30,19 @@ const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
     setShowSessionDropdown(false);
   };
 
+  const handleAuthSuccess = (userData: any) => {
+    signIn(userData);
+    setShowAuthModal(false);
+  };
+
+  const handleSignOut = () => {
+    signOut();
+  };
   const removeTag = (type: "course" | "session") => {
     if (type === "course") setSelectedCourse("");
     else setSelectedSession("");
   };
-    const suggestions = [
+  const suggestions = [
     {
       id: "1",
       text: "Show my tasks for today",
@@ -42,57 +55,51 @@ const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
   return (
     <div className="flex-1 flex flex-col items-center  mt-24 p-8 overflow-y-auto">
        <div className="absolute top-4 right-4">
-        <div className="absolute top-0 right-0 group relative">
-  {/* MAIN BUTTON */}
-  <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-full text-sm font-medium transition-colors flex items-center gap-2">
-    <div className="flex items-center gap-1">
-      <Zap size={16} /> 100
-    </div>
-    <span className="bg-[#00BF53] text-white rounded-full px-4 py-1" >
-      Upgrade
-    </span>
-  </button>
-
-  {/* HOVER POPUP */}
-  <div className="absolute right-0 mt-3 w-72 opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-all duration-200 z-50">
-    <div className="bg-white rounded-xl shadow-xl border border-gray-200 p-4">
-      
-      {/* HEADER */}
-      <div className="flex items-center justify-between mb-3">
-        <h4 className="font-semibold text-gray-900">Free Plan</h4>
-        <button className="text-xs border border-gray-300 rounded-full px-3 py-1 hover:bg-gray-100" >
-          Upgrade
-        </button>
-      </div>
-
-      {/* CREDITS */}
-      <div className="bg-gray-100 from-blue-50 to-purple-50 rounded-lg p-3 mb-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-gray-800 text-xs font-medium">
-            <Zap size={16} className="text-[#00BF53]" />
-            Credits
-            <span className="font-bold text-xs">100</span>
+        {!user.isAuthenticated ? (
+          <div className="flex gap-2">
+            <button 
+              onClick={() => {
+                setAuthModalTab("signin");
+                setShowAuthModal(true);
+              }}
+              className="bg-white hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-full text-sm font-medium transition-colors border border-gray-200"
+            >
+              Sign in
+            </button>
+            <button 
+              onClick={() => {
+                setAuthModalTab("signup");
+                setShowAuthModal(true);
+              }}
+              className="bg-[#00BF53] hover:bg-green-600 text-white px-4 py-2 rounded-full text-sm font-medium transition-colors"
+            >
+              Sign up
+            </button>
           </div>
-          <button className="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1">
-            View Usage →
-          </button>
-        </div>
-      </div>
-
-      {/* FOOTER */}
-      <div className="text-sm text-gray-700 font-medium">
-        Free Monthly Credits
-        <span className="float-right font-semibold text-xs">100/100</span>
-      </div>
-    </div>
-  </div>
-</div>
+        ) : (
+          <div className="flex items-center gap-3">
+            <div className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-full text-sm font-medium transition-colors flex items-center gap-2">
+              <div className="flex items-center gap-1">
+                <Zap size={16} /> 100
+              </div>
+              <span className="bg-[#00BF53] text-white rounded-full px-4 py-1">
+                Upgrade
+              </span>
+            </div>
+            <button 
+              onClick={handleSignOut}
+              className="text-gray-600 hover:text-gray-800 text-sm font-medium"
+            >
+              Sign Out
+            </button>
+          </div>
+        )}
        </div>
 
       <div className="relative w-full">
        
         <p className="text-3xl font-bold text-gray-900 text-center mb-4">
-          Hi Vicky S, I'm personalized AI from WeLe
+          Hi {user.name}, I'm personalized AI from WeLe
         </p>
         <p className="text-gray-600 text-center text-md">
           Let’s boost your skills, prepare for interviews, and grow smarter
@@ -435,6 +442,14 @@ const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
         </div>
       </div>
       
+      {showAuthModal && (
+        <AuthModal 
+          onClose={() => setShowAuthModal(false)}
+          onSuccess={handleAuthSuccess}
+          initialTab={authModalTab}
+        />
+      )}
+
       {showUpgradeModal && (
   <div className="fixed inset-0 z-[100] flex items-center justify-center">
     {/* BACKDROP */}
