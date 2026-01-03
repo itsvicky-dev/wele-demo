@@ -33,7 +33,7 @@ class AuthService {
   private backendUrl: string;
 
   constructor() {
-    this.backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://43296af1ea59.ngrok-free.app';
+    this.backendUrl = import.meta.env.VITE_BACKEND_URL;
   }
 
   private async graphqlRequest(query: string, variables: any) {
@@ -52,6 +52,31 @@ class AuthService {
     }
 
     return result.data;
+  }
+
+  // Resend Mobile OTP using GraphQL
+  async resendMobileOtp(emailOrMobile: string): Promise<{ success: boolean; error?: string }> {
+    try {
+      const query = `
+        mutation ResendMobileOtp($emailOrMobile: String!) {
+          resendMobileOtp(emailOrMobile: $emailOrMobile) {
+            statusCode
+            statusMessage
+            data
+          }
+        }
+      `;
+
+      const data = await this.graphqlRequest(query, { emailOrMobile });
+
+      if (data.resendMobileOtp.statusCode === 200) {
+        return { success: true };
+      } else {
+        return { success: false, error: data.resendMobileOtp.statusMessage };
+      }
+    } catch (error: any) {
+      return { success: false, error: error.message };
+    }
   }
 
   // Send OTP using GraphQL
@@ -234,6 +259,7 @@ class AuthService {
   async signOut(): Promise<{ success: boolean; error?: string }> {
     try {
       localStorage.removeItem('authToken');
+      localStorage.clear();
       return { success: true };
     } catch (error: any) {
       return { success: false, error: error.message };
@@ -311,6 +337,22 @@ class AuthService {
     } catch (error: any) {
       return { success: false, error: error.message };
     }
+  }
+  // Get current user from storage
+  async getCurrentUser(): Promise<AuthUser | null> {
+    const accessToken = sessionStorage.getItem('accessToken') || localStorage.getItem('authToken');
+    if (!accessToken) return null;
+
+    const email = sessionStorage.getItem('email') || undefined;
+    const name = sessionStorage.getItem('name') || undefined;
+    const phone = undefined; // We might want to store this too
+
+    return {
+      id: 'current-user', // Placeholder, or decode from token
+      name,
+      email,
+      phone
+    };
   }
 }
 

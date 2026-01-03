@@ -1,9 +1,10 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { X, Loader2 } from "lucide-react"
 import { authService } from "../services/authService"
 import { Button } from "./ui/button"
+import { toast } from "sonner"
 import { Input } from "./ui/input"
 import { Checkbox } from "./ui/checkbox"
 import Logo from "../assets/images/logo.svg";
@@ -24,10 +25,17 @@ export function AuthModal({ onClose, onSuccess, initialTab = "signin" }: { onClo
   const [mobile, setMobile] = useState("")
   const [otp, setOtp] = useState("")
   const [email, setEmail] = useState("")
+  const [emailError, setEmailError] = useState("")
   const [showEmailField, setShowEmailField] = useState(false)
   const [agreedToTerms, setAgreedToTerms] = useState(false)
 
   const navigate = useNavigate();
+
+  // Email validation function
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   // Countdown timer effect
   useEffect(() => {
@@ -37,6 +45,28 @@ export function AuthModal({ onClose, onSuccess, initialTab = "signin" }: { onClo
     }
     return () => clearTimeout(timer);
   }, [countdown]);
+
+  const googleButtonWrapperRef = useRef<HTMLDivElement>(null);
+  const [googleButtonWidth, setGoogleButtonWidth] = useState<string>();
+
+  useEffect(() => {
+    const updateWidth = () => {
+      if (googleButtonWrapperRef.current) {
+        const width = googleButtonWrapperRef.current.offsetWidth;
+        setGoogleButtonWidth(width ? (width > 400 ? "400" : String(width)) : undefined);
+      }
+    };
+
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+    // Add a small delay to ensure layout is stable
+    const timer = setTimeout(updateWidth, 100);
+
+    return () => {
+      window.removeEventListener('resize', updateWidth);
+      clearTimeout(timer);
+    };
+  }, [showOtpField, showEmailField, activeTab]);
 
   // const [activeTab, setActiveTab] = useState<"signin" | "signup">(initialTab) // (Keep existing state)
 
@@ -54,14 +84,18 @@ export function AuthModal({ onClose, onSuccess, initialTab = "signin" }: { onClo
       const result = await authService.loginWithGoogle(token);
 
       if (result.success && result.data) {
-        sessionStorage.setItem("email", result.data.email);
-        sessionStorage.setItem("accessToken", result.data.accessToken);
+        localStorage.setItem("email", result.data.email);
+        localStorage.setItem("email", result.data.email);
+        localStorage.setItem("accessToken", result.data.accessToken);
+        localStorage.setItem("onboardingCompleted", result.data.onBoard ? "true" : "false");
 
         if (result.data.onBoard === false) {
           console.log("Login Successful!");
+          toast.success("Login Successful!");
           onSuccess?.(result.data);
           onClose?.();
         } else {
+          toast.success("Login Successful!");
           onSuccess?.(result.data);
           onClose?.();
         }
@@ -141,13 +175,15 @@ export function AuthModal({ onClose, onSuccess, initialTab = "signin" }: { onClo
         // For signin: call verifyLoginOTP
         const result = await authService.verifyLoginOTP(mobile, otp);
         if (result.success && result.data) {
-          sessionStorage.setItem("email", result.data.email);
-          sessionStorage.setItem("accessToken", result.data.accessToken);
+          localStorage.setItem("email", result.data.email);
+          localStorage.setItem("accessToken", result.data.accessToken);
+          localStorage.setItem("onboardingCompleted", result.data.onBoard ? "true" : "false");
           // Store name if available or fallback to email
           const userName = result.data.email.split('@')[0];
-          sessionStorage.setItem("name", userName);
+          localStorage.setItem("name", userName);
 
           console.log("Login Successful!");
+          toast.success("Login Successful!");
           onSuccess?.(result.data);
           onClose?.();
         } else {
@@ -191,13 +227,14 @@ export function AuthModal({ onClose, onSuccess, initialTab = "signin" }: { onClo
 
       if (result.success && result.data) {
         console.log("Account created successfully!")
-        sessionStorage.setItem("email", result.data.email);
-        sessionStorage.setItem("accessToken", result.data.accessToken);
+        localStorage.setItem("email", result.data.email);
+        localStorage.setItem("accessToken", result.data.accessToken);
 
         // Store name if available or fallback to email
         const userName = result.data.email.split('@')[0];
-        sessionStorage.setItem("name", userName);
+        localStorage.setItem("name", userName);
 
+        toast.success("Account created successfully!");
         onSuccess?.(result.data)
         onClose?.()
       } else {
@@ -272,9 +309,9 @@ export function AuthModal({ onClose, onSuccess, initialTab = "signin" }: { onClo
           </button>
         </div>
 
-        {!showOtpField && (
+        {!showOtpField && !showEmailField && (
           <>
-            <div className="w-full mb-4 flex justify-center">
+            <div ref={googleButtonWrapperRef} className="w-full mb-4 flex justify-center">
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
                 onError={() => {
@@ -284,14 +321,14 @@ export function AuthModal({ onClose, onSuccess, initialTab = "signin" }: { onClo
                 theme="filled_black"
                 shape="rectangular"
                 size="large"
-                width="100%"
+                width={googleButtonWidth}
                 text="continue_with"
               />
             </div>
 
             <div className="flex items-center gap-4 my-6">
               <div className="flex-1 h-px bg-gray-200" />
-              <span className="text-sm text-gray-400 font-medium">OR</span>
+              <span className="text-xs text-gray-400">OR</span>
               <div className="flex-1 h-px bg-gray-200" />
             </div>
           </>
@@ -336,7 +373,7 @@ export function AuthModal({ onClose, onSuccess, initialTab = "signin" }: { onClo
                 <h2 className="text-xl font-medium text-gray-900 mb-3">
                   We've sent an OTP on
                 </h2>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 justify-center">
                   <span className="text-gray-600">+91 {mobile}</span>
                   <button
                     onClick={() => {
@@ -398,15 +435,7 @@ export function AuthModal({ onClose, onSuccess, initialTab = "signin" }: { onClo
                   onClick={async () => {
                     setIsLoading(true);
                     try {
-                      let result;
-                      if (activeTab === "signup") {
-                        result = await authService.signUp({
-                          name: name || "User",
-                          phone: mobile
-                        });
-                      } else {
-                        result = await authService.sendOTP(mobile);
-                      }
+                      const result = await authService.resendMobileOtp(mobile);
                       if (result.success) {
                         setCountdown(30);
                       } else {
@@ -432,7 +461,7 @@ export function AuthModal({ onClose, onSuccess, initialTab = "signin" }: { onClo
             <div className="flex flex-col gap-4">
               <Input
                 type="tel"
-                placeholder="Mobile Number (10 digits)"
+                placeholder="Mobile Number"
                 value={mobile}
                 onChange={(e) => {
                   const value = e.target.value.replace(/\D/g, "")
@@ -479,9 +508,21 @@ export function AuthModal({ onClose, onSuccess, initialTab = "signin" }: { onClo
                 type="email"
                 placeholder="Enter your email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full py-6 px-4 rounded-xl border-gray-200 text-gray-900 placeholder:text-gray-400 focus:border-[#00BF53] focus:ring-[#00BF53]"
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setEmailError("");
+                }}
+                onBlur={() => {
+                  if (email && !validateEmail(email)) {
+                    setEmailError("Please enter a valid email address");
+                  }
+                }}
+                className={`w-full py-6 px-4 rounded-xl border-gray-200 text-gray-900 placeholder:text-gray-400 focus:border-[#00BF53] focus:ring-[#00BF53] ${emailError ? "border-red-300 focus:border-red-500 focus:ring-red-500" : ""
+                  }`}
               />
+              {emailError && (
+                <p className="text-red-500 text-sm mt-1">{emailError}</p>
+              )}
             </div>
 
             {/* Terms checkbox for create account */}
@@ -501,7 +542,7 @@ export function AuthModal({ onClose, onSuccess, initialTab = "signin" }: { onClo
 
             <Button
               onClick={handleContinue}
-              disabled={!email || !agreedToTerms || isLoading}
+              disabled={!email || !validateEmail(email) || !agreedToTerms || isLoading}
               className="w-full bg-[#00BF53] hover:bg-green-600 disabled:bg-gray-400 text-white py-6 rounded-xl font-medium flex items-center justify-center gap-2"
               size="lg"
             >

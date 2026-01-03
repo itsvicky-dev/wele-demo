@@ -40,11 +40,17 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<UserProfile>(() => {
     const savedRole = localStorage.getItem('userRole') as UserRole;
+    const accessToken = localStorage.getItem('accessToken');
+    const name = localStorage.getItem('name');
+    const email = localStorage.getItem('email');
+    const isAuthenticated = !!accessToken;
+
     return {
-      name: 'Guest User',
+      name: name || (email ? email.split('@')[0] : 'Guest User'),
       role: savedRole || 'guest',
-      avatar: 'https://api.dicebear.com/9.x/notionists/svg?seed=guest',
-      isAuthenticated: false
+      avatar: `https://api.dicebear.com/9.x/notionists/svg?seed=${email || 'guest'}`,
+      email: email || undefined,
+      isAuthenticated
     };
   });
 
@@ -59,7 +65,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
             id: currentUser.id,
             email: currentUser.email,
             phone: currentUser.phone,
-            name: currentUser.email?.split('@')[0] || currentUser.phone || 'User',
+            name: currentUser.name || currentUser.email?.split('@')[0] || currentUser.phone || 'User',
             role: 'active-learner',
             isAuthenticated: true,
             avatar: `https://api.dicebear.com/9.x/notionists/svg?seed=${currentUser.id}`
@@ -87,7 +93,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const signIn = (userData: any) => {
     setUser({
       id: userData.id,
-      name: userData.email?.split('@')[0] || userData.phone || 'User',
+      name: userData.name || userData.email?.split('@')[0] || userData.phone || 'User',
       role: 'active-learner',
       avatar: `https://api.dicebear.com/9.x/notionists/svg?seed=${userData.id}`,
       email: userData.email,

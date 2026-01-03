@@ -48,20 +48,20 @@ export function Sidebar() {
 
   useEffect(() => {
     loadConversations();
-    
+
     // Listen for chat history refresh events
     const handleRefresh = () => loadConversations();
     window.addEventListener('refreshChatHistory', handleRefresh);
-    
+
     // Handle click outside role selector
     const handleClickOutside = (event: MouseEvent) => {
       if (roleSelectorRef.current && !roleSelectorRef.current.contains(event.target as Node)) {
         setShowRoleSelector(false);
       }
     };
-    
+
     document.addEventListener('mousedown', handleClickOutside);
-    
+
     return () => {
       window.removeEventListener('refreshChatHistory', handleRefresh);
       document.removeEventListener('mousedown', handleClickOutside);
@@ -184,7 +184,7 @@ export function Sidebar() {
     <div className="w-60 bg-[#f9fafb] flex flex-col h-screen border-r border-[#0d0d0d0d]">
       <div className="p-3.5">
         <Link to="/" className="flex items-center gap-2 mb-1">
-          <img src={Logo} alt="" width={'60%'}/>
+          <img src={Logo} alt="" width={'60%'} />
         </Link>
       </div>
 
@@ -197,20 +197,19 @@ export function Sidebar() {
             <MessageSquarePlus size={16} />
             <span className="text-sm font-medium">New Chat</span>
           </Link>
-          
+
           <div className="px-3 py-2">
             <span className="text-xs font-medium text-gray-500 tracking-wide">For me</span>
           </div>
-          
+
           {set1Menus.map((menu) => (
             <Link
               key={menu.id}
               to={menu.path}
-              className={`flex items-center gap-3 px-3 py-[5px] rounded-lg transition-all text-sm ${
-                location.pathname === menu.path
+              className={`flex items-center gap-3 px-3 py-[5px] rounded-lg transition-all text-sm ${location.pathname === menu.path
                   ? "text-[#00BF53] font-medium"
                   : "text-gray-600 hover:bg-white hover:text-[#00BF53]"
-              }`}
+                }`}
             >
               {menu.icon}
               <span>{menu.title}</span>
@@ -230,11 +229,10 @@ export function Sidebar() {
               <Link
                 key={menu.id}
                 to={menu.path}
-                className={`flex items-center gap-3 px-3 py-[5px] rounded-lg transition-all text-sm ${
-                  location.pathname === menu.path
+                className={`flex items-center gap-3 px-3 py-[5px] rounded-lg transition-all text-sm ${location.pathname === menu.path
                     ? "text-[#00BF53] font-medium"
                     : "text-gray-600 hover:bg-white hover:text-[#00BF53]"
-                }`}
+                  }`}
               >
                 {menu.icon}
                 <span>{menu.title}</span>
@@ -247,7 +245,7 @@ export function Sidebar() {
           <div className="px-3 py-2 mb-1">
             <span className="text-xs font-medium text-gray-500 tracking-wide">Your Chats</span>
           </div>
-          
+
           <div className="flex items-center justify-between px-3 py-2">
             <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
               <History size={16} />
@@ -297,7 +295,7 @@ export function Sidebar() {
       </div>
 
       <div className="border-t border-gray-200 p-2 px-4 relative" ref={roleSelectorRef}>
-        <div 
+        <div
           className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 rounded-lg p-2 -m-2"
           onClick={() => setShowRoleSelector(!showRoleSelector)}
         >
@@ -312,13 +310,13 @@ export function Sidebar() {
             <div className="text-sm font-semibold text-gray-800">
               {user.name}
             </div>
-            <div className="text-xs text-gray-500 capitalize">
-              {user.role.replace('-', ' ')}
+            <div className="text-xs text-gray-500 capitalize truncate">
+              {user.email || user.role.replace('-', ' ')}
             </div>
           </div>
           <ChevronDown size={16} className={`text-gray-400 transition-transform ${showRoleSelector ? 'rotate-180' : ''}`} />
         </div>
-        
+
         {showRoleSelector && (
           <div className="absolute bottom-full left-2 right-2 mb-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
             <div className="p-2">
@@ -330,9 +328,8 @@ export function Sidebar() {
                     setUserRole(role.value);
                     setShowRoleSelector(false);
                   }}
-                  className={`w-full text-left px-2 py-2 rounded-lg text-sm hover:bg-gray-50 transition-colors ${
-                    user.role === role.value ? 'bg-green-50 text-green-700' : 'text-gray-700'
-                  }`}
+                  className={`w-full text-left px-2 py-2 rounded-lg text-sm hover:bg-gray-50 transition-colors ${user.role === role.value ? 'bg-green-50 text-green-700' : 'text-gray-700'
+                    }`}
                 >
                   <div className="font-medium">{role.label}</div>
                   <div className="text-xs text-gray-500">{role.description}</div>

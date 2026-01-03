@@ -10,6 +10,8 @@ import { useState, useEffect, useRef } from "react";
 import { aiService } from "../services/aiService";
 import type { AIMessage } from "../services/aiService";
 import ReportURL from "../assets/document/cc.pdf";
+import { AuthModal } from "../components/auth-modal";
+import { OnboardingModal } from "../components/OnboardingModal";
 
 interface MCQOption {
   id: string;
@@ -210,6 +212,24 @@ export function CareerCompass() {
   const currentQuestionRef = useRef<HTMLDivElement>(null);
   const [displayedContent, setDisplayedContent] = useState("");
   const [isTyping, setIsTyping] = useState(true);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isOnboardingModalOpen, setIsOnboardingModalOpen] = useState(false);
+
+  const handleStartAssessment = () => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      setIsAuthModalOpen(true);
+      return;
+    }
+
+    const onboardingCompleted = localStorage.getItem("onboardingCompleted");
+    if (onboardingCompleted !== "true") {
+      setIsOnboardingModalOpen(true);
+      return;
+    }
+
+    setShowAssessment(true);
+  };
 
   const fullContent = `👏Welcome to Career Compass.
   This quick mission reveals your strengths and shows you the career path that truly fits you.
@@ -223,7 +243,7 @@ Level 3 : dives into pure technical questions to validate your real-world unders
   useEffect(() => {
     const words = fullContent.split(' ');
     let currentWordIndex = 0;
-    
+
     const typeWord = () => {
       if (currentWordIndex < words.length) {
         const displayText = words.slice(0, currentWordIndex + 1).join(' ');
@@ -234,7 +254,7 @@ Level 3 : dives into pure technical questions to validate your real-world unders
         setIsTyping(false);
       }
     };
-    
+
     typeWord();
   }, []);
 
@@ -354,10 +374,10 @@ Level 3 : dives into pure technical questions to validate your real-world unders
         prev.map((msg, index) =>
           index === prev.length - 1 && msg.role === "assistant"
             ? {
-                ...msg,
-                content:
-                  "Sorry, I'm having trouble generating a response. Please try again.",
-              }
+              ...msg,
+              content:
+                "Sorry, I'm having trouble generating a response. Please try again.",
+            }
             : msg
         )
       );
@@ -409,10 +429,10 @@ Level 3 : dives into pure technical questions to validate your real-world unders
         prev.map((msg, index) =>
           index === prev.length - 1 && msg.role === "assistant"
             ? {
-                ...msg,
-                content:
-                  "Sorry, I'm having trouble generating a response. Please try again.",
-              }
+              ...msg,
+              content:
+                "Sorry, I'm having trouble generating a response. Please try again.",
+            }
             : msg
         )
       );
@@ -475,9 +495,8 @@ Level 3 : dives into pure technical questions to validate your real-world unders
           className={`flex-1 overflow-y-auto bg-white transition-all duration-300`}
         >
           <div
-            className={`${
-              showAssessment ? "max-w-5xl" : "max-w-3xl"
-            } mx-auto py-6 flex`}
+            className={`${showAssessment ? "max-w-5xl" : "max-w-3xl"
+              } mx-auto py-6 flex`}
           >
             <div className="">
               {isLoading && (
@@ -535,9 +554,9 @@ Level 3 : dives into pure technical questions to validate your real-world unders
                               )}
                               {index ===
                                 displayedContent.split("\n").slice(1).length -
-                                  1 &&
+                                1 &&
                                 displayedContent.length <
-                                  fullContent.length && (
+                                fullContent.length && (
                                   <span className="inline-block w-4 h-4 bg-gray-400 rounded-full ml-1 animate-pulse"></span>
                                 )}
                             </p>
@@ -547,7 +566,7 @@ Level 3 : dives into pure technical questions to validate your real-world unders
                   {!showAssessment &&
                     displayedContent.length == fullContent.length && (
                       <button
-                        onClick={() => setShowAssessment(true)}
+                        onClick={handleStartAssessment}
                         className="px-4 py-2 mt-16 rounded-lg border border-[#00BF53] text-[#00BF53] mx-auto flex hover:bg-[#00BF53]/[0.1] transition-colors"
                       >
                         Start Career Assessment
@@ -555,6 +574,30 @@ Level 3 : dives into pure technical questions to validate your real-world unders
                     )}
                 </div>
               </div>
+
+              {isAuthModalOpen && (
+                <AuthModal
+                  onClose={() => setIsAuthModalOpen(false)}
+                  onSuccess={(user) => {
+                    setIsAuthModalOpen(false);
+                    const onboardingCompleted = localStorage.getItem("onboardingCompleted");
+                    if (onboardingCompleted !== "true") {
+                      setIsOnboardingModalOpen(true);
+                    } else {
+                      setShowAssessment(true);
+                    }
+                  }}
+                />
+              )}
+
+              <OnboardingModal
+                isOpen={isOnboardingModalOpen}
+                onClose={() => setIsOnboardingModalOpen(false)}
+                onComplete={() => {
+                  setIsOnboardingModalOpen(false);
+                  setShowAssessment(true);
+                }}
+              />
               {showAssessment && (
                 <div className="space-y-6">
                   <div className="bg-white rounded-lg py-6">
@@ -594,11 +637,10 @@ Level 3 : dives into pure technical questions to validate your real-world unders
                                         currentQuestionRef.current = el;
                                       }
                                     }}
-                                    className={`border-l-4 border-[#00BF53]/[0.1] pl-4 transition-all duration-500 ${
-                                      globalIndex === currentQuestionIndex
+                                    className={`border-l-4 border-[#00BF53]/[0.1] pl-4 transition-all duration-500 ${globalIndex === currentQuestionIndex
                                         ? "animate-slideIn opacity-100"
                                         : "opacity-60"
-                                    }`}
+                                      }`}
                                     style={{
                                       animation:
                                         globalIndex === currentQuestionIndex
@@ -632,7 +674,7 @@ Level 3 : dives into pure technical questions to validate your real-world unders
                                             className="text-blue-500"
                                             disabled={
                                               globalIndex !==
-                                                currentQuestionIndex &&
+                                              currentQuestionIndex &&
                                               !userAnswers[question.id]
                                             }
                                           />
@@ -650,7 +692,7 @@ Level 3 : dives into pure technical questions to validate your real-world unders
                         {!showResults &&
                           currentQuestionIndex === careerQuestions.length - 1 &&
                           userAnswers[
-                            careerQuestions[currentQuestionIndex].id
+                          careerQuestions[currentQuestionIndex].id
                           ] && (
                             <button
                               onClick={submitAssessment}
@@ -762,22 +804,19 @@ Level 3 : dives into pure technical questions to validate your real-world unders
                       <button
                         key={set.id}
                         onClick={() => scrollToSet(set.id)}
-                        className={`w-full border-l-2 text-left px-2 py-1 transition-all ${
-                          isActive ? "border-[#00BF53]" : "border-transparent"
-                        }`}
+                        className={`w-full border-l-2 text-left px-2 py-1 transition-all ${isActive ? "border-[#00BF53]" : "border-transparent"
+                          }`}
                       >
                         <div className="flex">
                           <span
-                            className={`text-sm font-medium ${
-                              isActive ? "text-[#00BF53]" : "text-gray-700"
-                            }`}
+                            className={`text-sm font-medium ${isActive ? "text-[#00BF53]" : "text-gray-700"
+                              }`}
                           >
                             {set.title}
                           </span>
                           <span
-                            className={`text-xs ml-2 self-center ${
-                              isActive ? "text-[#00BF53]" : "text-gray-500"
-                            }`}
+                            className={`text-xs ml-2 self-center ${isActive ? "text-[#00BF53]" : "text-gray-500"
+                              }`}
                           >
                             {completed}/{total}
                           </span>
@@ -794,9 +833,8 @@ Level 3 : dives into pure technical questions to validate your real-world unders
 
       <div className="bg-white">
         <div
-          className={` ${
-            showAssessment ? "max-w-5xl" : "max-w-3xl"
-          } mx-auto pb-6`}
+          className={` ${showAssessment ? "max-w-5xl" : "max-w-3xl"
+            } mx-auto pb-6`}
         >
           <form
             onSubmit={(e) => {
@@ -844,38 +882,40 @@ Level 3 : dives into pure technical questions to validate your real-world unders
         </div>
       </div>
 
-      {showWarningPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
-            <div className="p-6">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
-                  <span className="text-3xl text-yellow-500 font-bold">!</span>
+      {
+        showWarningPopup && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+              <div className="p-6">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                    <span className="text-3xl text-yellow-500 font-bold">!</span>
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900">Warning</h3>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900">Warning</h3>
-              </div>
-              <p className="text-gray-700 mb-6">
-                Current assessment data will be cleared if you continue. Do you
-                want to proceed?
-              </p>
-              <div className="flex space-x-3 justify-end">
-                <button
-                  onClick={() => setShowWarningPopup(false)}
-                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleWarningConfirm}
-                  className="px-4 py-2 bg-[#00BF53] text-white rounded-lg hover:bg-[#00a045] transition-colors"
-                >
-                  Continue
-                </button>
+                <p className="text-gray-700 mb-6">
+                  Current assessment data will be cleared if you continue. Do you
+                  want to proceed?
+                </p>
+                <div className="flex space-x-3 justify-end">
+                  <button
+                    onClick={() => setShowWarningPopup(false)}
+                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleWarningConfirm}
+                    className="px-4 py-2 bg-[#00BF53] text-white rounded-lg hover:bg-[#00a045] transition-colors"
+                  >
+                    Continue
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
-    </div>
+        )
+      }
+    </div >
   );
 }
