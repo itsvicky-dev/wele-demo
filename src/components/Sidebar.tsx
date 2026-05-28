@@ -90,6 +90,12 @@ export function Sidebar() {
         icon: <LayoutDashboard size={16} />,
         path: "/dashboard",
       },
+      {
+        id: "home",
+        title: "Home",
+        icon: <Home size={16} />,
+        path: "/landing",
+      },
     ];
 
     if (role === 'guest') {

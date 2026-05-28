@@ -16,6 +16,7 @@ import { WhatIsBest } from "./pages/WhatIsBest";
 import { Chat } from "./pages/Chat";
 import { AIChat } from "./components/AIChat";
 import { UserProvider } from "./contexts/UserContext";
+import LandingPage from "./pages/LandingPage";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Sidebar />
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/landing" element={<LandingPage />} />
             <Route path="/chat" element={<Chat key={window.location.href} />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/learning-hub" element={<LearningHub />} />
