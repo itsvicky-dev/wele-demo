@@ -1,4 +1,4 @@
-import { HashRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route, useLocation } from "react-router-dom";
 import { Sidebar } from "./components/Sidebar";
 import { Home } from "./pages/Home";
 import { Dashboard } from "./pages/Dashboard";
@@ -17,13 +17,21 @@ import { Chat } from "./pages/Chat";
 import { AIChat } from "./components/AIChat";
 import { UserProvider } from "./contexts/UserContext";
 import LandingPage from "./pages/LandingPage";
+import CourseLearningPage from "./pages/CourseLearningPage";
+import { LearningHubClone } from "./pages/LearningHubClone";
+
+function SidebarWrapper() {
+  const location = useLocation();
+  if (location.pathname === '/course-learning') return null;
+  return <Sidebar />;
+}
 
 function App() {
   return (
     <UserProvider>
       <HashRouter>
         <div className="flex h-screen overflow-hidden">
-          <Sidebar />
+          <SidebarWrapper />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/landing" element={<LandingPage />} />
@@ -40,6 +48,8 @@ function App() {
             <Route path="/chat-history" element={<ChatHistory />} />
             <Route path="/what-is-best" element={<WhatIsBest />} />
             <Route path="/mock-interviews" element={<MockInterviews />} />
+            <Route path="/course-learning" element={<CourseLearningPage />} />
+            <Route path="/learning-hub-clone" element={<LearningHubClone />} />
           </Routes>
         </div>
       </HashRouter>
