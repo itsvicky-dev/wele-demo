@@ -16,19 +16,24 @@ import { WhatIsBest } from "./pages/WhatIsBest";
 import { Chat } from "./pages/Chat";
 import { AIChat } from "./components/AIChat";
 import { UserProvider } from "./contexts/UserContext";
+import { CartProvider } from "./contexts/CartContext";
 import LandingPage from "./pages/LandingPage";
+import CourseDetailsPage from "./pages/CourseDetailsPage";
+import CartPage from "./pages/CartPage";
 import CourseLearningPage from "./pages/CourseLearningPage";
 import { LearningHubClone } from "./pages/LearningHubClone";
 
 function SidebarWrapper() {
   const location = useLocation();
   if (location.pathname === '/course-learning') return null;
+  if (location.pathname === '/cart') return null;
   return <Sidebar />;
 }
 
 function App() {
   return (
     <UserProvider>
+      <CartProvider>
       <HashRouter>
         <div className="flex h-screen overflow-hidden">
           <SidebarWrapper />
@@ -48,11 +53,14 @@ function App() {
             <Route path="/chat-history" element={<ChatHistory />} />
             <Route path="/what-is-best" element={<WhatIsBest />} />
             <Route path="/mock-interviews" element={<MockInterviews />} />
+            <Route path="/course-details" element={<CourseDetailsPage />} />
+            <Route path="/cart" element={<CartPage />} />
             <Route path="/course-learning" element={<CourseLearningPage />} />
             <Route path="/learning-hub-clone" element={<LearningHubClone />} />
           </Routes>
         </div>
       </HashRouter>
+      </CartProvider>
     </UserProvider>
   );
 }
